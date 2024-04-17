@@ -12,11 +12,13 @@
 import Blockly from 'blockly';
 import {pythonGenerator} from 'blockly/python';
 import * as monaco from 'monaco-editor';
+import '../components/Test/demo'
+
 export default {
   name: 'HomeView',
   data() {
     return {
-      toolbox: {
+      toolbox: {  
         "kind": "flyoutToolbox",
         "contents": [
           {
@@ -47,6 +49,10 @@ export default {
             "kind": "block",
             "type": "text_print"
           },
+          {
+              "kind": "block",
+              "type": "string_length",
+            },
         ]
       },
       workspace: null,
@@ -55,10 +61,19 @@ export default {
     }
   },
   mounted() {
-    this.workspace = Blockly.inject('blocklyDiv', {toolbox: this.toolbox});
+    this.workspace = Blockly.inject('blocklyDiv', {
+      toolbox: this.toolbox,
+      move:{
+        scrollbars: {
+          horizontal: true,
+          vertical: true
+        },
+        drag: true,
+        wheel: false}
+    
+    });
     this.workspace.addChangeListener(() => {
-      const pythonCode = pythonGenerator.workspaceToCode(this.workspace);
-      console.log(pythonCode)
+      const pythonCode = pythonGenerator.workspaceToCode(this.workspace)||'';
       this.codeValue = pythonCode;
       this.codeViewIns.setValue(this.codeValue);
 
