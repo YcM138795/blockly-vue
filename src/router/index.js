@@ -3,18 +3,12 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Demo_02 from '../components/Test/Demo02.vue'
 import CarGame from '../components/CarGame/CarGame.vue'
-import HomeLayout from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeLayout
-  },
-  {
-    path: '/home',
     name: 'home',
     component: HomeView
   },
