@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-// import './extensions/pxt-kitronik-motor-driver/jacdac/main.ts'
+// import './extensions/pxt-kitronik-motor-driver'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);

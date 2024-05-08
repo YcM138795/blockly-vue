@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import Demo_02 from '../components/Test/Demo02.vue'
-import CarGame from '../components/CarGame/CarGame.vue'
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -11,16 +8,6 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
-  },
-  {
-    path: '/demo',
-    name: 'demo',
-    component: Demo_02
-  },
-  {
-    path: '/car',
-    name: 'car',
-    component: CarGame
   },
   {
     path: '/about',
