@@ -87,7 +87,7 @@ Blockly.setLocale(hans);//汉化
                 "name": "operate"
               }
             ],
-            "colour": 105,
+            "colour": 180,
             "tooltip": "开始",
             "helpUrl": ""
           })
@@ -119,7 +119,7 @@ Blockly.setLocale(hans);//汉化
             ],
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": 180,
             "tooltip": "亮灯",
             "helpUrl": ""
           })
@@ -155,7 +155,7 @@ Blockly.setLocale(hans);//汉化
             "inputsInline": true,
             "previousStatement": null,
             "nextStatement": null,
-            "colour": 230,
+            "colour": 180,
             "tooltip": "灭灯",
             "helpUrl": ""
           })
@@ -177,3 +177,4 @@ Blockly.setLocale(hans);//汉化
       };
     }
   }
+

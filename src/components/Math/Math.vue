@@ -17,17 +17,15 @@
           {
             "kind": "category",
             "name": "数学",
+            "categoryStyle":"math_category",
             "cssConfig": {
-              "container": "math"
+              "container": "math",
+              "icon":"mathIcon"
             },
             "contents": [
               {
                 kind: "block",
                 type: "number_single",
-              },
-              {
-                kind: "block",
-                type: "logic_boolean",
               },
               {
                 kind: "block",
@@ -72,7 +70,14 @@
   
   <style>
   .math {
-  background-color: rgb(143, 203, 227);
-  /* height: 100px; */
+   
+
+    color: #5BA580;
+    font-size: 60px;
+}
+.mathIcon{
+  content: url('../../assets//SVG//计算器.svg');
+  width: 32px;
+
 }
   </style>

@@ -8,6 +8,9 @@
 
 // import * as monaco from "monaco-editor";
 import "./logic";
+import "./list_create";
+import "./if"
+
 export default {
   name: "LogicBlock",
   data() {
@@ -17,15 +20,44 @@ export default {
           {
             "kind": "category",
             "name": "逻辑",
+            "categoryStyle": "logic_category",
+            "cssConfig": {
+              "container": "logic",
+              "icon": "logicIcon"
+            },
             "contents": [
               {
                 "kind": "block",
-                "type": "cycle"
+                "type": "controls_if"
+              },
+              {
+                "kind": "block",
+                "type": "controls_if",
+                "extraState": {
+                  "hasElse": true,
+                }
+              },
+              {
+                "kind": "block",
+                "type": "cycle",
               },
               {
                 "kind": "block",
                 "type": "compare"
-              }
+              },
+              {
+                "kind": "block",
+                "type": "and_or",
+              },
+
+              {
+                "kind": "block",
+                "type": "or_judge",
+              },
+              {
+                "kind": "block",
+                "type": "and_judge",
+              },
             ]
           },
         ],
@@ -33,12 +65,20 @@ export default {
     };
   },
   mounted() {
-    
-          this.$emit('logicBox', this.toolbox);
+    this.$emit('logicBox', this.toolbox);
   },
 };
 </script>
 
 <style>
+.logic {
+  color: #5B80A5;
+  font-size: 75px;
+}
 
+.logicIcon {
+  /* 在这里定义类别图标的样式 */
+  content: url("../../assets/SVG/逻辑.svg");
+  height: 42px;
+}
 </style>

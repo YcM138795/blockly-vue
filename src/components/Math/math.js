@@ -148,7 +148,7 @@ Blockly.setLocale(hans);//汉化
         init: function () {
           this.jsonInit({
             "type": "compute",
-            "message0": "%1 %2 %3 %4 %5",
+            "message0": "%1 %2 %3 %4",
             "args0": [
               {
                 "type": "field_number",
@@ -188,7 +188,7 @@ Blockly.setLocale(hans);//汉化
                 "options": [
                   [
                     "空",
-                    " "
+                    "null"
                   ],
                   [
                     "+",
@@ -208,17 +208,34 @@ Blockly.setLocale(hans);//汉化
                   ]
                 ]
               },
-              {
-                "type": "input_value",
-                "name": "operate",
-                "check": "Number",
-                "align": "CENTRE"
-              }
+              // {
+              //   "type": "input_value",
+              //   "name": "operate",
+              //   "check": "Number",
+              //   "align": "CENTRE"
+              // }
             ],
             "output": "Number",
             "colour": 150,
             "tooltip": "运算",
             "helpUrl": ""
+          })
+          this.operationChange();
+        },
+
+        operationChange:function(){
+          const dropdown = this.getField('maths2');
+          dropdown.setValidator((newValue) =>{
+            if(newValue!=='null'){
+              if(!this.getInput('digit3')){
+                this.appendValueInput('digit3')
+                .setCheck('Number')
+              }
+            }else{
+              if(this.getInput('digit3')){
+                this.removeInput('digit3')
+              }
+            }
           })
         }
       }
@@ -229,17 +246,12 @@ Blockly.setLocale(hans);//汉化
         var dropdown_maths1 = block.getFieldValue('maths1');
         var number_digit2 = block.getFieldValue('digit2');
         var dropdown_maths2 = block.getFieldValue('maths2');
-        var value_operate = generator.valueToCode(block, 'operate', javascript.Order.ATOMIC);
+        var digit3 = generator.valueToCode(block, 'digit3', javascript.Order.ATOMIC);
         var code
-        if (!value_operate) {
+        if (dropdown_maths2==='null') {
           code = number_digit1 + dropdown_maths1 + number_digit2;
         } else {
-          if (dropdown_maths2 === ' ') {
-            block.setFieldValue('+', 'maths2');
-            console.log(dropdown_maths2);
-          }
-  
-          code = '(' + number_digit1 + dropdown_maths1 + number_digit2 + ')' + dropdown_maths2 + value_operate;
+          code = '(' + number_digit1 + dropdown_maths1 + number_digit2 + ')' + dropdown_maths2 + digit3;
         }
         return [code, Order.MEMBER];
       };
@@ -351,7 +363,7 @@ Blockly.setLocale(hans);//汉化
   
     }
   
-    //math_fun
+    //math_fun:方法
     {
       Blockly.Blocks['math_fun'] = {
         init: function () {
@@ -392,7 +404,7 @@ Blockly.setLocale(hans);//汉化
             ],
             "inputsInline": true,
             "output": "Number",
-            "colour": 230,
+            "colour": 150,
             "tooltip": "数学方法",
             "helpUrl": ""
           });
@@ -410,7 +422,6 @@ Blockly.setLocale(hans);//汉化
               if (!this.getInput('input1')) {
                 this.appendValueInput('input1')
                   .setCheck('Number')
-                  .appendField('  ');
               }
             } else {
               if (!this.getInput('input2')) {
@@ -467,7 +478,7 @@ Blockly.setLocale(hans);//汉化
         }
   
       }
-      javascript.javascriptGenerator.forBlock['random'] = function (block,) {
+      javascript.javascriptGenerator.forBlock['random'] = function (block,) {1
         var number_digit = block.getFieldValue('digit1');
         var number_name = block.getFieldValue('digit2');
         // TODO: Assemble javascript into code variable.

@@ -21,7 +21,7 @@ Blockly.setLocale(hans);//汉化
                   }
                 ],
                 "output": "Number",
-                "colour": 160,
+                "colour": 230,
                 "tooltip": "求长度",
               });
             }
@@ -144,7 +144,7 @@ Blockly.setLocale(hans);//汉化
           ],
           "inputsInline": true,
           "output": "String",
-          "colour": 195,
+          "colour": 230,
           "tooltip": "",
           "helpUrl": ""
         }
