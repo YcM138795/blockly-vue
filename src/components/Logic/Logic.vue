@@ -47,6 +47,10 @@ export default {
               },
               {
                 "kind": "block",
+                "type": "single_compare"
+              },
+              {
+                "kind": "block",
                 "type": "and_or",
               },
 

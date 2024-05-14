@@ -23,13 +23,18 @@
             <span>通过拖动积木并拼装可以实现在线的代码生成,<br>得到符合你逻辑的代码:</span>
             <br><br><br>
             <span>例1:通过三重判断验证3与2的关系,输出较大的数<br></span>
-            <button>例1</button>
+            <button @click="exampleOne">例1</button>
+            <img   class="exampleOne" :style="{ display: oneShow ? 'block' : 'none' }" src="../assets/img/exampleOne.png" alt="">
             <br><br><br><br><br><br>
-            <span>例2:通过三重判断验证3与2的关系,输出较大的数<br></span>
-            <button>例2</button>
+
+            <span>例2:筛选出长度大于4的字符串,并将其输出同等的次数<br></span>
+            <button @click="exampleTwo">例2</button>
+            <img class="exampleTwo" :style="{ display: twoShow ? 'block' : 'none' }" src="../assets/img/exampleTwo.png" alt="">
             <br><br><br><br><br><br>
-            <span>例3:通过三重判断验证3与2的关系,输出较大的数<br></span>
-            <button>例3</button>
+
+            <span>例3:指定循环次数与灯亮灭时间,循环灯亮与灯灭并最终灭灯<br></span>
+            <button @click="exampleThree">例3</button>
+            <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }" src="../assets/img/exampleThree.png" alt="">
         </div>
     </div>
 
@@ -41,6 +46,9 @@ export default {
     data() {
         return {
             tipShow: false,
+            oneShow:false,
+            twoShow:false,
+            threeShow:false,
         }
     },
     methods: {
@@ -74,6 +82,15 @@ export default {
                     message: '已取消清空'
                 });
             });
+        },
+        exampleOne(){
+            this.oneShow = !this.oneShow
+        },
+        exampleTwo(){
+            this.twoShow = !this.twoShow
+        },
+        exampleThree(){
+            this.threeShow = !this.threeShow
         }
     }
 }
@@ -165,16 +182,12 @@ export default {
 }
 
 
-/* 右侧保存按钮样式 */
-.right .saveButton {
-    margin: 0 50px;
-    background-color: rgb(188, 28, 42);
-    /* background-color: rgb(185, 240, 222); */
+/* 右侧按钮样式 */
+.right Button {
     height: 60px;
     width: 60px;
     border: none;
     border-radius: 50%;
-    background-image: url('../assets/SVG/save.svg');
     background-repeat: no-repeat;
     background-size: contain;
     /* 图片大小适应按钮 */
@@ -182,79 +195,29 @@ export default {
     /* 图片居中 */
     cursor: pointer;
     transition: background-color 0.5s;
-    /* 添加过渡效果 */
 }
 
-.right .saveButton:hover {
-    /* background-color: #4cb5ea; 鼠标悬停时改变背景色 */
-    transform: scale(1.05);
-    /* 微微放大 */
-    filter: brightness(110%);
-    /* 背景颜色稍稍变深 */
+/* 右侧保存按钮 */
+.right .saveButton {
+    margin: 0 50px;
+    background-image: url('../assets/SVG/save.svg');
 }
 
-.right .saveButton:active {
-    transform: translateY(1px);
-    /* 按下按钮时向下移动 1px */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    /* 添加阴影效果 */
-}
-
-
-/* 右侧提示按钮样式 */
+/* 右侧提示按钮 */
 .right .tipButton {
     margin-right: 50px;
     background-color: rgb(185, 240, 222);
-    height: 60px;
-    width: 60px;
-    border: none;
-    border-radius: 50%;
     background-image: url('../assets/SVG/灯泡.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    /* 图片大小适应按钮 */
-    background-position: center;
-    /* 图片居中 */
-    cursor: pointer;
-    transition: background-color 0.5s;
 }
 
-.right .tipButton:hover {
-    /* background-color: #4cb5ea; 鼠标悬停时改变背景色 */
-    transform: scale(1.05);
-    /* 微微放大 */
-    filter: brightness(110%);
-    /* 背景颜色稍稍变深 */
-}
-
-.right .tipButton:active {
-    transform: translateY(1px);
-    /* 按下按钮时向下移动 1px */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    /* 添加阴影效果 */
-}
-
-
-/* 右侧清空按钮样式 */
+/* 右侧清空按钮 */
 .right .clearButton {
     margin-right: 5px;
-    background-color: rgb(185, 240, 222);
-    height: 60px;
-    width: 60px;
-    border: none;
-    border-radius: 50%;
     background-image: url('../assets/SVG/delete.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    /* 图片大小适应按钮 */
-    background-position: center;
-    /* 图片居中 */
-    cursor: pointer;
-    transition: background-color 0.5s;
-    /* 添加过渡效果 */
 }
 
-.right .clearButton:hover {
+/* 右侧按钮悬浮样式 */ 
+.right Button:hover {
     /* background-color: #4cb5ea; 鼠标悬停时改变背景色 */
     transform: scale(1.05);
     /* 微微放大 */
@@ -262,7 +225,8 @@ export default {
     /* 背景颜色稍稍变深 */
 }
 
-.right .clearButton:active {
+/* 右侧按钮激活样式 */ 
+.right Button:active {
     transform: translateY(1px);
     /* 按下按钮时向下移动 1px */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -271,15 +235,15 @@ export default {
 
 /* 提示 */
 .tip {
+    overflow: scroll;
     position: absolute;
     right: 0px;
     height: calc(100vh - 60px);
     width: 30%;
     border-radius: 30px;
     background-color: rgb(233, 241, 252);
+    transition:all 1s;
 }
-
-
 
  .tip Button {
     position: absolute;
@@ -308,4 +272,26 @@ export default {
     transform: translateY(1px);
 }
 
+
+.tip img{
+    margin-top: 60px ;
+}
+.exampleOne{
+    margin-left: 100px ;
+    height: 316px;
+    width: 264.72px;
+    
+}
+.exampleTwo{
+    /* margin-left: 50px; */
+    margin-left: 85px;
+    width: 347px;
+    height: 266px;
+}
+.exampleThree{
+    /* margin-left: 50px; */
+    margin-left: 80px;
+    width: 347px;
+    height: 266px;
+}
 </style>

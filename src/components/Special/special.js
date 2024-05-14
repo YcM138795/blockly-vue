@@ -32,7 +32,39 @@ Blockly.setLocale(hans);//汉化
       };
      
     }
-  
+    
+    //string:字符串
+    {
+      Blockly.Blocks['string'] = {
+        init:function(){
+          this.jsonInit({
+            "type": "string",
+            "message0": "\" %1 \"",
+            "args0": [
+              {
+                "type": "field_input",
+                "name": "value",
+                "text": " "
+              }
+            ],
+            "inputsInline": true,
+            "output": "String",
+            "colour": 180,
+            "tooltip": "字符串",
+            "helpUrl": ""
+          })
+        }
+      }
+      javascript.javascriptGenerator.forBlock['string'] = function(block) {
+        var text_value = block.getFieldValue('value');
+        // TODO: Assemble javascript into code variable.
+        var code = `"${text_value}"`;
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.MEMBER];
+      };
+      
+    }
+
     // barcket:括号
     {
       Blockly.Blocks['bracket'] = {
@@ -100,9 +132,7 @@ Blockly.setLocale(hans);//汉化
         return code;
       };
     }
-  
-   
-  
+
     //open_led:亮灯
     {
       Blockly.Blocks['open_led'] = {
@@ -138,6 +168,7 @@ Blockly.setLocale(hans);//汉化
         return code;
       };
     }
+
     //close_led:灭灯
     {
       Blockly.Blocks['close_led'] = {
@@ -176,5 +207,5 @@ Blockly.setLocale(hans);//汉化
         return code;
       };
     }
-  }
+}
 

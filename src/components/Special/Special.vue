@@ -31,6 +31,11 @@ export default {
               {
                 kind: "block",
 
+                type: "string"
+              },
+              {
+                kind: "block",
+
                 type: "fill"
               },
               {

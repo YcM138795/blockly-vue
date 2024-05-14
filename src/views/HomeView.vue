@@ -1,7 +1,11 @@
 <template>
   <div>
     <div style="width: 100%; height: 60px">
-      <TopNav @save="saveWorkspace" @clear="clearScreen" @tipShowUpdate="codeShowChange" ></TopNav>
+      <TopNav 
+      @save="saveWorkspace" 
+      @clear="clearScreen"
+       @tipShowUpdate="codeShowChange" 
+       ></TopNav>
     </div>
     <div id="blockly">
       <!-- 工作区 -->
@@ -264,7 +268,8 @@ export default {
     },
     methodBox(methodBox) {
       this.methodToolbox = methodBox
-    }
+    },
+    
   }
 };
 </script>

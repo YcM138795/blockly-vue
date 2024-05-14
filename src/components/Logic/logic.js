@@ -111,6 +111,73 @@ import "./if"
 };
 }
 
+//single_compare:单比较
+{
+  Blockly.Blocks['single_compare'] = {
+    init:function(){
+      this.jsonInit({
+        "type": "single_compare",
+        "message0": "%1 %2 %3 %4",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "digit1",
+            "check": "Number"
+          },
+          {
+            "type": "field_dropdown",
+            "name": "operation",
+            "options": [
+              [
+                ">",
+                ">"
+              ],
+              [
+                ">=",
+                ">="
+              ],
+              [
+                "<",
+                "<"
+              ],
+              [
+                "<=",
+                "<="
+              ],
+              [
+                "=",
+                "=="
+              ]
+            ]
+          },
+          {
+            "type": "input_dummy"
+          },
+          {
+            "type": "field_number",
+            "name": "digit2",
+            "value": 0
+          }
+        ],
+        "inputsInline": true,
+        "output": "Boolean",
+        "colour": 210,
+        "tooltip": "单判断",
+        "helpUrl": ""
+      })
+    }
+  }
+  javascript.javascriptGenerator.forBlock['single_compare'] = function(block, generator) {
+    var value_digit1 = generator.valueToCode(block, 'digit1', javascript.Order.ATOMIC);
+    var dropdown_operation = block.getFieldValue('operation');
+    var number_digit2 = block.getFieldValue('digit2');
+    // TODO: Assemble javascript into code variable.
+    var code = value_digit1+dropdown_operation+number_digit2;
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
+}
+
 //if_judge:if单判断
 {
   Blockly.Blocks['if_judge'] = {

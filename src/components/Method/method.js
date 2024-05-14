@@ -60,7 +60,8 @@ Blockly.setLocale(hans);//汉化
     javascript.javascriptGenerator.forBlock['string_length'] = function (block, generator) {
       // String or array length.
       var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
-      return [argument0 + '.length' + '  js', Order.MEMBER];
+      var code = `(${argument0}.length)`;
+      return [ code , Order.MEMBER];
     };
   }
 
