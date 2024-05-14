@@ -3,7 +3,7 @@
     <router-view/>
   </div>
 </template>
-
+<script type="text/javascript" src="https://unpkg.com/default-passive-events"></script>
 <script>
 
 </script>

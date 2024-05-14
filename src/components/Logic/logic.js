@@ -58,7 +58,7 @@ import "./if"
             "type": "field_number",
             "name": "digit1",
             "value": 0,
-            "precision": 3
+            "precision": 0
           },
           {
             "type": "field_dropdown",
@@ -90,7 +90,7 @@ import "./if"
             "type": "field_number",
             "name": "digit2",
             "value": 0,
-            "precision": 3
+            "precision": 0
           }
         ],
         "output": "Boolean",

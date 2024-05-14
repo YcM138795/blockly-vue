@@ -38,7 +38,6 @@ Blockly.setLocale(hans);//汉化
         var number_digit = block.getFieldValue('digit');
         // TODO: Assemble javascript into code variable.
         var code = number_digit;
-        console.log(Blockly.basic);
         // Blockly.basic.showString("Hello!")
         // TODO: Change ORDER_NONE to the correct strength. 
         return [code, Order.MEMBER];

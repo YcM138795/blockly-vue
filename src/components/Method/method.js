@@ -8,30 +8,60 @@ Blockly.setLocale(hans);//汉化
 
 //功能
 {
-    //string_length:求长度
-{
-        Blockly.Blocks['string_length'] = {
-            init: function() {
-              this.jsonInit({
-                "message0": 'length of %1',
-                "args0": [
-                  {
-                    "type": "input_value",
-                    "name": "VALUE",
-                  }
-                ],
-                "output": "Number",
-                "colour": 230,
-                "tooltip": "求长度",
-              });
+  //printf:输出
+  {
+    Blockly.Blocks['printf'] = {
+      init:function(){
+        this.jsonInit({
+          "type": "printf",
+          "message0": "输出 %1",
+          "args0": [
+            {
+              "type": "input_value",
+              "name": "value"
             }
-          }
+          ],
+          "inputsInline": true,
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 230,
+          "tooltip": "输出函数",
+          "helpUrl": ""
+        })
+      }
+    }
+    javascript.javascriptGenerator.forBlock['printf'] = function(block, generator) {
+      var value_value = generator.valueToCode(block, 'value', Order.NONE);
+      var code = `printf(${value_value})`;
+      return code;
+    };
+  }
 
-          javascript.javascriptGenerator.forBlock['string_length'] = function(block, generator) {
-    // String or array length.
-    var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
-    return [argument0 + '.length'+'  js', Order.MEMBER];
-  };
+
+  //string_length:求长度
+  {
+    Blockly.Blocks['string_length'] = {
+      init: function () {
+        this.jsonInit({
+          "message0": 'length of %1',
+          "args0": [
+            {
+              "type": "input_value",
+              "name": "VALUE",
+            }
+          ],
+          "output": "Number",
+          "colour": 230,
+          "tooltip": "求长度",
+        });
+      }
+    }
+
+    javascript.javascriptGenerator.forBlock['string_length'] = function (block, generator) {
+      // String or array length.
+      var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
+      return [argument0 + '.length' + '  js', Order.MEMBER];
+    };
   }
 
   //open_led:亮灯
@@ -124,12 +154,12 @@ Blockly.setLocale(hans);//汉化
                 [
                   "lrft",
                   "左边",
-  
+
                 ],
                 [
                   "right",
                   "右边",
-  
+
                 ]
               ]
             },
@@ -160,11 +190,11 @@ Blockly.setLocale(hans);//汉化
       direction(dropdown___, angle___);
       return ''
     };
-    
+
   }
-  
+
 
 }
 function direction(direction, angle) {
-    console.log(`向${direction}转了${angle}度`);
-  }
+  console.log(`向${direction}转了${angle}度`);
+}

@@ -25,6 +25,10 @@ export default {
             "contents": [
               {
                 kind: "block",
+                type: "printf"
+              },
+              {
+                kind: "block",
                 type: "string_length"
               },
               {
