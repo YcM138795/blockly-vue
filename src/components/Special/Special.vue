@@ -26,7 +26,12 @@ export default {
               {
                 kind: "block",
 
-                type: "when_start"
+                type: "test"
+              },
+              {
+                kind: "block",
+
+                type: "test2"
               },
               {
                 kind: "block",
@@ -36,13 +41,15 @@ export default {
               {
                 kind: "block",
 
+                type: "number_variable"
+              },
+              {
+                kind: "block",
+
                 type: "fill"
               },
               {
                 kind: "block",
-                'icons': {
-                  // 'my_icon': 'my_icon',  // 图标状态配置
-                },
                 type: "bracket"
               },
             ]

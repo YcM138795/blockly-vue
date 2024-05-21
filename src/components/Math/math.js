@@ -452,38 +452,47 @@ Blockly.setLocale(hans);//汉化
     {
       Blockly.Blocks['random'] = {
         init: function () {
-          this.jsonInit(
-            {
-              "type": "random",
-              "message0": "随机数：从 %1 到 %2",
-              "args0": [
-                {
-                  "type": "field_number",
-                  "name": "digit1",
-                  "value": 0
-                },
-                {
-                  "type": "field_number",
-                  "name": "digit2",
-                  "value": 1
-                }
-              ],
-              "inputsInline": true,
-              "output": "Number",
-              "colour": 150,
-              icon: "./pilcrow.png",
-            }
-          )
+          this.jsonInit({
+            "type": "random",
+            "message0": "定义 %1 为 %2 随机数从 %3 到 %4",
+            "args0": [
+              {
+                "type": "field_input",
+                "name": "variable",
+                "text": "b"
+              },
+              {
+                "type": "input_dummy"
+              },
+              {
+                "type": "field_number",
+                "name": "digit1",
+                "value": 0
+              },
+              {
+                "type": "field_number",
+                "name": "digit2",
+                "value": 1
+              }
+            ],
+            "inputsInline": true,
+            "previousStatement": null,
+            "nextStatement": null,
+            "colour": 150,
+            "tooltip": "定义一个随机数",
+            "helpUrl": ""
+          })
         }
   
       }
-      javascript.javascriptGenerator.forBlock['random'] = function (block,) {1
-        var number_digit = block.getFieldValue('digit1');
-        var number_name = block.getFieldValue('digit2');
+      javascript.javascriptGenerator.forBlock['random'] = function(block) {
+        var text_variable = block.getFieldValue('variable');
+        var number_digit1 = block.getFieldValue('digit1');
+        var number_digit2 = block.getFieldValue('digit2');
+        const number = number_digit2-number_digit1+1;
         // TODO: Assemble javascript into code variable.
-        var code = `Math.floor(Math.random() * (${number_name} - ${number_digit} + 1)) + ${number_digit}`;
-        // TODO: Change ORDER_NONE to the correct strength.
-        return [code, Order.MEMBER];
+        var code = 'srand(time(NULL));\nint '+text_variable+'=rand()%'+number+'+'+number_digit1+';\n';
+        return code;
       };
     
     }

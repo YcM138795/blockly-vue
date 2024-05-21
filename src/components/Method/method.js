@@ -8,13 +8,13 @@ Blockly.setLocale(hans);//汉化
 
 //功能
 {
-  //printf:输出
+  //string_printf:输出
   {
-    Blockly.Blocks['printf'] = {
-      init:function(){
+    Blockly.Blocks['string_printf'] = {
+      init: function () {
         this.jsonInit({
           "type": "printf",
-          "message0": "输出 %1",
+          "message0": "字符输出 %1",
           "args0": [
             {
               "type": "input_value",
@@ -25,14 +25,44 @@ Blockly.setLocale(hans);//汉化
           "previousStatement": null,
           "nextStatement": null,
           "colour": 230,
-          "tooltip": "输出函数",
+          "tooltip": "字符输出函数",
           "helpUrl": ""
         })
       }
     }
-    javascript.javascriptGenerator.forBlock['printf'] = function(block, generator) {
+    javascript.javascriptGenerator.forBlock['string_printf'] = function (block, generator) {
       var value_value = generator.valueToCode(block, 'value', Order.NONE);
-      var code = `printf(${value_value})`;
+      var code = '';
+        code = `printf("${value_value}");\n`;
+      return code;
+    };
+  }
+  //number_printf:输出
+  {
+    Blockly.Blocks['number_printf'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "printf",
+          "message0": "数字输出 %1",
+          "args0": [
+            {
+              "type": "input_value",
+              "name": "value"
+            }
+          ],
+          "inputsInline": true,
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 230,
+          "tooltip": "数字输出函数",
+          "helpUrl": ""
+        })
+      }
+    }
+    javascript.javascriptGenerator.forBlock['number_printf'] = function (block, generator) {
+      var value_value = generator.valueToCode(block, 'value', Order.NONE);
+      var code = '';
+      code = `printf("%d",${value_value});\n`;
       return code;
     };
   }
@@ -60,8 +90,8 @@ Blockly.setLocale(hans);//汉化
     javascript.javascriptGenerator.forBlock['string_length'] = function (block, generator) {
       // String or array length.
       var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
-      var code = `(${argument0}.length)`;
-      return [ code , Order.MEMBER];
+      var code = `strlen("${argument0}")`;
+      return [code, Order.MEMBER];
     };
   }
 

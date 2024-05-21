@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div ref="container" style="width: 100%; height: 100%;">
     <div style="width: 100%; height: 60px">
       <TopNav 
       @save="saveWorkspace" 
       @clear="clearScreen"
        @tipShowUpdate="codeShowChange" 
+       :code="code"
        ></TopNav>
     </div>
     <div id="blockly">
@@ -12,7 +13,6 @@
       <!-- <div class="code-wrap"> -->
       <div class="code-wrap">
         <div id="blocklyDiv" ref="blocklyDiv" style=" height: calc(100vh - 60px); width: 70%"></div>
-        <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <MethodBlock @methodBox="methodBox"></MethodBlock>
@@ -30,8 +30,8 @@ import { javascriptGenerator } from "blockly/javascript";
 import TopNav from '../components/TopNav.vue'
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
-import SpecialBlock from '../components/Special/Special.vue'
 import MethodBlock from '../components/Method/Method.vue'
+import '../components/Special/special'
 
 import * as monaco from 'monaco-editor';
 
@@ -42,7 +42,6 @@ export default {
   data() {
     return {
       codeShow:true,
-      specialToolbox: null,
       methodToolbox: null,
       logicToolbox: null,
       mathToolbox: null,
@@ -50,51 +49,44 @@ export default {
       horizontalLayout: true, //工具箱水平
       toolboxPosition: "end", //工具箱在底部
       toolbox: {
-        kind: "categoryToolbox",
         contents: [
           {
             "kind": "category",
-            "name": "内置",
+            "name": "特殊",
+            "categoryStyle": "special_category",
+            "cssConfig": {
+              "container": "special",
+              "icon": "specialIcon",
+            },
             "contents": [
-              // {
-              //   "kind": "block",
-              //   "type": "kitronik_neopixel_set_color"
-              // },
               {
-                "kind": "block",
-                "type": "logic_operation"
+                kind: "block",
+
+                type: "test"
               },
               {
-                "kind": "block",
-                "type": "controls_if"
+                kind: "block",
+
+                type: "test2"
               },
               {
-                "kind": "block",
-                "type": "controls_ifelse"
+                kind: "block",
+
+                type: "string"
               },
               {
-                "kind": "block",
-                "type": "controls_repeat_ext"
+                kind: "block",
+
+                type: "number_variable"
               },
               {
-                "kind": "block",
-                "type": "logic_compare"
+                kind: "block",
+
+                type: "fill"
               },
               {
-                "kind": "block",
-                "type": "math_number"
-              },
-              {
-                "kind": "block",
-                "type": "math_arithmetic"
-              },
-              {
-                "kind": "block",
-                "type": "text"
-              },
-              {
-                "kind": "block",
-                "type": "text_print"
+                kind: "block",
+                type: "bracket"
               },
             ]
           },
@@ -108,12 +100,10 @@ export default {
   components: {
     LogicBlock,
     MathBlock,
-    SpecialBlock,
     MethodBlock,
     TopNav
   },
   mounted() {
-
     // 自定义主题
     const customTheme = Blockly.Theme.defineTheme('customTheme', {
       base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
@@ -149,6 +139,14 @@ export default {
     //加载工作区
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
       toolbox: this.toolbox,
+      zoom:
+         {controls: true,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2},
+    //  trashcan: true,
       grid:
       {
         spacing: 40,
@@ -161,6 +159,12 @@ export default {
       //渲染方式
       renderer: 'Zelos',
     });
+    
+    this.addInt_Main();
+
+
+    // 监听工作区变化事件
+    this.workspace.addChangeListener(this.workspaceChangeListener);
     this.workspace.addChangeListener(() => {
       const JSCode = javascriptGenerator.workspaceToCode(this.workspace);
       this.code = JSCode;
@@ -201,22 +205,84 @@ export default {
       disableLayerHinting: true, // 等宽优化
       emptySelectionClipboard: false, // 空选择剪切板
       selectionClipboard: false, // 选择剪切板
-      automaticLayout: true, // 自动布局
-      codeLens: false, // 代码镜头
+      automaticLayout: false, // 自动布局
+      codeLens: true, // 代码镜头
       scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
       colorDecorators: true, // 颜色装饰器
       accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
       lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
-      lineNumbersMinChars: 5, // 行号最小字符   number
+      lineNumbersMinChars: 1, // 行号最小字符   number
       enableSplitViewResizing: false,
       readOnly: false, //是否只读  取值 true | false
+      minimap: {
+    enabled: true // 启用迷你地图
+  }
     });
 
     // Toolbox添加
     this.addToolbox();
+
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleWindowResize);
   },
 
   methods: {
+    addInt_Main(){
+          // 添加int_main块加到工作区
+    const entryBlock = this.workspace.newBlock('int_main');
+    entryBlock.initSvg();
+    entryBlock.render();
+
+    // 设置入口块的位置
+    entryBlock.moveBy(50, 50);
+    },
+    workspaceChangeListener() {
+      const allBlocks = this.workspace.getAllBlocks();
+      if (allBlocks.length === 0) {
+        this.addInt_Main();
+      }
+      if (allBlocks.length !== 0) {
+        const entryBlocks = allBlocks.filter(block => block.type === 'int_main');
+
+        // 保证只有一个入口块
+        if (entryBlocks.length > 1) {
+            for (let i = 1; i < entryBlocks.length; i++) {
+                entryBlocks[i].dispose();
+            }
+        }
+
+        const entryBlock = entryBlocks[0];
+        const connectedBlocks = this.getAllConnectedBlocks(entryBlock);
+
+        allBlocks.forEach(block => {
+            if (block.type !== 'int_main' && !connectedBlocks.includes(block)) {
+              block.setEnabled(false);
+            } else {
+              block.setEnabled(true);
+            }
+        });
+      }
+        
+    },
+    getAllConnectedBlocks(block) {
+        const connectedBlocks = [];
+        let currentBlock = block.getNextBlock();
+
+        while (currentBlock) {
+            connectedBlocks.push(currentBlock);
+            connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
+            currentBlock = currentBlock.getNextBlock();
+        }
+
+        block.getChildren().forEach(childBlock => {
+            connectedBlocks.push(childBlock);
+            connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
+        });
+
+        return connectedBlocks;
+    },
+
     //添加合并工作箱
     addToolbox() {
       // 合并子组件的工具箱与主组件的工具箱
@@ -228,7 +294,6 @@ export default {
           // 子组件的工具箱内容
           ...this.logicToolbox.contents,
           ...this.mathToolbox.contents,
-          ...this.specialToolbox.contents,
           ...this.methodToolbox.contents,
         ]
       };
@@ -263,18 +328,24 @@ export default {
     mathBox(mathBox) {
       this.mathToolbox = mathBox
     },
-    specialBox(specialBox) {
-      this.specialToolbox = specialBox
-    },
     methodBox(methodBox) {
       this.methodToolbox = methodBox
     },
-    
-  }
+  },
+
 };
 </script>
 
 <style>
+html {
+  touch-action: manipulation; /* 禁止双击放大 */
+  -ms-text-size-adjust: 100%; /* IE10 以下禁止用户调整文本大小 */
+  -moz-text-size-adjust: 100%; /* 火狐浏览器禁止用户调整文本大小 */
+  -webkit-text-size-adjust: 100%; /* Safari 和 Chrome 禁止用户调整文本大小 */
+  zoom: 1; /* 禁止用户缩放 */
+}
+
+
 body {
   margin: 0;
 }
@@ -292,6 +363,7 @@ body {
 
 /* 左侧toolbox */
 .blocklyToolboxDiv {
+  padding-top: 170px;
   background-color: rgb(218, 227, 234);
   background-image: url('../assets//SVG/积木.svg');
   background-size: 180px auto;
@@ -300,16 +372,10 @@ body {
 }
 
 
-/* 内置区Toolbox */
-.blocklyToolboxCategory {
-  padding-top: 100px;
-  width: 170px;
-  height: auto;
-}
-
 
 /* Toolbox下属分支设置 */
 .blocklyTreeRow {
+  width: 170px;
   height: 40px;
   border-radius: 13px;
   margin-bottom: 45px;
@@ -319,6 +385,7 @@ body {
 
 /* 代码编辑器的背景控制 */
 .monaco-editor .view-lines {
+  text-align: left !important;
   /* background-color:#00bfff; */
   background-color: rgb(233, 241, 252);
   /* background-image: url('../assets//SVG/积木logo (1).svg'); */
@@ -342,6 +409,16 @@ body {
   border: 10px solid #E9F1FC;
   border-radius: 30px;
   flex: 1;
+}
+.special {
+  color: #5BA5A5;
+  font-size: 60px;
+
+}
+
+.specialIcon {
+  content: url(../assets/SVG/加号.svg);
+  height: 32px;
 }
 
 </style>

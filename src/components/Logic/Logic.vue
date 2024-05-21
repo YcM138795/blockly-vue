@@ -8,7 +8,6 @@
 
 // import * as monaco from "monaco-editor";
 import "./logic";
-import "./list_create";
 import "./if"
 
 export default {

@@ -37,15 +37,7 @@
               },
               {
                 kind: "block",
-                type: "operation",
-              },
-              {
-                kind: "block",
                 type: "remainder",
-              },
-              {
-                kind: "block",
-                type: "big_small",
               },
               {
                 kind: "block",
@@ -54,6 +46,14 @@
               {
                 kind: "block",
                 type: "random",
+              },
+              {
+                kind: "block",
+                type: "operation",
+              },
+              {
+                kind: "block",
+                type: "big_small",
               },
             ]
           },

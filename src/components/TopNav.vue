@@ -24,17 +24,20 @@
             <br><br><br>
             <span>例1:通过三重判断验证3与2的关系,输出较大的数<br></span>
             <button @click="exampleOne">例1</button>
-            <img   class="exampleOne" :style="{ display: oneShow ? 'block' : 'none' }" src="../assets/img/exampleOne.png" alt="">
+            <img class="exampleOne" :style="{ display: oneShow ? 'block' : 'none' }" src="../assets/img/exampleOne.png"
+                alt="">
             <br><br><br><br><br><br>
 
             <span>例2:筛选出长度大于4的字符串,并将其输出同等的次数<br></span>
             <button @click="exampleTwo">例2</button>
-            <img class="exampleTwo" :style="{ display: twoShow ? 'block' : 'none' }" src="../assets/img/exampleTwo.png" alt="">
+            <img class="exampleTwo" :style="{ display: twoShow ? 'block' : 'none' }" src="../assets/img/exampleTwo.png"
+                alt="">
             <br><br><br><br><br><br>
 
             <span>例3:指定循环次数与灯亮灭时间,循环灯亮与灯灭并最终灭灯<br></span>
             <button @click="exampleThree">例3</button>
-            <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }" src="../assets/img/exampleThree.png" alt="">
+            <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }"
+                src="../assets/img/exampleThree.png" alt="">
         </div>
     </div>
 
@@ -43,25 +46,45 @@
 <script>
 export default {
     name: 'TopNav',
+
     data() {
+
         return {
             tipShow: false,
-            oneShow:false,
-            twoShow:false,
-            threeShow:false,
+            oneShow: false,
+            twoShow: false,
+            threeShow: false,
+        }
+    },
+    props: {
+        code: {
+            type: String, // 声明code为字符串类型的prop
+            required: true // 如果必须传递code，将required设置为true
         }
     },
     methods: {
+        //返回
         returnAction() {
             alert('返回')
         },
+        //保存
         saveAction() {
             this.$emit('save');
+            const h = this.$createElement;
+            this.$notify({
+                title: '',
+                message: h('i', { style: 'color: teal' }, '积木保存成功'),
+                duration: 700,
+                type: 'success',
+                offset: 50
+            });
         },
+        //提示
         tipAction() {
             this.tipShow = !this.tipShow
             this.$emit('tipShowUpdate', this.tipShow);
         },
+       
         clear() {
             this.$emit('clear');
         },
@@ -83,15 +106,20 @@ export default {
                 });
             });
         },
-        exampleOne(){
+        exampleOne() {
             this.oneShow = !this.oneShow
         },
-        exampleTwo(){
+        exampleTwo() {
             this.twoShow = !this.twoShow
         },
-        exampleThree(){
+        exampleThree() {
             this.threeShow = !this.threeShow
-        }
+        },
+
+
+
+
+
     }
 }
 </script>
@@ -203,6 +231,7 @@ export default {
     background-image: url('../assets/SVG/save.svg');
 }
 
+
 /* 右侧提示按钮 */
 .right .tipButton {
     margin-right: 50px;
@@ -216,7 +245,7 @@ export default {
     background-image: url('../assets/SVG/delete.svg');
 }
 
-/* 右侧按钮悬浮样式 */ 
+/* 右侧按钮悬浮样式 */
 .right Button:hover {
     /* background-color: #4cb5ea; 鼠标悬停时改变背景色 */
     transform: scale(1.05);
@@ -225,7 +254,7 @@ export default {
     /* 背景颜色稍稍变深 */
 }
 
-/* 右侧按钮激活样式 */ 
+/* 右侧按钮激活样式 */
 .right Button:active {
     transform: translateY(1px);
     /* 按下按钮时向下移动 1px */
@@ -242,10 +271,10 @@ export default {
     width: 30%;
     border-radius: 30px;
     background-color: rgb(233, 241, 252);
-    transition:all 1s;
+    /* transition:all 1s; */
 }
 
- .tip Button {
+.tip Button {
     position: absolute;
     left: 27%;
     background-color: rgb(233, 241, 252);
@@ -273,22 +302,25 @@ export default {
 }
 
 
-.tip img{
-    margin-top: 60px ;
+.tip img {
+    margin-top: 60px;
 }
-.exampleOne{
-    margin-left: 100px ;
+
+.exampleOne {
+    margin-left: 100px;
     height: 316px;
     width: 264.72px;
-    
+
 }
-.exampleTwo{
+
+.exampleTwo {
     /* margin-left: 50px; */
     margin-left: 85px;
     width: 347px;
     height: 266px;
 }
-.exampleThree{
+
+.exampleThree {
     /* margin-left: 50px; */
     margin-left: 80px;
     width: 347px;

@@ -38,7 +38,7 @@ import "./if"
     }
   }
   javascript.javascriptGenerator.forBlock['cycle'] = function (block, generator) {
-    var value_times = generator.valueToCode(block, 'times', javascript.Order.ATOMIC);
+    var value_times = generator.valueToCode(block, 'times', javascript.Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
     // TODO: Assemble javascript into code variable.
     var code = `for(int i=0;i<${value_times};i++){\n${statements_operate}}`;
