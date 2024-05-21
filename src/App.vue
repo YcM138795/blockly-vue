@@ -3,11 +3,10 @@
     <router-view/>
   </div>
 </template>
-
+<script type="text/javascript" src="https://unpkg.com/default-passive-events"></script>
 <script>
 
 </script>
-
 
 <style lang="less">
 
@@ -18,6 +17,7 @@
   text-align: center;
   color: #2c3e50;
 }
+
 
 nav {
   padding: 30px;
