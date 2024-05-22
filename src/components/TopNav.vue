@@ -11,6 +11,7 @@
             <div class="right">
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
+                <button class="dowmloadButton" title="提示" @click="dowmloadAction"></button>
                 <button class="clearButton" title="清空所有块" @click="clearAction"></button>
             </div>
 
@@ -44,6 +45,8 @@
 </template>
 
 <script>
+import {postData} from '../utils'
+
 export default {
     name: 'TopNav',
 
@@ -67,6 +70,7 @@ export default {
         returnAction() {
             alert('返回')
         },
+
         //保存
         saveAction() {
             this.$emit('save');
@@ -79,12 +83,19 @@ export default {
                 offset: 50
             });
         },
+
         //提示
         tipAction() {
             this.tipShow = !this.tipShow
             this.$emit('tipShowUpdate', this.tipShow);
         },
-       
+
+        //提示
+        dowmloadAction() {
+            postData(this.code)
+        },
+
+       //清除
         clear() {
             this.$emit('clear');
         },
@@ -106,6 +117,8 @@ export default {
                 });
             });
         },
+        
+        //提示案例
         exampleOne() {
             this.oneShow = !this.oneShow
         },
@@ -237,6 +250,13 @@ export default {
     margin-right: 50px;
     background-color: rgb(185, 240, 222);
     background-image: url('../assets/SVG/灯泡.svg');
+}
+
+/* 右侧提示按钮 */
+.right .dowmloadButton {
+    margin-right: 50px;
+    background-color: rgb(185, 240, 222);
+    background-image: url('../assets/SVG/云下载.svg');
 }
 
 /* 右侧清空按钮 */

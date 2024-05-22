@@ -12,12 +12,12 @@
       <!-- 工作区 -->
       <!-- <div class="code-wrap"> -->
       <div class="code-wrap">
-        <div id="blocklyDiv" ref="blocklyDiv" style=" height: calc(100vh - 60px); width: 70%"></div>
+        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" ></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <MethodBlock @methodBox="methodBox"></MethodBlock>
-        <div id="code" ref="codeView" :style="{display: codeShow? 'block' : 'none'}"></div>
 
+        <div id="code" ref="codeView" :style="{display: codeShow? 'block' : 'none'}"></div>
       </div>
     </div>
   </div>
@@ -363,7 +363,8 @@ body {
 
 /* 左侧toolbox */
 .blocklyToolboxDiv {
-  padding-top: 170px;
+  /* padding-top: 170px; */
+  padding-top: 15%;
   background-color: rgb(218, 227, 234);
   background-image: url('../assets//SVG/积木.svg');
   background-size: 180px auto;
@@ -375,8 +376,9 @@ body {
 
 /* Toolbox下属分支设置 */
 .blocklyTreeRow {
-  width: 170px;
-  height: 40px;
+  width: 9vw;
+  height: 4.5vh;
+  /* height: 40px; */
   border-radius: 13px;
   margin-bottom: 45px;
   padding: 5px;
