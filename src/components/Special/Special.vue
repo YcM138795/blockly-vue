@@ -26,16 +26,6 @@ export default {
               {
                 kind: "block",
 
-                type: "test"
-              },
-              {
-                kind: "block",
-
-                type: "test2"
-              },
-              {
-                kind: "block",
-
                 type: "string"
               },
               {
