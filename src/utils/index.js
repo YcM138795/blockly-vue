@@ -1,7 +1,7 @@
 
 import axios from 'axios'; // 确保正确导入 axios
 
-  // 下载文件并返回 Blob 对象
+// 下载文件并返回 Blob 对象
 async function downloadFile(url) {
     try {
         const response = await axios({
@@ -25,15 +25,17 @@ async function saveFileToUSB(blob, fileName) {
                 suggestedName: fileName,
                 types: [{
                     description: '选择要储存的位置',
-                    accept: {'application/octet-stream': ['.exe']},
+                    accept: { 'application/octet-stream': ['.exe'] },
                 }],
             });
             const writableStream = await fileHandle.createWritable();
             await writableStream.write(blob);
             await writableStream.close();
             console.log("文件已写入USB闪存盘");
+            return 1;
         } catch (error) {
             console.error("保存文件时出错:", error);
+            return -1;
         }
     } else {
         console.log("File System Access API不被支持");
@@ -48,15 +50,23 @@ async function postData(data) {
         });
 
         const fileUrl = response.data.msg;
-        // console.log('Download URL:', fileUrl);
+        console.log('Download URL:', fileUrl);
 
         const blob = await downloadFile(fileUrl);
-        // console.log('File downloaded successfully');
+        console.log('File downloaded successfully');
 
-        await saveFileToUSB(blob, 'downloaded_file.exe');
+        let saveState = await saveFileToUSB(blob, 'downloaded_file.exe');
+
+        if (saveState === 1) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+
     } catch (error) {
-        alert('aaa')
-        // console.error('Error in the main function:', error);
+        console.error('Error in the main function:', error);
+        return -1
     }
 }
 

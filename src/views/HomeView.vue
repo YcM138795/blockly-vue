@@ -1,23 +1,23 @@
 <template>
   <div ref="container" style="width: 100%; height: 100%;">
     <div style="width: 100%; height: 60px">
-      <TopNav 
-      @save="saveWorkspace" 
-      @clear="clearScreen"
-       @tipShowUpdate="codeShowChange" 
-       :code="code"
-       ></TopNav>
+      <TopNav @save="saveWorkspace" 
+      @clear="clearScreen" 
+      @viewShowUpdate="codeShowChange" 
+      :code="code" 
+      :ledArr="ledArr">
+      </TopNav>
     </div>
     <div id="blockly">
       <!-- 工作区 -->
       <!-- <div class="code-wrap"> -->
       <div class="code-wrap">
-        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" ></div>
+        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%"></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <MethodBlock @methodBox="methodBox"></MethodBlock>
 
-        <div id="code" ref="codeView" :style="{display: codeShow? 'block' : 'none'}"></div>
+        <div id="code" ref="codeView" :style="{ display: codeShow == 'code' ? 'block' : 'none' }"></div>
       </div>
     </div>
   </div>
@@ -41,7 +41,8 @@ export default {
   name: "CarGame",
   data() {
     return {
-      codeShow:true,
+      ledArr: [],
+      codeShow: 'code',
       methodToolbox: null,
       logicToolbox: null,
       mathToolbox: null,
@@ -59,16 +60,6 @@ export default {
               "icon": "specialIcon",
             },
             "contents": [
-              {
-                kind: "block",
-
-                type: "test"
-              },
-              {
-                kind: "block",
-
-                type: "test2"
-              },
               {
                 kind: "block",
 
@@ -140,13 +131,15 @@ export default {
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
       toolbox: this.toolbox,
       zoom:
-         {controls: true,
-          wheel: true,
-          startScale: 1.0,
-          maxScale: 3,
-          minScale: 0.3,
-          scaleSpeed: 1.2},
-    //  trashcan: true,
+      {
+        controls: true,
+        wheel: true,
+        startScale: 1.0,
+        maxScale: 3,
+        minScale: 0.3,
+        scaleSpeed: 1.2
+      },
+      //  trashcan: true,
       grid:
       {
         spacing: 40,
@@ -159,7 +152,7 @@ export default {
       //渲染方式
       renderer: 'Zelos',
     });
-    
+
     this.addInt_Main();
 
 
@@ -171,13 +164,13 @@ export default {
       this.codeViewIns.setValue(this.code);
     });
 
-     // 从本地浏览器中读取数据
-     const savedData = localStorage.getItem('workspaceData');
-      if (savedData) {
-        const state = JSON.parse(savedData);
-        //读取数据
-        Blockly.serialization.workspaces.load(state, this.workspace);
-      }
+    // 从本地浏览器中读取数据
+    const savedData = localStorage.getItem('workspaceData');
+    if (savedData) {
+      const state = JSON.parse(savedData);
+      //读取数据
+      Blockly.serialization.workspaces.load(state, this.workspace);
+    }
 
     // monaco.editor编译器自定义主题
     monaco.editor.defineTheme('my-custom-theme', {
@@ -215,8 +208,8 @@ export default {
       enableSplitViewResizing: false,
       readOnly: false, //是否只读  取值 true | false
       minimap: {
-    enabled: true // 启用迷你地图
-  }
+        enabled: true // 启用迷你地图
+      }
     });
 
     // Toolbox添加
@@ -228,14 +221,14 @@ export default {
   },
 
   methods: {
-    addInt_Main(){
-          // 添加int_main块加到工作区
-    const entryBlock = this.workspace.newBlock('int_main');
-    entryBlock.initSvg();
-    entryBlock.render();
+    addInt_Main() {
+      // 添加int_main块加到工作区
+      const entryBlock = this.workspace.newBlock('int_main');
+      entryBlock.initSvg();
+      entryBlock.render();
 
-    // 设置入口块的位置
-    entryBlock.moveBy(50, 50);
+      // 设置入口块的位置
+      entryBlock.moveBy(50, 50);
     },
     workspaceChangeListener() {
       const allBlocks = this.workspace.getAllBlocks();
@@ -247,40 +240,41 @@ export default {
 
         // 保证只有一个入口块
         if (entryBlocks.length > 1) {
-            for (let i = 1; i < entryBlocks.length; i++) {
-                entryBlocks[i].dispose();
-            }
+          for (let i = 1; i < entryBlocks.length; i++) {
+            entryBlocks[i].dispose();
+          }
         }
 
         const entryBlock = entryBlocks[0];
         const connectedBlocks = this.getAllConnectedBlocks(entryBlock);
 
+        //代码区的块的禁用
         allBlocks.forEach(block => {
-            if (block.type !== 'int_main' && !connectedBlocks.includes(block)) {
-              block.setEnabled(false);
-            } else {
-              block.setEnabled(true);
-            }
+          if (block.type !== 'int_main' && !connectedBlocks.includes(block)) {
+            block.setEnabled(false);
+          } else {
+            block.setEnabled(true);
+          }
         });
       }
-        
+
     },
     getAllConnectedBlocks(block) {
-        const connectedBlocks = [];
-        let currentBlock = block.getNextBlock();
+      const connectedBlocks = [];
+      let currentBlock = block.getNextBlock();
 
-        while (currentBlock) {
-            connectedBlocks.push(currentBlock);
-            connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
-            currentBlock = currentBlock.getNextBlock();
-        }
+      while (currentBlock) {
+        connectedBlocks.push(currentBlock);
+        connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
+        currentBlock = currentBlock.getNextBlock();
+      }
 
-        block.getChildren().forEach(childBlock => {
-            connectedBlocks.push(childBlock);
-            connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
-        });
+      block.getChildren().forEach(childBlock => {
+        connectedBlocks.push(childBlock);
+        connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
+      });
 
-        return connectedBlocks;
+      return connectedBlocks;
     },
 
     //添加合并工作箱
@@ -312,13 +306,45 @@ export default {
     },
 
     //清空所有块
-    clearScreen(){
+    clearScreen() {
       this.workspace.clear();
     },
 
     // 代码展示数据的改变
-    codeShowChange(tipShow){
-      this.codeShow = !tipShow
+    codeShowChange(viewShow) {
+      this.codeShow = viewShow
+      if (viewShow == 'run') {
+        this.arrAdd()
+      }
+
+    },
+
+    //收集亮灭的数组添加
+    arrAdd() {
+      //每一次调用将ledArr数组清空
+      this.ledArr = [];
+
+      //获取全部块
+      const allBlocks = this.workspace.getAllBlocks();
+      const entryBlocks = allBlocks.filter(block => block.type === 'int_main');
+      const entryBlock = entryBlocks[0];
+
+      //获取全部在主块内部的块
+      const connectedBlocks = this.getAllConnectedBlocks(entryBlock);
+
+      //筛选内部相关块中关于灯亮灭操作的块并添加数组数据
+      allBlocks.forEach(block => {
+        if (connectedBlocks.includes(block) && block.type == 'open_led') {
+          const fieldValue = block.getFieldValue('digital');
+          this.ledArr.push('open_led')
+          this.ledArr.push(`${fieldValue}`)
+        } else if (connectedBlocks.includes(block) && block.type == 'close_led') {
+          const fieldValue = block.getFieldValue('digital');
+          this.ledArr.push('close_led')
+          this.ledArr.push(`${fieldValue}`)
+        }
+      });
+
     },
 
     // 接收子组件传递的工具箱并存储
@@ -338,11 +364,16 @@ export default {
 
 <style>
 html {
-  touch-action: manipulation; /* 禁止双击放大 */
-  -ms-text-size-adjust: 100%; /* IE10 以下禁止用户调整文本大小 */
-  -moz-text-size-adjust: 100%; /* 火狐浏览器禁止用户调整文本大小 */
-  -webkit-text-size-adjust: 100%; /* Safari 和 Chrome 禁止用户调整文本大小 */
-  zoom: 1; /* 禁止用户缩放 */
+  touch-action: manipulation;
+  /* 禁止双击放大 */
+  -ms-text-size-adjust: 100%;
+  /* IE10 以下禁止用户调整文本大小 */
+  -moz-text-size-adjust: 100%;
+  /* 火狐浏览器禁止用户调整文本大小 */
+  -webkit-text-size-adjust: 100%;
+  /* Safari 和 Chrome 禁止用户调整文本大小 */
+  zoom: 1;
+  /* 禁止用户缩放 */
 }
 
 
@@ -407,11 +438,13 @@ body {
   width: 100%;
 
 }
+
 #code {
   border: 10px solid #E9F1FC;
   border-radius: 30px;
   flex: 1;
 }
+
 .special {
   color: #5BA5A5;
   font-size: 60px;
@@ -422,5 +455,4 @@ body {
   content: url(../assets/SVG/加号.svg);
   height: 32px;
 }
-
 </style>
