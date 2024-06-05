@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 // import 'default-passive-events'
-import { MessageBox, Message , Notification } from 'element-ui';
+import { MessageBox, Message , Notification } from 'element-ui';``
 import 'element-ui/lib/theme-chalk/index.css';
 // import './extensions/pxt-kitronik-motor-driver'
 

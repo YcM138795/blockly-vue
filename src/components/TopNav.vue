@@ -102,11 +102,7 @@ export default {
 
         //运行
         runAction() {
-            if (this.viewShow !== 'run') {
-                this.viewShow = 'run'
-            } else {
-                this.viewShow = 'code'
-            }
+            this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
             this.$emit('viewShowUpdate', this.viewShow);
             //确保this.ledShow();是在主组件ledArr数据修改后调用
             this.$nextTick(() => {
@@ -122,6 +118,7 @@ export default {
             }
             if (this.viewShow == 'run')
             console.log('开始亮灭灯操作');
+            console.log(this.ledArr);
             //提前保存this,确保executeAction函数内部this的报错
             const that = this
             //递归调用函数
@@ -149,11 +146,7 @@ export default {
 
         //提示
         tipAction() {
-            if (this.viewShow !== 'tip') {
-                this.viewShow = 'tip'
-            } else {
-                this.viewShow = 'code'
-            }
+            this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
             this.$emit('viewShowUpdate', this.viewShow);
         },
 

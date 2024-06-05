@@ -1,5 +1,8 @@
 import Blockly from 'blockly'
 import javascript from 'blockly/javascript';
+import dart from 'blockly/dart';
+
+
 import { Order } from 'blockly/javascript';
 
 import * as hans from 'blockly/msg/zh-hans'
@@ -42,6 +45,14 @@ Blockly.setLocale(hans);//汉化
         // TODO: Change ORDER_NONE to the correct strength. 
         return [code, Order.MEMBER];
       };
+      dart.dartGenerator.forBlock['number_single'] = function (block) {
+        var number_digit = block.getFieldValue('digit');
+        // TODO: Assemble javascript into code variable.
+        var code = number_digit;
+        // Blockly.basic.showString("Hello!")
+        // TODO: Change ORDER_NONE to the correct strength. 
+        return [code, Order.MEMBER];
+      };
       
     }
   
@@ -73,6 +84,14 @@ Blockly.setLocale(hans);//汉化
       javascript.javascriptGenerator.forBlock['number_double'] = function (block, generator) {
         var number_digit = block.getFieldValue('digit');
         var value_operate = generator.valueToCode(block, 'operate', javascript.Order.NONE);
+        // TODO: Assemble javascript into code variable.
+        var code = number_digit + value_operate;
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.MEMBER];
+      };
+      dart.dartGenerator.forBlock['number_double'] = function (block, generator) {
+        var number_digit = block.getFieldValue('digit');
+        var value_operate = generator.valueToCode(block, 'operate', dart.Order.NONE);
         // TODO: Assemble javascript into code variable.
         var code = number_digit + value_operate;
         // TODO: Change ORDER_NONE to the correct strength.
@@ -133,6 +152,14 @@ Blockly.setLocale(hans);//汉化
       javascript.javascriptGenerator.forBlock['single_operation'] = function (block, generator) {
         var dropdown_maths = block.getFieldValue('maths');
         var value_operate = generator.valueToCode(block, 'operate', javascript.Order.ATOMIC);
+        // TODO: Assemble javascript into code variable.
+        var code = dropdown_maths + value_operate;
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.MEMBER];
+      };
+      dart.dartGenerator.forBlock['single_operation'] = function (block, generator) {
+        var dropdown_maths = block.getFieldValue('maths');
+        var value_operate = generator.valueToCode(block, 'operate', dart.Order.ATOMIC);
         // TODO: Assemble javascript into code variable.
         var code = dropdown_maths + value_operate;
         // TODO: Change ORDER_NONE to the correct strength.
@@ -254,6 +281,21 @@ Blockly.setLocale(hans);//汉化
         }
         return [code, Order.MEMBER];
       };
+      dart.dartGenerator.forBlock['operation'] = function (block, generator) {
+        11
+        var number_digit1 = block.getFieldValue('digit1');
+        var dropdown_maths1 = block.getFieldValue('maths1');
+        var number_digit2 = block.getFieldValue('digit2');
+        var dropdown_maths2 = block.getFieldValue('maths2');
+        var digit3 = generator.valueToCode(block, 'digit3', dart.Order.ATOMIC);
+        var code
+        if (dropdown_maths2==='null') {
+          code = number_digit1 + dropdown_maths1 + number_digit2;
+        } else {
+          code = '(' + number_digit1 + dropdown_maths1 + number_digit2 + ')' + dropdown_maths2 + digit3;
+        }
+        return [code, Order.MEMBER];
+      };
       
     }
   
@@ -299,10 +341,20 @@ Blockly.setLocale(hans);//汉化
         // TODO: Change ORDER_NONE to the correct strength.
         return [code, Order.MEMBER];
       };
+      dart.dartGenerator.forBlock['remainder'] = function (block, generator) {
+        var value_digit1 = generator.valueToCode(block, 'digit1', dart.Order.ATOMIC) || 0;
+        var number_digit2 = block.getFieldValue('digit2');
+        if (number_digit2 === 0) {
+          number_digit2 = 1
+          block.setFieldValue(1, 'digit2');
+        }
+        // TODO: Assemble javascript into code variable.
+        var code = value_digit1 + " % " + number_digit2;
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.MEMBER];
+      };
       
     }
-  
-   
   
     // big_small:两个数中较大的或较小的
     {
@@ -355,7 +407,16 @@ Blockly.setLocale(hans);//汉化
         var value_digit2 = generator.valueToCode(block, 'digit2', javascript.Order.ATOMIC);
         var dropdown_maths = block.getFieldValue('maths');
         // TODO: Assemble javascript into code variable.
-        var code = `if(${value_digit1}${dropdown_maths}${value_digit2}){\n return ${value_digit1} }\n else{\n return ${value_digit2}}`;
+        var code = `${value_digit1}${dropdown_maths}${value_digit2}?${value_digit1}:${value_digit2}`;
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.MEMBER];
+      };
+      dart.dartGenerator.forBlock['big_small'] = function (block, generator) {
+        var value_digit1 = generator.valueToCode(block, 'digit1', dart.Order.ATOMIC);
+        var value_digit2 = generator.valueToCode(block, 'digit2', dart.Order.ATOMIC);
+        var dropdown_maths = block.getFieldValue('maths');
+        // TODO: Assemble javascript into code variable.
+        var code = `${value_digit1}${dropdown_maths}${value_digit2}?${value_digit1}:${value_digit2}`;
         // TODO: Change ORDER_NONE to the correct strength.
         return [code, Order.MEMBER];
       };
@@ -411,34 +472,106 @@ Blockly.setLocale(hans);//汉化
           this.mathFunChange();
         },
   
+        // mathFunChange: function () {
+        //   const dropdown = this.getField('maths');
+        //   dropdown.setValidator((newValue) => {
+        //     // 如果选定值不是"pow"，添加一个输入
+        //     if (newValue !== 'pow') {
+        //       // 如果选择 'Option 1'，添加一个输入
+        //       this.removeInput('input2', true);
+        //       if (!this.getInput('input1')) {
+        //         this.appendValueInput('input1')
+        //           .setCheck('Number')
+        //       }
+        //     } else {
+        //       if (!this.getInput('input2')) {
+        //         this.appendValueInput('input2')
+        //           .setCheck('Number')
+        //           .appendField('的平方');
+        //       }
+        //     }
+        //   })
+        // }
         mathFunChange: function () {
           const dropdown = this.getField('maths');
           dropdown.setValidator((newValue) => {
-            // 如果选定值不是"pow"，添加一个输入
-            if (newValue !== 'pow') {
-              // 如果选择 'Option 1'，添加一个输入
+            // 移除 'input2' 输入字段（如果存在）
+            if (this.getInput('input2')) {
               this.removeInput('input2', true);
+            }
+            if (this.getInput('input1')) {
+              this.removeInput('input1', true);
+            }
+            
+            // 根据选择的值来添加输入字段
+              
+              // 如果选择的是 'sin', 'cos', 'tan'，添加角度输入字段
+              if (newValue === 'sin' || newValue === 'cos' || newValue === 'tan') {
+                if (!this.getInput('input1')) {
+                  this.appendDummyInput('input1')
+                    .appendField('角度')
+                    .appendField(new Blockly.FieldAngle(90), 'ANGLE'); // 默认值 90 度
+                }
+              }
+             else {
               if (!this.getInput('input1')) {
                 this.appendValueInput('input1')
-                  .setCheck('Number')
+                  .setCheck('Number');
               }
-            } else {
-              if (!this.getInput('input2')) {
+              // 如果选择 'pow'，添加 'input2' 输入字段
+              if(newValue === 'pow'){
+                if (!this.getInput('input2')) {
                 this.appendValueInput('input2')
                   .setCheck('Number')
                   .appendField('的平方');
               }
+              }
+              
             }
-          })
+          });
         }
+        
       }
       javascript.javascriptGenerator.forBlock['math_fun'] = function (block, generator) {
         var dropdown_maths = block.getFieldValue('maths');
-        var value_input1 = generator.valueToCode(block, 'input1', javascript.Order.ATOMIC);
-        var value_input2 = generator.valueToCode(block, 'input2', javascript.Order.ATOMIC);
+
+        var value_input1
+        if (dropdown_maths === 'sin' || dropdown_maths === 'cos' || dropdown_maths === 'tan') {
+          // 获取角度字段的值
+          value_input1 = block.getFieldValue('ANGLE');
+        } else {
+          // 获取数值输入的值
+          value_input1 = generator.valueToCode(block, 'input1', javascript.Order.ATOMIC) || 0;
+        }
+        
+        var value_input2 = generator.valueToCode(block, 'input2', javascript.Order.ATOMIC) || 0; 
+        var code
+
+        if (dropdown_maths !== 'pow') {
+          code = dropdown_maths+'(' + value_input1+'*(M_PI / 180)'+')'
+        } else {
+          code = 'pow(' + value_input1 + ',' + value_input2 + ')'
+        }
+        return [code, Order.MEMBER];
+      };
+      dart.dartGenerator.forBlock['math_fun'] = function (block, generator) {
+        var dropdown_maths = block.getFieldValue('maths');
+
+        var value_input1
+        if (dropdown_maths === 'sin' || dropdown_maths === 'cos' || dropdown_maths === 'tan') {
+          // 获取角度字段的值
+          value_input1 = block.getFieldValue('ANGLE');
+        } else {
+          // 获取数值输入的值
+          value_input1 = generator.valueToCode(block, 'input1', javascript.Order.ATOMIC) || 0;
+        }
+
+        var value_input2 = generator.valueToCode(block, 'input2', dart.Order.ATOMIC) || 0;
+
+
         var code
         if (dropdown_maths !== 'pow') {
-          code = 'Math.' + dropdown_maths + value_input1
+          code = 'Math.' + dropdown_maths +'('+ value_input1+'*(Math.PI / 180)'+')'
         } else {
           code = 'Math.pow(' + value_input1 + ',' + value_input2 + ')'
         }
@@ -492,6 +625,16 @@ Blockly.setLocale(hans);//汉化
         const number = number_digit2-number_digit1+1;
         // TODO: Assemble javascript into code variable.
         var code = 'srand(time(NULL));\nint '+text_variable+'=rand()%'+number+'+'+number_digit1+';\n';
+        return code;
+      };
+      dart.dartGenerator.forBlock['random'] = function(block) {
+        var text_variable = block.getFieldValue('variable');
+        var number_digit1 = block.getFieldValue('digit1');
+        var number_digit2 = block.getFieldValue('digit2');
+        console.log();
+        const number = number_digit2-number_digit1+1;
+        // TODO: Assemble javascript into code variable.
+        var code = `let ${text_variable} = Math.floor(Math.random() * ${number}) + ${number_digit1};\nconsole.log(${text_variable});`;
         return code;
       };
     

@@ -27,14 +27,15 @@
 <script>
 import Blockly from "blockly";
 import { javascriptGenerator } from "blockly/javascript";
+import{test} from '../utils/test'
 import TopNav from '../components/TopNav.vue'
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
 import MethodBlock from '../components/Method/Method.vue'
 import '../components/Special/special'
 
-import * as monaco from 'monaco-editor';
 
+import * as monaco from 'monaco-editor';
 
 
 export default {
@@ -72,12 +73,15 @@ export default {
               },
               {
                 kind: "block",
-
-                type: "fill"
+                type: "bracket"
               },
               {
                 kind: "block",
-                type: "bracket"
+                type: "close_led"
+              },
+              {
+                kind: "block",
+                type: "open_led"
               },
             ]
           },
@@ -321,30 +325,15 @@ export default {
 
     //收集亮灭的数组添加
     arrAdd() {
+      const result = test(this.workspace)
+
       //每一次调用将ledArr数组清空
       this.ledArr = [];
 
-      //获取全部块
-      const allBlocks = this.workspace.getAllBlocks();
-      const entryBlocks = allBlocks.filter(block => block.type === 'int_main');
-      const entryBlock = entryBlocks[0];
+      alert(result)
+      eval(result)
 
-      //获取全部在主块内部的块
-      const connectedBlocks = this.getAllConnectedBlocks(entryBlock);
-
-      //筛选内部相关块中关于灯亮灭操作的块并添加数组数据
-      allBlocks.forEach(block => {
-        if (connectedBlocks.includes(block) && block.type == 'open_led') {
-          const fieldValue = block.getFieldValue('digital');
-          this.ledArr.push('open_led')
-          this.ledArr.push(`${fieldValue}`)
-        } else if (connectedBlocks.includes(block) && block.type == 'close_led') {
-          const fieldValue = block.getFieldValue('digital');
-          this.ledArr.push('close_led')
-          this.ledArr.push(`${fieldValue}`)
-        }
-      });
-
+     
     },
 
     // 接收子组件传递的工具箱并存储

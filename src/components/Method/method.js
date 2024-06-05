@@ -1,5 +1,7 @@
 import Blockly from 'blockly'
 import javascript from 'blockly/javascript';
+import dart from 'blockly/dart';
+
 import { Order } from 'blockly/javascript';
 
 import * as hans from 'blockly/msg/zh-hans'
@@ -36,6 +38,12 @@ Blockly.setLocale(hans);//汉化
         code = `printf("${value_value}");\n`;
       return code;
     };
+    dart.dartGenerator.forBlock['string_printf'] = function (block, generator) {
+      var value_value = generator.valueToCode(block, 'value', Order.NONE);
+      var code = '';
+        code = `console.log("${value_value}");\n`;
+      return code;
+    };
   }
   //number_printf:输出
   {
@@ -63,6 +71,12 @@ Blockly.setLocale(hans);//汉化
       var value_value = generator.valueToCode(block, 'value', Order.NONE);
       var code = '';
       code = `printf("%d",${value_value});\n`;
+      return code;
+    };
+    dart.dartGenerator.forBlock['number_printf'] = function (block, generator) {
+      var value_value = generator.valueToCode(block, 'value', Order.NONE);
+      var code = '';
+      code = `console.log(${value_value});\n`;
       return code;
     };
   }
@@ -93,80 +107,11 @@ Blockly.setLocale(hans);//汉化
       var code = `strlen("${argument0}")`;
       return [code, Order.MEMBER];
     };
-  }
-
-  //open_led:亮灯
-  {
-    Blockly.Blocks['open_led'] = {
-      init: function () {
-        this.jsonInit({
-          "type": "open__led",
-          "message0": "亮灯      持续时间 %1",
-          "args0": [
-            {
-              "type": "field_number",
-              "name": "digital",
-              "value": -1
-            }
-          ],
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": 230,
-          "tooltip": "亮灯",
-          "helpUrl": ""
-        })
-      }
-    }
-    javascript.javascriptGenerator.forBlock['open_led'] = function (block) {
-      var number_digital = block.getFieldValue('digital');
-      var code;
-      // TODO: Assemble javascript into code variable.
-      if (number_digital >= 0) {
-        var time = number_digital * 1000;
-        code = `bflb_gpio_set(gpio, GPIO_PIN_32);\nbflb_mtimer_delay_ms(${time});\n`
-      } else {
-        code = 'bflb_gpio_set(gpio, GPIO_PIN_32);\n';
-      }
-      return code;
-    };
-  }
-
-  //close_led:灭灯
-  {
-    Blockly.Blocks['close_led'] = {
-      init: function () {
-        this.jsonInit({
-          "type": "close_led",
-          "message0": "灭灯    持续时间 %1",
-          "args0": [
-            {
-              "type": "field_number",
-              "name": "digital",
-              "value": -1
-            }
-          ],
-          "inputsInline": true,
-          "previousStatement": null,
-          "nextStatement": null,
-          "colour": 230,
-          "tooltip": "灭灯",
-          "helpUrl": ""
-        })
-      }
-    }
-    javascript.javascriptGenerator.forBlock['close_led'] = function (block) {
-      var number_digital = block.getFieldValue('digital');
-
-      var code;
-      // TODO: Assemble javascript into code variable.
-      if (number_digital >= 0) {
-        var time = number_digital * 1000;
-        code = `bflb_gpio_reset(gpio, GPIO_PIN_32);\nbflb_mtimer_delay_ms(${time});\n`
-      } else {
-        code = 'bflb_gpio_reset(gpio, GPIO_PIN_32);\n';
-      }
-
-      return code;
+    dart.dartGenerator.forBlock['string_length'] = function (block, generator) {
+      // String or array length.
+      var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
+      var code = `("${argument0}").length`;
+      return [code, Order.MEMBER];
     };
   }
 

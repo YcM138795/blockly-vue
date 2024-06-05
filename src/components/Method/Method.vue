@@ -37,14 +37,6 @@ export default {
               },
               {
                 kind: "block",
-                type: "close_led"
-              },
-              {
-                kind: "block",
-                type: "open_led"
-              },
-              {
-                kind: "block",
                 type: "direction"
               },
             ]
