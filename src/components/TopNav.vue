@@ -154,31 +154,31 @@ export default {
         dowmloadAction() {
             let state = postData(this.code);
             state.then((result) => {
-                if (result === -1) {
+                if (result === '二进制文件获取失败') {
                     const h = this.$createElement;
                     this.$notify({
                         title: '',
-                        message: h('i', { style: 'color: teal' }, '代码错误'),
+                        message: h('i', { style: 'color: teal' }, '二进制文件获取失败'),
                         duration: 700,
                         type: 'error',
                         offset: 50
                     });
-                } else if (result === 1) {
+                } else if (result === '未选择串口或串口通信打开错误') {
                     const h = this.$createElement;
                     this.$notify({
                         title: '',
-                        message: h('i', { style: 'color: teal' }, '储存成功'),
+                        message: h('i', { style: 'color: teal' }, '未选择串口或串口通信打开错误'),
                         duration: 700,
-                        type: 'success',
+                        type: 'error',
                         offset: 50
                     });
-                } else if (result === 0) {
+                } else if (result === '下载成功') {
                     const h = this.$createElement;
                     this.$notify({
                         title: '',
-                        message: h('i', { style: 'color: teal' }, '储存失败'),
+                        message: h('i', { style: 'color: teal' }, '下载成功'),
                         duration: 700,
-                        type: 'warning',
+                        type: 'success',
                         offset: 50
                     });
                 }

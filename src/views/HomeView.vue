@@ -75,14 +75,6 @@ export default {
                 kind: "block",
                 type: "bracket"
               },
-              {
-                kind: "block",
-                type: "close_led"
-              },
-              {
-                kind: "block",
-                type: "open_led"
-              },
             ]
           },
         ],
