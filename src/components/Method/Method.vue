@@ -16,7 +16,7 @@ export default {
         contents: [
           {
             "kind": "category",
-            "name": "方法",
+            "name": "功能",
             "categoryStyle": "method_category",
             "cssConfig": {
               "container": "method",
@@ -34,18 +34,6 @@ export default {
               {
                 kind: "block",
                 type: "string_length"
-              },
-              {
-                kind: "block",
-                type: "close_led"
-              },
-              {
-                kind: "block",
-                type: "open_led"
-              },
-              {
-                kind: "block",
-                type: "direction"
               },
             ]
           },
