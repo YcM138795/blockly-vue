@@ -1,11 +1,7 @@
 <template>
   <div ref="container" style="width: 100%; height: 100%;">
     <div style="width: 100%; height: 60px">
-      <TopNav @save="saveWorkspace" 
-      @clear="clearScreen" 
-      @viewShowUpdate="codeShowChange" 
-      :code="code" 
-      :ledArr="ledArr">
+      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" :ledArr="ledArr">
       </TopNav>
     </div>
     <div id="blockly">
@@ -16,6 +12,8 @@
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <MethodBlock @methodBox="methodBox"></MethodBlock>
+        <SpecialBlock @specialBox="specialBox"></SpecialBlock>
+        <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
 
         <div id="code" ref="codeView" :style="{ display: codeShow == 'code' ? 'block' : 'none' }"></div>
       </div>
@@ -27,12 +25,13 @@
 <script>
 import Blockly from "blockly";
 import { javascriptGenerator } from "blockly/javascript";
-import{test} from '../utils/test'
+import { test } from '../utils/test'
 import TopNav from '../components/TopNav.vue'
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
 import MethodBlock from '../components/Method/Method.vue'
-import '../components/Special/special'
+import SpecialBlock from '../components/Special/Special.vue'
+import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
 
 
 import * as monaco from 'monaco-editor';
@@ -54,28 +53,28 @@ export default {
         contents: [
           {
             "kind": "category",
-            "name": "特殊",
-            "categoryStyle": "special_category",
-            "cssConfig": {
-              "container": "special",
-              "icon": "specialIcon",
-            },
-            "contents": [
-              {
-                kind: "block",
+            // "name": "特殊",
+            // "categoryStyle": "special_category",
+            // "cssConfig": {
+            //   "container": "special",
+            //   "icon": "specialIcon",
+            // },
+            // "contents": [
+              // {
+              //   kind: "block",
 
-                type: "string"
-              },
-              {
-                kind: "block",
+              //   type: "string"
+              // },
+              // {
+              //   kind: "block",
 
-                type: "number_variable"
-              },
-              {
-                kind: "block",
-                type: "bracket"
-              },
-            ]
+              //   type: "number_variable"
+              // },
+              // {
+              //   kind: "block",
+              //   type: "bracket"
+              // },
+            // ]
           },
         ],
       },
@@ -88,7 +87,9 @@ export default {
     LogicBlock,
     MathBlock,
     MethodBlock,
-    TopNav
+    TopNav,
+    SpecialBlock,
+    XfxCarBlock
   },
   mounted() {
     // 自定义主题
@@ -113,6 +114,11 @@ export default {
         },
         special_category: {
           colour: '#5BA5A5', // 背景颜色（十六进制表示）
+          colourSecondary: '#FF8C61', // 二次背景颜色
+          colourTertiary: '#C73F1E', // 三次背景颜色
+        },
+        xfxCar_category: {
+          colour: '#E6CEAC', // 背景颜色（十六进制表示）
           colourSecondary: '#FF8C61', // 二次背景颜色
           colourTertiary: '#C73F1E', // 三次背景颜色
         },
@@ -251,7 +257,7 @@ export default {
       }
 
     },
-     getAllConnectedBlocks(block) {
+    getAllConnectedBlocks(block) {
       const connectedBlocks = [];
       let currentBlock = block.getNextBlock();
 
@@ -276,11 +282,13 @@ export default {
         kind: "categoryToolbox",
         contents: [
           // 主组件的工具箱内容
-          ...this.toolbox.contents,
+          // ...this.toolbox.contents,
           // 子组件的工具箱内容
+          ...this.specialToolbox.contents,
           ...this.logicToolbox.contents,
           ...this.mathToolbox.contents,
           ...this.methodToolbox.contents,
+          ...this.xfxCarToolbox.contents
         ]
       };
       // 更新工作区的工具箱
@@ -321,10 +329,13 @@ export default {
       alert(result)
       eval(result)
 
-     
+
     },
 
     // 接收子组件传递的工具箱并存储
+    specialBox(specialBox) {
+      this.specialToolbox = specialBox
+    },
     logicBox(logicBox) {
       this.logicToolbox = logicBox
     },
@@ -334,6 +345,9 @@ export default {
     methodBox(methodBox) {
       this.methodToolbox = methodBox
     },
+    xfxCarBlock(xfxCarBlock) {
+      this.xfxCarToolbox = xfxCarBlock
+    }
   },
 
 };
@@ -372,7 +386,7 @@ body {
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
-  padding-top: 15%;
+  padding-top: 10%;
   background-color: rgb(218, 227, 234);
   background-image: url('../assets//SVG/积木.svg');
   background-size: 180px auto;
@@ -422,14 +436,4 @@ body {
   flex: 1;
 }
 
-.special {
-  color: #5BA5A5;
-  font-size: 60px;
-
-}
-
-.specialIcon {
-  content: url(../assets/SVG/加号.svg);
-  height: 32px;
-}
 </style>

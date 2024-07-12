@@ -35,38 +35,6 @@ export default {
                 kind: "block",
                 type: "string_length"
               },
-              {
-                kind: "block",
-                type: "close_led"
-              },
-              {
-                kind: "block",
-                type: "open_led"
-              },
-              {
-                kind: "block",
-                type: "steering_gear180"
-              },
-              {
-                kind: "block",
-                type: "steering_gear270"
-              },
-              {
-                kind: "block",
-                type: "steering_gear360"
-              },
-              {
-                kind: "block",
-                type: "motor_single"
-              },
-              {
-                kind: "block",
-                type: "motor_double"
-              },
-              {
-                kind: "block",
-                type: "stop_all_motor"
-              },
             ]
           },
         ],
