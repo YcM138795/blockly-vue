@@ -212,10 +212,6 @@ export default {
     this.addToolbox();
 
   },
-  destroyed() {
-    window.removeEventListener('resize', this.handleWindowResize);
-  },
-
   methods: {
     addInt_Main() {
       // 添加int_main块加到工作区
@@ -255,7 +251,7 @@ export default {
       }
 
     },
-    getAllConnectedBlocks(block) {
+     getAllConnectedBlocks(block) {
       const connectedBlocks = [];
       let currentBlock = block.getNextBlock();
 
