@@ -1,18 +1,18 @@
 <template>
-  <div>
-
-  </div>
-</template>
-
-<script>
-
-// import * as monaco from "monaco-editor";
-import "./special";
-export default {
-  name: "SpecialBlock",
-  data() {
-    return {
-      toolbox: {
+    <div>
+  
+    </div>
+  </template>
+  
+  <script>
+  
+  // import * as monaco from "monaco-editor";
+  import "./special";
+  export default {
+    name: "SpecialBlock",
+    data() {
+      return {
+        toolbox: {
         contents: [
           {
             "kind": "category",
@@ -26,16 +26,6 @@ export default {
               {
                 kind: "block",
 
-                type: "test"
-              },
-              {
-                kind: "block",
-
-                type: "test2"
-              },
-              {
-                kind: "block",
-
                 type: "string"
               },
               {
@@ -45,26 +35,21 @@ export default {
               },
               {
                 kind: "block",
-
-                type: "fill"
-              },
-              {
-                kind: "block",
                 type: "bracket"
               },
             ]
           },
         ],
       },
-    };
-  },
-  mounted() {
-    this.$emit('specialBox', this.toolbox);
-  },
-};
-</script>
-
-<style>
+      };
+    },
+    mounted() {
+      this.$emit('specialBox', this.toolbox);
+    },
+  };
+  </script>
+  
+  <style>
 .special {
   color: #5BA5A5;
   font-size: 60px;
@@ -72,8 +57,7 @@ export default {
 }
 
 .specialIcon {
-  content: url('../../assets//SVG/加号.svg');
+  content: url(../../assets/SVG/加号.svg);
   height: 32px;
 }
-
-</style>
+  </style>

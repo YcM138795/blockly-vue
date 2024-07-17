@@ -9,48 +9,63 @@
                 <span style="font-family: '阿里妈妈刀隶体 Regular', sans-serif;">积木代码编程</span>
             </div>
             <div class="right">
+                <button class="runButton" title="运行" @click="runAction"></button>
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
+                <button class="dowmloadButton" title="云下载" @click="dowmloadAction"></button>
                 <button class="clearButton" title="清空所有块" @click="clearAction"></button>
             </div>
 
 
         </div>
-        <div class="tip" :style="{ display: tipShow ? 'block' : 'none' }">
-            <h3>提示</h3>
-            <span>(再次点击提示收起)</span>
-            <br>
-            <span>通过拖动积木并拼装可以实现在线的代码生成,<br>得到符合你逻辑的代码:</span>
-            <br><br><br>
-            <span>例1:通过三重判断验证3与2的关系,输出较大的数<br></span>
-            <button @click="exampleOne">例1</button>
-            <img class="exampleOne" :style="{ display: oneShow ? 'block' : 'none' }" src="../assets/img/exampleOne.png"
-                alt="">
-            <br><br><br><br><br><br>
+        <div class="view">
+            <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
+                <h3>提示</h3>
+                <span>(再次点击提示收起)</span>
+                <br>
+                <span>通过拖动积木并拼装可以实现在线的代码生成,<br>得到符合你逻辑的代码:</span>
+                <br><br><br>
+                <span>例1:通过三重判断验证3与2的关系,输出较大的数<br></span>
+                <button @click="exampleOne">例1</button>
+                <img class="exampleOne" :style="{ display: oneShow ? 'block' : 'none' }"
+                    src="../assets/img/exampleOne.png" alt="">
+                <br><br><br><br><br><br>
 
-            <span>例2:筛选出长度大于4的字符串,并将其输出同等的次数<br></span>
-            <button @click="exampleTwo">例2</button>
-            <img class="exampleTwo" :style="{ display: twoShow ? 'block' : 'none' }" src="../assets/img/exampleTwo.png"
-                alt="">
-            <br><br><br><br><br><br>
+                <span>例2:筛选出长度大于4的字符串,并将其输出同等的次数<br></span>
+                <button @click="exampleTwo">例2</button>
+                <img class="exampleTwo" :style="{ display: twoShow ? 'block' : 'none' }"
+                    src="../assets/img/exampleTwo.png" alt="">
+                <br><br><br><br><br><br>
 
-            <span>例3:指定循环次数与灯亮灭时间,循环灯亮与灯灭并最终灭灯<br></span>
-            <button @click="exampleThree">例3</button>
-            <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }"
-                src="../assets/img/exampleThree.png" alt="">
+                <span>例3:指定循环次数与灯亮灭时间,循环灯亮与灯灭并最终灭灯<br></span>
+                <button @click="exampleThree">例3</button>
+                <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }"
+                    src="../assets/img/exampleThree.png" alt="">
+            </div>
+            <div id="animation" :style="{ display: viewShow == 'run' ? 'block' : 'none' }">
+                <img src="../assets/SVG/灯亮.svg" :style="{ display: imgShow == 'img1' ? 'block' : 'none' }">
+                <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
+            </div>
         </div>
     </div>
 
 </template>
 
 <script>
+import { postData } from '../utils'
+
 export default {
     name: 'TopNav',
 
     data() {
 
         return {
-            tipShow: false,
+            //定时器id记录
+            timerId: null,
+            //亮灭灯图片展示的数据
+            imgShow: 'img1',
+            //右侧视图的展示选择
+            viewShow: '',
             oneShow: false,
             twoShow: false,
             threeShow: false,
@@ -60,13 +75,18 @@ export default {
         code: {
             type: String, // 声明code为字符串类型的prop
             required: true // 如果必须传递code，将required设置为true
-        }
+        },
+        ledArr: {
+            type: Array, // 声明code为字符串类型的prop
+            required: true // 如果必须传递code，将required设置为true
+        },
     },
     methods: {
         //返回
         returnAction() {
             alert('返回')
         },
+
         //保存
         saveAction() {
             this.$emit('save');
@@ -79,12 +99,95 @@ export default {
                 offset: 50
             });
         },
+
+        //运行
+        runAction() {
+            this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
+            this.$emit('viewShowUpdate', this.viewShow);
+            //确保this.ledShow();是在主组件ledArr数据修改后调用
+            this.$nextTick(() => {
+                this.ledShow();
+            });
+        },
+
+        //灯亮灭的展示
+        ledShow() {
+            //判断上一次定时器是否关闭，确保按钮点击过快的多重定时器问题
+            if (this.timerId) {
+                clearTimeout(this.timerId);
+            }
+            if (this.viewShow == 'run')
+            console.log('开始亮灭灯操作');
+            console.log(this.ledArr);
+            //提前保存this,确保executeAction函数内部this的报错
+            const that = this
+            //递归调用函数
+            const executeAction = (index) => {
+                if (this.viewShow !== 'run') return
+                if (index >= that.ledArr.length) return;
+                const led = that.ledArr[index];
+                const time = that.ledArr[index + 1];
+                if (led === 'open_led') {
+                    that.imgShow = 'img1'
+                    console.log('open_led时间:', time);
+                } else if (led === 'close_led') {
+                    that.imgShow = 'img2'
+                    console.log('close_led时间:', time);
+                }
+                if (time == -1) return
+                that.timerId = setTimeout(() => {
+                    //每次加2读取数组open_led或者close_led
+                    executeAction(index + 2);
+                }, time * 1000);
+            };
+            // 初始调用
+            executeAction(0);
+        },
+
         //提示
         tipAction() {
-            this.tipShow = !this.tipShow
-            this.$emit('tipShowUpdate', this.tipShow);
+            this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
+            this.$emit('viewShowUpdate', this.viewShow);
         },
-       
+
+        //提示
+        dowmloadAction() {
+            let state = postData(this.code);
+            state.then((result) => {
+                if (result === '二进制文件获取失败') {
+                    const h = this.$createElement;
+                    this.$notify({
+                        title: '',
+                        message: h('i', { style: 'color: teal' }, '二进制文件获取失败'),
+                        duration: 700,
+                        type: 'error',
+                        offset: 50
+                    });
+                } else if (result === '未选择串口或串口通信打开错误') {
+                    const h = this.$createElement;
+                    this.$notify({
+                        title: '',
+                        message: h('i', { style: 'color: teal' }, '未选择串口或串口通信打开错误'),
+                        duration: 700,
+                        type: 'error',
+                        offset: 50
+                    });
+                } else if (result === '下载成功') {
+                    const h = this.$createElement;
+                    this.$notify({
+                        title: '',
+                        message: h('i', { style: 'color: teal' }, '下载成功'),
+                        duration: 700,
+                        type: 'success',
+                        offset: 50
+                    });
+                }
+
+
+            })
+        },
+
+        //清除
         clear() {
             this.$emit('clear');
         },
@@ -106,6 +209,8 @@ export default {
                 });
             });
         },
+
+        //提示案例
         exampleOne() {
             this.oneShow = !this.oneShow
         },
@@ -225,6 +330,13 @@ export default {
     transition: background-color 0.5s;
 }
 
+/* 右侧运行按钮 */
+
+.right .runButton {
+    /* margin: 0; */
+    background-image: url('../assets/SVG/运行.svg')
+}
+
 /* 右侧保存按钮 */
 .right .saveButton {
     margin: 0 50px;
@@ -236,7 +348,14 @@ export default {
 .right .tipButton {
     margin-right: 50px;
     background-color: rgb(185, 240, 222);
-    background-image: url('../assets/SVG/灯泡.svg');
+    background-image: url('../assets/SVG/提示.svg');
+}
+
+/* 右侧提示按钮 */
+.right .dowmloadButton {
+    margin-right: 50px;
+    background-color: rgb(185, 240, 222);
+    background-image: url('../assets/SVG/云下载.svg');
 }
 
 /* 右侧清空按钮 */
@@ -247,11 +366,10 @@ export default {
 
 /* 右侧按钮悬浮样式 */
 .right Button:hover {
-    /* background-color: #4cb5ea; 鼠标悬停时改变背景色 */
-    transform: scale(1.05);
     /* 微微放大 */
-    filter: brightness(110%);
+    transform: scale(1.05);
     /* 背景颜色稍稍变深 */
+    filter: brightness(110%);
 }
 
 /* 右侧按钮激活样式 */
@@ -263,7 +381,7 @@ export default {
 }
 
 /* 提示 */
-.tip {
+.view {
     overflow: scroll;
     position: absolute;
     right: 0px;
@@ -325,5 +443,15 @@ export default {
     margin-left: 80px;
     width: 347px;
     height: 266px;
+}
+
+#animation {
+    margin-top: 50px;
+    margin-left: 50px;
+}
+
+#animation img {
+    width: 160px;
+    height: auto
 }
 </style>
