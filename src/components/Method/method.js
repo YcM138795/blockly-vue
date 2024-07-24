@@ -1,11 +1,7 @@
-import Blockly from 'blockly'
-import javascript from 'blockly/javascript';
-import dart from 'blockly/dart';
+import * as Blockly from 'blockly/core';
+import {javascriptGenerator, Order} from 'blockly/javascript';
+import {dartGenerator} from 'blockly/dart';
 
-import { Order } from 'blockly/javascript';
-
-import * as hans from 'blockly/msg/zh-hans'
-Blockly.setLocale(hans);//汉化
 
 
 //功能
@@ -32,13 +28,13 @@ Blockly.setLocale(hans);//汉化
         })
       }
     }
-    javascript.javascriptGenerator.forBlock['string_printf'] = function (block, generator) {
+    javascriptGenerator.forBlock['string_printf'] = function (block, generator) {
       var value_value = generator.valueToCode(block, 'value', Order.NONE);
       var code = '';
         code = `printf("${value_value}");\n`;
       return code;
     };
-    dart.dartGenerator.forBlock['string_printf'] = function (block, generator) {
+    dartGenerator.forBlock['string_printf'] = function (block, generator) {
       var value_value = generator.valueToCode(block, 'value', Order.NONE);
       var code = '';
         code = `console.log("${value_value}");\n`;
@@ -67,13 +63,13 @@ Blockly.setLocale(hans);//汉化
         })
       }
     }
-    javascript.javascriptGenerator.forBlock['number_printf'] = function (block, generator) {
+    javascriptGenerator.forBlock['number_printf'] = function (block, generator) {
       var value_value = generator.valueToCode(block, 'value', Order.NONE);
       var code = '';
       code = `printf("%d",${value_value});\n`;
       return code;
     };
-    dart.dartGenerator.forBlock['number_printf'] = function (block, generator) {
+    dartGenerator.forBlock['number_printf'] = function (block, generator) {
       var value_value = generator.valueToCode(block, 'value', Order.NONE);
       var code = '';
       code = `console.log(${value_value});\n`;
@@ -101,13 +97,13 @@ Blockly.setLocale(hans);//汉化
       }
     }
 
-    javascript.javascriptGenerator.forBlock['string_length'] = function (block, generator) {
+    javascriptGenerator.forBlock['string_length'] = function (block, generator) {
       // String or array length.
       var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
       var code = `strlen("${argument0}")`;
       return [code, Order.MEMBER];
     };
-    dart.dartGenerator.forBlock['string_length'] = function (block, generator) {
+    dartGenerator.forBlock['string_length'] = function (block, generator) {
       // String or array length.
       var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
       var code = `("${argument0}").length`;

@@ -1,12 +1,12 @@
-import Blockly from 'blockly'
-import javascript from 'blockly/javascript';
-import dart from 'blockly/dart';
+import * as Blockly from 'blockly/core';
+import {javascriptGenerator,Order} from 'blockly/javascript';
+import {dartGenerator} from 'blockly/dart';
+import '@blockly/block-plus-minus';
 
-import { Order } from 'blockly/javascript';
+// 检查语言包是否已加载
 
-import * as hans from 'blockly/msg/zh-hans'
-Blockly.setLocale(hans);//汉化
-import "./if"
+
+// import "./if"
 
 
 
@@ -39,15 +39,15 @@ import "./if"
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['cycle'] = function (block, generator) {
-    var value_times = generator.valueToCode(block, 'times', javascript.Order.ATOMIC) || 0;
+  javascriptGenerator.forBlock['cycle'] = function (block, generator) {
+    var value_times = generator.valueToCode(block, 'times', Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
     // TODO: Assemble javascript into code variable.
     var code = `for(int i=0;i<${value_times};i++){\n${statements_operate}}`;
     return code;
   };
-  dart.dartGenerator.forBlock['cycle'] = function(block, generator) {
-    var value_times = generator.valueToCode(block, 'times', dart.Order.ATOMIC) || 0;
+  dartGenerator.forBlock['cycle'] = function(block, generator) {
+    var value_times = generator.valueToCode(block, 'times', Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
 
     // TODO: Assemble dart into code variable.
@@ -115,7 +115,7 @@ import "./if"
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['compare'] = function(block) {
+  javascriptGenerator.forBlock['compare'] = function(block) {
   var number_digit1 = block.getFieldValue('digit1');
   var dropdown_maths = block.getFieldValue('maths');
   var number_digit2 = block.getFieldValue('digit2');
@@ -124,7 +124,7 @@ import "./if"
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Order.MEMBER];
 };
-dart.dartGenerator.forBlock['compare'] = function(block) {
+dartGenerator.forBlock['compare'] = function(block) {
   var number_digit1 = block.getFieldValue('digit1');
   var dropdown_maths = block.getFieldValue('maths');
   var number_digit2 = block.getFieldValue('digit2');
@@ -192,8 +192,8 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['single_compare'] = function(block, generator) {
-    var value_digit1 = generator.valueToCode(block, 'digit1', javascript.Order.ATOMIC) || 0;
+  javascriptGenerator.forBlock['single_compare'] = function(block, generator) {
+    var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || 0;
     var dropdown_operation = block.getFieldValue('operation');
     var number_digit2 = block.getFieldValue('digit2');
     // TODO: Assemble javascript into code variable.
@@ -201,8 +201,8 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
-  dart.dartGenerator.forBlock['single_compare'] = function(block, generator) {
-    var value_digit1 = generator.valueToCode(block, 'digit1', dart.Order.ATOMIC) || 0;
+  dartGenerator.forBlock['single_compare'] = function(block, generator) {
+    var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || 0;
     var dropdown_operation = block.getFieldValue('operation');
     var number_digit2 = block.getFieldValue('digit2');
     // TODO: Assemble dart into code variable.
@@ -246,15 +246,15 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['if_judge'] = function(block, generator) {
-    var value_judge  = generator.valueToCode(block, 'judge', javascript.Order.ATOMIC);
+  javascriptGenerator.forBlock['if_judge'] = function(block, generator) {
+    var value_judge  = generator.valueToCode(block, 'judge', Order.ATOMIC);
     var statements_operation = generator.statementToCode(block, 'operation');
     // TODO: Assemble javascript into code variable.
     var code = `if(${value_judge}){\n${statements_operation}}`;
     return code;
   };
-  dart.dartGenerator.forBlock['if_judge'] = function(block, generator) {
-    var value_judge  = generator.valueToCode(block, 'judge', dart.Order.ATOMIC);
+  dartGenerator.forBlock['if_judge'] = function(block, generator) {
+    var value_judge  = generator.valueToCode(block, 'judge', Order.ATOMIC);
     var statements_operation = generator.statementToCode(block, 'operation');
     // TODO: Assemble javascript into code variable.
     var code = `if(${value_judge}){\n${statements_operation}}`;
@@ -297,14 +297,14 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['and_judge'] = function(block, generator) {
+  javascriptGenerator.forBlock['and_judge'] = function(block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
     var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
     var code = `${value_judge1}&&${value_judge2}`;
     return  [code,Order.MEMBER];
   };
-  dart.dartGenerator.forBlock['and_judge'] = function(block, generator) {
+  dartGenerator.forBlock['and_judge'] = function(block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
     var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
@@ -348,15 +348,15 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['or_judge'] = function(block, generator) {
-    var value_judge1 = generator.valueToCode(block, 'judge1', javascript.Order.ATOMIC) || false;
-    var value_judge2 = generator.valueToCode(block, 'judge2', javascript.Order.ATOMIC)|| false;
+  javascriptGenerator.forBlock['or_judge'] = function(block, generator) {
+    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
     var code = `${value_judge1} || ${value_judge2}`;
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
-  dart.dartGenerator.forBlock['or_judge'] = function(block, generator) {
+  dartGenerator.forBlock['or_judge'] = function(block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
     var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
@@ -415,7 +415,7 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascript.javascriptGenerator.forBlock['and_or'] = function(block, generator) {
+  javascriptGenerator.forBlock['and_or'] = function(block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
     var dropdown_operation = block.getFieldValue('operation');
     var value_judge2 = generator.valueToCode(block, 'j  udge2', Order.ATOMIC)|| false;
@@ -424,7 +424,7 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
-  dart.dartGenerator.forBlock['and_or'] = function(block, generator) {
+  dartGenerator.forBlock['and_or'] = function(block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
     var dropdown_operation = block.getFieldValue('operation');
     var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
@@ -435,7 +435,80 @@ dart.dartGenerator.forBlock['compare'] = function(block) {
   };
 }
 
+// // 检查并注销已经注册的扩展
+// if (Blockly.Extensions.isRegistered('controls_if_mutator')) {
+//   Blockly.Extensions.unregister('controls_if_mutator');
+// }
 
+// Blockly.Blocks['controls_if'] = {
+//   init: function() {
+//     this.jsonInit({
+//       "type": "controls_if",
+//       "message0": "%{BKY_CONTROLS_IF_MSG_IF} %1",
+//       "args0": [{
+//         "type": "input_value",
+//         "name": "IF0",
+//         "check": "Boolean"
+//       }],
+//       "message1": "%{BKY_CONTROLS_IF_MSG_THEN} %1",
+//       "args1": [{
+//         "type": "input_statement",
+//         "name": "DO0"
+//       }],
+//       "previousStatement": null,
+//       "nextStatement": null,
+//       "colour": Blockly.Msg['LOGIC_HUE'],
+//       "helpUrl": Blockly.Msg['CONTROLS_IF_HELPURL'],
+//       "mutator": "controls_if_mutator"
+//     });
+//   }
+// };
 
+// // 定义 mutator mixin
+// const CONTROLS_IF_MUTATOR_MIXIN = {
+//   mutationToDom: function() {
+//     const container = Blockly.utils.xml.createElement('mutation');
+//     for (let i = 1; i <= this.elseifCount_; i++) {
+//       if (this.getInput(`IF${i}`)) {
+//         const elseif = Blockly.utils.xml.createElement('elseif');
+//         container.appendChild(elseif);
+//       }
+//     }
+//     if (this.getInput('ELSE')) {
+//       const elseInput = Blockly.utils.xml.createElement('else');
+//       container.appendChild(elseInput);
+//     }
+//     return container;
+//   },
+//   domToMutation: function(xmlElement) {
+//     for (let i = 1; i <= this.elseifCount_; i++) {
+//       this.removeInput(`IF${i}`);
+//       this.removeInput(`DO${i}`);
+//     }
+//     this.elseifCount_ = 0;
+//     this.elseCount_ = 0;
+//     for (let i = 0; i < xmlElement.childNodes.length; i++) {
+//       const childNode = xmlElement.childNodes[i];
+//       switch (childNode.nodeName) {
+//         case 'elseif':
+//           this.elseifCount_++;
+//           this.appendValueInput(`IF${this.elseifCount_}`)
+//               .setCheck('Boolean')
+//               .appendField(Blockly.Msg['CONTROLS_IF_MSG_ELSEIF']);
+//           this.appendStatementInput(`DO${this.elseifCount_}`)
+//               .appendField(Blockly.Msg['CONTROLS_IF_MSG_THEN']);
+//           break;
+//         case 'else':
+//           this.elseCount_++;
+//           this.appendStatementInput('ELSE')
+//               .appendField(Blockly.Msg['CONTROLS_IF_MSG_ELSE']);
+//           break;
+//       }
+//     }
+//   }
+// };
+
+// // 注册扩展
+// Blockly.Extensions.registerMutator('controls_if_mutator', CONTROLS_IF_MUTATOR_MIXIN, null, ['controls_if']);
 
 

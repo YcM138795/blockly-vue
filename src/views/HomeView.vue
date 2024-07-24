@@ -23,15 +23,28 @@
 </template>
 
 <script>
-import Blockly from "blockly";
+import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from "blockly/javascript";
+//测试函数，输出工作区代码
 import { test } from '../utils/test'
+//引入其他组件
 import TopNav from '../components/TopNav.vue'
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
 import MethodBlock from '../components/Method/Method.vue'
 import SpecialBlock from '../components/Special/Special.vue'
 import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
+//引入controls_if的插件包
+import '@blockly/block-plus-minus';
+import * as zh_hans from 'blockly/msg/zh-hans';
+//设置语言
+Blockly.setLocale(zh_hans);
+// import {
+//   ContinuousToolbox,
+//   ContinuousFlyout,
+//   ContinuousMetrics,
+// } from '@blockly/continuous-toolbox';
+
 
 
 import * as monaco from 'monaco-editor';
@@ -53,28 +66,6 @@ export default {
         contents: [
           {
             "kind": "category",
-            // "name": "特殊",
-            // "categoryStyle": "special_category",
-            // "cssConfig": {
-            //   "container": "special",
-            //   "icon": "specialIcon",
-            // },
-            // "contents": [
-              // {
-              //   kind: "block",
-
-              //   type: "string"
-              // },
-              // {
-              //   kind: "block",
-
-              //   type: "number_variable"
-              // },
-              // {
-              //   kind: "block",
-              //   type: "bracket"
-              // },
-            // ]
           },
         ],
       },
@@ -92,6 +83,7 @@ export default {
     XfxCarBlock
   },
   mounted() {
+    
     // 自定义主题
     const customTheme = Blockly.Theme.defineTheme('customTheme', {
       base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
@@ -131,6 +123,7 @@ export default {
 
     //加载工作区
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
+      
       toolbox: this.toolbox,
       zoom:
       {
@@ -249,9 +242,9 @@ export default {
         //代码区的块的禁用
         allBlocks.forEach(block => {
           if (block.type !== 'int_main' && !connectedBlocks.includes(block)) {
-            block.setEnabled(false);
+            block.setDisabledReason(true,'未连接到入口块');
           } else {
-            block.setEnabled(true);
+            block.setDisabledReason(false,'连接到入口块');
           }
         });
       }

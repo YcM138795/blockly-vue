@@ -1,12 +1,6 @@
-import Blockly from 'blockly'
-import javascript from 'blockly/javascript';
-import dart from 'blockly/dart';
-
-// import { Order } from 'blockly/javascript';
-
-import * as hans from 'blockly/msg/zh-hans'
-Blockly.setLocale(hans);//汉化
-
+import * as Blockly from 'blockly/core';
+import {javascriptGenerator} from 'blockly/javascript';
+import {dartGenerator} from 'blockly/dart';
 
 
 //小飞象智能车
@@ -34,7 +28,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['open_led'] = function (block) {
+        javascriptGenerator.forBlock['open_led'] = function (block) {
             var number_digital = block.getFieldValue('digital');
             var code;
             var time = number_digital * 1000;
@@ -47,7 +41,7 @@ Blockly.setLocale(hans);//汉化
             }
             return code;
         };
-        dart.dartGenerator.forBlock['open_led'] = function (block) {
+        dartGenerator.forBlock['open_led'] = function (block) {
             var number_digital = block.getFieldValue('digital');
             var code = `
       this.ledArr.push('open_led')
@@ -80,7 +74,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['close_led'] = function (block) {
+        javascriptGenerator.forBlock['close_led'] = function (block) {
             var number_digital = block.getFieldValue('digital');
 
             var code;
@@ -93,7 +87,7 @@ Blockly.setLocale(hans);//汉化
             }
             return code;
         };
-        dart.dartGenerator.forBlock['close_led'] = function (block) {
+        dartGenerator.forBlock['close_led'] = function (block) {
             var number_digital = block.getFieldValue('digital');
             var code = `
       this.ledArr.push('close_led')
@@ -153,7 +147,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['steering_gear180'] = function (block) {
+        javascriptGenerator.forBlock['steering_gear180'] = function (block) {
             const dropdown_serial_number = block.getFieldValue('serial_number');
             const number_angle = block.getFieldValue('angle');
 
@@ -161,7 +155,7 @@ Blockly.setLocale(hans);//汉化
             const code = `SuperBit.Servo(SuperBit.enServo.${dropdown_serial_number}, ${number_angle});\n`;
             return code;
         }
-        dart.dartGenerator.forBlock['steering_gear180'] = function (block) {
+        dartGenerator.forBlock['steering_gear180'] = function (block) {
             const dropdown_serial_number = block.getFieldValue('serial_number');
             const number_angle = block.getFieldValue('angle');
 
@@ -222,7 +216,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['steering_gear270'] = function (block) {
+        javascriptGenerator.forBlock['steering_gear270'] = function (block) {
             const dropdown_serial_number = block.getFieldValue('serial_number');
             const number_angle = block.getFieldValue('angle');
 
@@ -230,7 +224,7 @@ Blockly.setLocale(hans);//汉化
             const code = `SuperBit.Servo2(SuperBit.enServo.${dropdown_serial_number}, ${number_angle});\n`;
             return code;
         }
-        dart.dartGenerator.forBlock['steering_gear270'] = function (block) {
+        dartGenerator.forBlock['steering_gear270'] = function (block) {
             const dropdown_serial_number = block.getFieldValue('serial_number');
             const number_angle = block.getFieldValue('angle');
 
@@ -309,7 +303,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['steering_gear360'] = function (block) {
+        javascriptGenerator.forBlock['steering_gear360'] = function (block) {
             const dropdown_serial_number = block.getFieldValue('serial_number');
             const dropdown__turn_around = block.getFieldValue(' turn_around');
             const number_speed = block.getFieldValue('speed');
@@ -318,7 +312,7 @@ Blockly.setLocale(hans);//汉化
             const code = `SuperBit.Servo3(SuperBit.enServo.${dropdown_serial_number}, SuperBit.enPos.${dropdown__turn_around}, ${number_speed});\n`;
             return code;
         }
-        dart.dartGenerator.forBlock['steering_gear360'] = function (block) {
+        dartGenerator.forBlock['steering_gear360'] = function (block) {
             const dropdown_serial_number = block.getFieldValue('serial_number');
             const dropdown__turn_around = block.getFieldValue(' turn_around');
             const number_speed = block.getFieldValue('speed');
@@ -380,7 +374,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['motor_single'] = function (block) {
+        javascriptGenerator.forBlock['motor_single'] = function (block) {
             const dropdown_motor_number = block.getFieldValue('motor_number');
             const number_speed = block.getFieldValue('speed');
 
@@ -388,7 +382,7 @@ Blockly.setLocale(hans);//汉化
             const code = `SuperBit.MotorRun(SuperBit.enMotors.${dropdown_motor_number}, ${number_speed});\n`;
             return code;
         }
-        dart.dartGenerator.forBlock['motor_single'] = function (block) {
+        dartGenerator.forBlock['motor_single'] = function (block) {
             const dropdown_motor_number = block.getFieldValue('motor_number');
             const number_speed = block.getFieldValue('speed');
 
@@ -489,7 +483,7 @@ Blockly.setLocale(hans);//汉化
                 })
             }
         }
-        javascript.javascriptGenerator.forBlock['motor_double'] = function (block) {
+        javascriptGenerator.forBlock['motor_double'] = function (block) {
             const dropdown_motor_number1 = block.getFieldValue('motor_number1');
 
             const number_speed1 = block.getFieldValue('speed1');
@@ -502,7 +496,7 @@ Blockly.setLocale(hans);//汉化
             const code = `SuperBit.MotorRunDual(\nSuperBit.enMotors.${dropdown_motor_number1}, ${number_speed1},\nSuperBit.enMotors.${dropdown_motor_number2}, ${number_speed2});\n`;
             return code;
         }
-        dart.dartGenerator.forBlock['motor_double'] = function (block) {
+        dartGenerator.forBlock['motor_double'] = function (block) {
             const dropdown_motor_number1 = block.getFieldValue('motor_number1');
 
             const number_speed1 = block.getFieldValue('speed1');
@@ -541,13 +535,13 @@ Blockly.setLocale(hans);//汉化
                 )
             }
         }
-        javascript.javascriptGenerator.forBlock['stop_all_motor'] = function () {
+        javascriptGenerator.forBlock['stop_all_motor'] = function () {
 
             // TODO: Assemble javascript into the code variable.
             const code = `SuperBit.MotorStopAll();\n`;
             return code;
         }
-        dart.dartGenerator.forBlock['stop_all_motor'] = function () {
+        dartGenerator.forBlock['stop_all_motor'] = function () {
 
             // TODO: Assemble dart into the code variable.
             const code = 'comsole.log("停止所有电机")\n';
