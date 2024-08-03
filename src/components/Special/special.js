@@ -50,6 +50,54 @@ import {dartGenerator} from 'blockly/dart';
       return code;
     };
   }
+  //Decrease:变量自减
+  {
+    Blockly.Blocks['Decrease'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "Decrease",
+          "tooltip": "变量自减",
+          "helpUrl": "",
+          "message0": "自减 %1 每次自减 %2 %3",
+          "args0": [
+            {
+              "type": "field_input",
+              "name": "target_value",
+              "text": "a"
+            },
+            {
+              "type": "field_number",
+              "name": "digit",
+              "value": 1
+            },
+            {
+              "type": "input_dummy",
+              "name": "target"
+            }
+          ],
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 180
+        })
+      }
+    }
+    javascriptGenerator.forBlock['Decrease'] = function(block) {
+      const text_target_value = block.getFieldValue('target_value');
+      const number_digit = block.getFieldValue('digit');
+    
+      // TODO: Assemble javascript into the code variable.
+      const code = `${text_target_value} -= ${number_digit};\n`;
+      return code;
+    }
+    dartGenerator.forBlock['Decrease'] = function (block) {
+      const text_target_value = block.getFieldValue('target_value');
+      const number_digit = block.getFieldValue('digit');
+    
+      // TODO: Assemble dart into the code variable.
+      const code = `${text_target_value} -= ${number_digit};\n`;
+      return code;
+    };
+  }
 
   //string:字符串
   {

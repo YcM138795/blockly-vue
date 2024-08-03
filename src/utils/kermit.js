@@ -1,34 +1,298 @@
 
 
-const kermit_mark = 1;
-const kermit_offset_mark = 0;
 const kermit_offset_len = 1;
-const kermit_offset_seq = 2;
 const kermit_offset_type = 3;
-const kermit_offset_data = 4;
 const kermit_packet_size_min = 5;
 const kermit_packet_size_max = 96;
-const kermit_packet_seq_min = 0;
-const kermit_packet_seq_max = 63;
 const kermit_bctsize = 1;
-const kermit_qctl = '#';
-const kermit_ebq = '&';
+
+"use strict";
+
+function kermit_qctl() {
+    return '#'.charCodeAt();
+}
+
+function kermit_ebq() {
+    return '&'.charCodeAt();
+}
 
 
-function kermit_tochar(x) {
-    return x + 32;
+
+
+function kermit_mark() {
+    return 0x01;
+}
+
+function kermit_mark_offset() {
+    return 0;
+}
+
+function kermit_mark_get(pkt) {
+    return pkt[kermit_mark_offset()];
+}
+
+
+function kermit_len_offset() {
+    return 1;
 }
 
 function kermit_unchar(x) {
     return x - 32;
 }
 
-function kermit_length(packet) {
-    return kermit_unchar(packet[kermit_offset_len]) + 2;
+function kermit_len_get(pkt) {
+    return kermit_unchar(pkt[kermit_len_offset()]);
 }
 
-function kermit_tosum(x) {
-    return kermit_tochar(((x) + (((x) & 192) >> 6)) & 63);
+function kermit_tochar(x) {
+    return x + 32;
+}
+
+
+
+function kermit_seq_offset() {
+    return 2;
+}
+
+function kermit_seq_get(pkt) {
+    return kermit_unchar(pkt[kermit_seq_offset()]);
+}
+
+
+function kermit_type_offset() {
+    return 3;
+}
+
+
+function kermit_data_offset() {
+    return 4;
+}
+
+function kermit_mark_size() {
+    return 1;
+}
+
+function kermit_len_size() {
+    return 1;
+}
+
+function kermit_seq_size() {
+    return 1;
+}
+
+function kermit_type_size() {
+    return 1;
+}
+
+
+function kermit_sum_size() {
+    return 1;
+}
+
+function kermit_header_size() {
+    return kermit_mark_size() + kermit_len_size() +
+        kermit_seq_size() + kermit_type_size();
+}
+
+function kermit_packet_size(pkt) {
+    return kermit_mark_size() + kermit_len_size() + kermit_len_get(pkt);
+}
+
+function kermit_data_size(pkt) {
+    return kermit_packet_size(pkt) - kermit_header_size() - kermit_sum_size();
+}
+
+
+
+function kermit_is_control(val) {
+    if ((val < 32) || (val == 127)) {
+        return true;
+    }
+    return false;
+}
+
+
+
+function kermit_ctl(data) {
+    return data ^ 64;
+}
+
+
+function arr2str(arr) {
+    var str = '';
+    var i;
+    var tmp;
+    for (i = 0; i < arr.length; i++) {
+        tmp = String.fromCharCode(arr[i]);
+        str = str.concat(tmp);
+    }
+    return str;
+}
+
+
+
+
+function kermit_sum_offset(pkt) {
+    return kermit_header_size() + kermit_data_size(pkt);
+}
+
+function kermit_sum_get(pkt) {
+    return pkt[kermit_sum_offset(pkt)];
+}
+
+
+
+function kermit_tosum(sum) {
+    return (kermit_tochar(((sum) + (((sum) & 192) >> 6)) & 63));
+}
+
+function kermit_sum_make(pkt) {
+    var sum = 0;
+    var i;
+    for (i = kermit_len_offset(); i < kermit_sum_offset(pkt); i++) {
+        sum += pkt[i];
+    }
+    return kermit_tosum(sum);
+}
+
+function kermit_sum_check(pkt) {
+    var remote_sum;
+    var local_sum;
+    remote_sum = kermit_sum_get(pkt);
+    local_sum = kermit_sum_make(pkt);
+    return (remote_sum == local_sum);
+}
+
+function kermit_recv_reset(pkt) {
+
+    pkt.length = 0;
+
+
+}
+
+function kermit_visible_max() {
+    return 127;
+}
+
+function kermit_len_max() {
+    return kermit_unchar(kermit_visible_max());
+}
+
+function kermit_len_min() {
+    return kermit_seq_size() + kermit_type_size() + kermit_sum_size();
+}
+
+function kermit_seq_min() {
+    return 0;
+}
+
+function kermit_seq_max() {
+    return 63;
+}
+
+function KSTA_MARK_OK() {
+    return 0;
+}
+
+function KSTA_LEN_OK() {
+    return 1;
+}
+
+function KSTA_SEQ_OK() {
+    return 2;
+}
+
+function KSTA_TYPE_OK() {
+    return 3;
+}
+
+function KSTA_DATA_OK() {
+    return 4;
+}
+
+function KSTA_SUM_OK() {
+    return 5;
+}
+
+function KSTA_MARK_BAD() {
+    return -60;
+}
+
+function KSTA_LEN_BAD() {
+    return -61;
+}
+
+function KSTA_SEQ_BAD() {
+    return -62;
+}
+
+
+
+function KSTA_DATA_BAD() {
+    return -64;
+}
+
+function KSTA_SUM_BAD() {
+    return -65;
+}
+
+
+function kermit_recv(pkt, data) {
+    console.log(pkt.length);
+    if (pkt.length == kermit_mark_offset()) {
+        pkt.push(data);
+        if (kermit_mark_get(pkt) != kermit_mark()) {
+            kermit_recv_reset(pkt);
+            return KSTA_MARK_BAD();
+        }
+        return KSTA_MARK_OK();
+    }
+    if (pkt.length == kermit_len_offset()) {
+        pkt.push(data);
+        if ((kermit_len_get(pkt) < kermit_len_min()) ||
+            (kermit_len_get(pkt) > kermit_len_max())) {
+            kermit_recv_reset(pkt);
+            return KSTA_LEN_BAD();
+        }
+        return KSTA_LEN_OK();
+    }
+    if (pkt.length == kermit_seq_offset()) {
+        pkt.push(data);
+        if ((kermit_seq_get(pkt) < kermit_seq_min()) ||
+            (kermit_seq_get(pkt) > kermit_seq_max())) {
+            kermit_recv_reset(pkt);
+            return KSTA_SEQ_BAD();
+        }
+        return KSTA_SEQ_OK();
+    }
+    if (pkt.length == kermit_type_offset()) {
+        pkt.push(data);
+        return KSTA_TYPE_OK();
+    }
+    if ((pkt.length >= kermit_data_offset()) && (pkt.length < kermit_packet_size(pkt))) {
+        pkt.push(data);
+        if (pkt.length == kermit_packet_size(pkt)) {
+            if (kermit_sum_check(pkt)) {
+                return KSTA_SUM_OK();
+            }
+            console.log(arr2str(pkt));
+            return KSTA_SUM_BAD();
+        }
+        return KSTA_DATA_OK();
+    }
+
+    return KSTA_DATA_BAD();
+}
+
+
+
+
+
+
+
+
+function kermit_length(packet) {
+    return kermit_unchar(packet[kermit_offset_len]) + 2;
 }
 
 function kermit_check(packet) {
@@ -56,13 +320,6 @@ function kermit_gensum(packet) {
     return kermit_tosum(sum);
 }
 
-function kermit_getsum(packet) {
-    if (kermit_check(packet) == false) {
-        return -1;
-    }
-    return packet[kermit_length(packet) - kermit_bctsize];
-}
-
 function kermit_setsum(packet, sum) {
     if (kermit_check(packet) == false) {
         return -1;
@@ -70,28 +327,7 @@ function kermit_setsum(packet, sum) {
     return (packet[kermit_length(packet) - kermit_bctsize] = sum);
 }
 
-function kermit_chksum(packet) {
-    let local_sum = kermit_getsum(packet);
-    let remote_sum = kermit_gensum(packet);
-    if ((local_sum == -1) || (remote_sum == -1)) {
-        return false;
-    }
-    if (local_sum != remote_sum) {
-        return false;
-    }
-    return true;
-}
 
-function kermit_is_control(c) {
-    if (((c >= 0) && (c <= 31)) || (c == 127)) {
-        return true;
-    }
-    return false;
-}
-
-function kermit_ctl(x) {
-    return ((x) ^ 64);
-}
 
 function kermit_encode(type, data) {
     let encoded = new Array();
@@ -173,63 +409,111 @@ function kermit_packet_make(seq, type, payload) {
 
 
 
-function kermit_recv(packet_in, data) {
-    let packet = new Array();
-    let i;
-    for (i = 0; i < packet_in.length; i++) {
-        packet[i] = packet_in[i];
-    }
-    if (packet.length == kermit_offset_mark) {
-        if (data != kermit_mark) {
-            return false;
-        }
-        packet.push(data);
-        return packet;
-    }
-    if (packet.length == kermit_offset_len) {
-        packet.push(data);
-        if (kermit_length(packet) > kermit_packet_size_max) {
-            return false;
-        }
-        if (kermit_length(packet) < kermit_packet_size_min) {
-            return false;
-        }
-        return packet;
-    }
-    if (packet.length == kermit_offset_seq) {
-        if (kermit_unchar(data) < kermit_packet_seq_min) {
-            return false;
-        }
-        if (kermit_unchar(data) > kermit_packet_seq_max) {
-            return false;
-        }
-        packet.push(data);
-        return packet;
-    }
-    if (packet.length == kermit_offset_type) {
-        packet.push(data);
-        return packet;
-    }
-    if (packet.length >= kermit_offset_data) {
-        // recv ok, stop recv
-        if (packet.length >= kermit_length(packet)) {
-            return packet;
-        }
-        // recv sum
-        if (packet.length == (kermit_length(packet) - 1)) {
-            packet.push(data);
-            if (kermit_chksum(packet) == false) {
-                // mask packet is bad sum
-                packet[kermit_offset_type] = 'Q'.codePointAt();
-            }
-            return packet;
-        }
-        // recv data
-        packet.push(data);
-        return packet;
-    }
-}
-
+// function kermit_recv(packet_in, data) {
+//     console.log('test3');
+//     let packet = new Array();
+//     let i;
+//     for (i = 0; i < packet_in.length; i++) {
+//         packet[i] = packet_in[i];
+//         console.log(packet[i]);
+//     }
+//     if (packet.length == kermit_offset_mark) {
+//         if (data != kermit_mark) {
+//             console.log('hasdiug');
+//             return false;
+//         }
+//         packet.push(data);
+//         return packet;
+//     }
+//     if (packet.length == kermit_offset_len) {
+//         packet.push(data);
+//         if (kermit_length(packet) > kermit_packet_size_max) {
+//             return false;
+//         }
+//         if (kermit_length(packet) < kermit_packet_size_min) {
+//             return false;
+//         }
+//         return packet;
+//     }
+//     if (packet.length == kermit_offset_seq) {
+//         if (kermit_unchar(data) < kermit_packet_seq_min) {
+//             return false;
+//         }
+//         if (kermit_unchar(data) > kermit_packet_seq_max) {
+//             return false;
+//         }
+//         packet.push(data);
+//         return packet;
+//     }
+//     if (packet.length == kermit_offset_type) {
+//         packet.push(data);
+//         return packet;
+//     }
+//     if (packet.length >= kermit_offset_data) {
+//         // recv ok, stop recv
+//         if (packet.length >= kermit_length(packet)) {
+//             return packet;
+//         }
+//         // recv sum
+//         if (packet.length == (kermit_length(packet) - 1)) {
+//             packet.push(data);
+//             if (kermit_chksum(packet) == false) {
+//                 // mask packet is bad sum
+//                 packet[kermit_offset_type] = 'Q'.codePointAt();
+//             }
+//             return packet;
+//         }
+//         // recv data
+//         packet.push(data);
+//         return packet;
+//     }
+// }
+// function kermit_recv(packet_in, data) {
+//     console.log('处理接收到的数据');
+//     let packet = Array.from(packet_in); // 确保深拷贝
+//     if (packet.length == kermit_offset_mark) {
+//         if (data != kermit_mark) {
+//             console.log('test1');
+//             return false;
+//         }
+//         packet.push(data);
+//         return packet;
+//     }
+//     if (packet.length == kermit_offset_len) {
+//         packet.push(data);
+//         if (kermit_length(packet) > kermit_packet_size_max || kermit_length(packet) < kermit_packet_size_min) {
+//             console.log('test2');
+//             return false;
+//         }
+//         return packet;
+//     }
+//     if (packet.length == kermit_offset_seq) {
+//         if (kermit_unchar(data) < kermit_packet_seq_min || kermit_unchar(data) > kermit_packet_seq_max) {
+//             console.log('test3');
+//             return false;
+//         }
+//         packet.push(data);
+//         return packet;
+//     }
+//     if (packet.length == kermit_offset_type) {
+//         packet.push(data);
+//         return packet;
+//     }
+//     if (packet.length >= kermit_offset_data) {
+//         if (packet.length >= kermit_length(packet)) {
+//             return packet;
+//         }
+//         if (packet.length == (kermit_length(packet) - 1)) {
+//             packet.push(data);
+//             if (!kermit_chksum(packet)) {
+//                 packet[kermit_offset_type] = 'Q'.codePointAt();
+//             }
+//             return packet;
+//         }
+//         packet.push(data);
+//         return packet;
+//     }
+// }
 
 
 
@@ -249,6 +533,7 @@ async function kermit_trans(port, packet) {
     let time_start = Date.now();
     let writer;
     let reader;
+    let count = 0;
 
     try {
         // 获取写入器
@@ -257,16 +542,20 @@ async function kermit_trans(port, packet) {
 
         // 发送数据包
         await writer.write(encoder.encode(packet));
-        console.log("已发送数据包:", packet);
+        console.log("已发送数据包:", encoder.encode(packet));
 
         // 获取读取器
         reader = port.readable.getReader();
 
         while (flag === 1) {
-            console.log('test');
+            if (count > 10) {
+                return;
+            }
             const { value, done } = await reader.read();
-            console.log("读取到数据:", value, done);
-            
+            console.log("读取到数据:");
+            console.log('value:', value);
+            console.log('done:', done);
+
             if (done) {
                 console.log("串口已关闭或读取结束");
                 break;
@@ -276,6 +565,29 @@ async function kermit_trans(port, packet) {
             for (const byte of value) {
                 let c = byte;
                 a = kermit_recv(a, c);
+                console.log(a);
+
+                // recv bad header
+                if (a <= -60 && a >= -64) {
+                    console.log("recv bad header");
+                    console.log('重新发送数据包');
+                    await writer.write(encoder.encode(packet));
+                    time_start = Date.now();
+                    a = [];
+                    count++;
+                    break;
+                }
+
+                if (a.length > kermit_offset_type) {
+                    // recv bad sum
+                    if (String.fromCharCode(a[kermit_offset_type]) == 'Q') {
+                        console.log("recv bad sum packet");
+                        await writer.write(encoder.encode(packet));
+                        time_start = Date.now();
+                        a = [];
+                        break;
+                    }
+                }
 
                 // 如果接收到了完整的数据包
                 if (a.length === kermit_length(a)) {
@@ -306,8 +618,8 @@ async function kermit_trans(port, packet) {
             console.error("关闭读取器、写入器时发生错误:", error);
         }
     }
-
 }
+
 
 // 发送文件函数
 async function kermit_sendfile(port, file, filesize) {
@@ -398,45 +710,4 @@ async function burn(blob) {
 export { burn };
 
 
-// async function burn(blob) {
-//     let port;
-//     try {
-//         console.log('二进制文件数据', blob);
-
-//         // 选择并请求串口
-//         port = await navigator.serial.requestPort();
-//         console.log("已选择串口:", port);
-
-//         // 打开串口并设置波特率
-//         await port.open({ baudRate: 115200 });
-//         console.log("已打开串口:", port);
-
-//         // 读取 blob 数据并写入串口
-//         const reader = new FileReader();
-//         reader.onload = async function () {
-//             let fileData = [1,2,3,4,5];
-//              fileData = new Uint8Array(fileData);
-            
-//             const writer = port.writable.getWriter();
-//             console.log(fileData);
-//             await writer.write(fileData);
-//              // 获取读取器
-//        const  reader1 = port.readable.getReader();
-//        console.log( reader1.read());
-//             const { value, done } = await reader1.read();
-//             console.log("读取到数据:", value, done);
-//             console.log("文件数据已发送完毕");
-//         };
-
-//         reader.readAsArrayBuffer(blob);
-
-//     } catch (error) {
-//         console.error("烧录过程中发生错误:", error);
-//         throw error; // 抛出异常以便上层函数处理
-//     }
-// }
-
-
-// // 导出函数，使其可在模块外部使用
-// export { burn };
 
