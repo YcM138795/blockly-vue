@@ -1,6 +1,5 @@
 
 import axios from 'axios'; // 确保正确导入 axios
-import { burn } from './kermit.js'; // 导入 burn 函数
 // 下载文件并自动下载
 async function downloadFile(url) {
     try {
@@ -10,11 +9,9 @@ async function downloadFile(url) {
             responseType: 'blob' // 获取二进制数据
         });
         console.log(response);
-
         // 调用自动下载文件的函数
-        autoDownloadFile(response.data, 'test.bin');
+        autoDownloadFile(response.data, 'binary_file.bin');
         
-        return response.data; // 返回 blob 数据
     } catch (error) {
         console.error('下载文件时出错:', error);
         throw error;
@@ -177,19 +174,9 @@ void M0p_ota(void)
     const fileUrl = response.data.msg;
     console.log('Download URL:', fileUrl);
 
-    const blob = await downloadFile(fileUrl);
-    console.log(blob.size);
-    console.log('获取编译文件成功');
+    await downloadFile(fileUrl);
 
-    let result = await burn(blob)
-
-
-    if (result) {
-        return result;
-    } else {
-        return '下载成功'
-    }
-
+    return '二进制文件获取成功';
 
 } catch (error) {
     console.error('Error in the main function:', error);
