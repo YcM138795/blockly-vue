@@ -15,58 +15,18 @@ import { dartGenerator } from 'blockly/dart';
                     "helpUrl": "",
                     "message0": "while %1 %2 执行 %3",
                     "args0": [
-                      {
-                        "type": "field_input",
-                        "name": " condition",
-                        "text": "1"
-                      },
-                      {
-                        "type": "input_dummy",
-                        "name": "NAME"
-                      },
-                      {
-                        "type": "input_statement",
-                        "name": "inner"
-                      }
-                    ],
-                    "previousStatement": null,
-                    "nextStatement": null,
-                    "colour": '#E6CEAC'
-                  })
-            }
-        }
-        javascriptGenerator.forBlock['implement'] = function(block,generator) {
-            const text__condition = block.getFieldValue(' condition');
-          
-            const statement_inner = generator.statementToCode(block, 'inner');
-          
-            // TODO: Assemble javascript into the code variable.
-            const code = `while(${text__condition}){\n${statement_inner}\n}\n`;
-            return code;
-          }
-        dartGenerator.forBlock['implement'] = function(block) {
-            const text__condition = block.getFieldValue(' condition');
-          
-          
-            // TODO: Assemble dart into the code variable.
-            const code = `console.log('while ${text__condition}执行')\n`;
-            return code;
-        }
-    }
-
-    //init_gpio:初始化引脚
-    {
-        Blockly.Blocks['init_gpio'] = {
-            init: function () {
-                this.jsonInit({
-                    "type": "init_gpio",
-                    "tooltip": "初始化GPIO",
-                    "helpUrl": "",
-                    "message0": "初始化GPIO %1",
-                    "args0": [
+                        {
+                            "type": "field_input",
+                            "name": " condition",
+                            "text": "1"
+                        },
                         {
                             "type": "input_dummy",
                             "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "inner"
                         }
                     ],
                     "previousStatement": null,
@@ -75,19 +35,26 @@ import { dartGenerator } from 'blockly/dart';
                 })
             }
         }
-        javascriptGenerator.forBlock['init_gpio'] = function () {
+        javascriptGenerator.forBlock['implement'] = function (block, generator) {
+            const text__condition = block.getFieldValue(' condition');
+
+            const statement_inner = generator.statementToCode(block, 'inner');
 
             // TODO: Assemble javascript into the code variable.
-            const code = `LED_gpio_init();\n`;
+            const code = `while(${text__condition}){\n${statement_inner}\n}\n`;
             return code;
         }
-        dartGenerator.forBlock['init_gpio'] = function () {
-            // var number_digital = block.getFieldValue('digital');
-            var code = `console.log('初始化GPIO')\n`
+        dartGenerator.forBlock['implement'] = function (block) {
+            const text__condition = block.getFieldValue(' condition');
+
+
+            // TODO: Assemble dart into the code variable.
+            const code = `console.log('while ${text__condition}执行')\n`;
             return code;
-        };
+        }
     }
-    //init_board:初始化引脚
+
+    //init_board:初始化板子
     {
         Blockly.Blocks['init_board'] = {
             init: function () {
@@ -111,7 +78,7 @@ import { dartGenerator } from 'blockly/dart';
         javascriptGenerator.forBlock['init_board'] = function () {
 
             // TODO: Assemble javascript into the code variable.
-            const code = `board_init();\n gpio = bflb_device_get_by_name("gpio");\n`;
+            const code = `board_init();\n`;
             return code;
         }
         dartGenerator.forBlock['init_board'] = function () {
@@ -120,6 +87,75 @@ import { dartGenerator } from 'blockly/dart';
             return code;
         };
     }
+
+
+    //init_Light:初始化引脚
+    {
+        Blockly.Blocks['init_Light'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "init_Light",
+                    "tooltip": "初始化灯",
+                    "helpUrl": "",
+                    "message0": "初始化灯 %1",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": '#E6CEAC'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['init_Light'] = function () {
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `Light_init();\n`;
+            return code;
+        }
+        dartGenerator.forBlock['init_Light'] = function () {
+            // var number_digital = block.getFieldValue('digital');
+            var code = `console.log('初始化灯')\n`
+            return code;
+        };
+    }
+    //init_Fmq:初始化蜂鸣器
+    {
+        Blockly.Blocks['init_Fmq'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "init_Fmq",
+                    "tooltip": "初始化蜂鸣器",
+                    "helpUrl": "",
+                    "message0": "初始化蜂鸣器 %1",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": '#E6CEAC'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['init_Fmq'] = function () {
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `Fmq_init();\n`;
+            return code;
+        }
+        dartGenerator.forBlock['init_Fmq'] = function () {
+            // var number_digital = block.getFieldValue('digital');
+            var code = `console.log('初始化蜂鸣器')\n`
+            return code;
+        };
+    }
+
 
     //delay:延时
     {
@@ -131,11 +167,167 @@ import { dartGenerator } from 'blockly/dart';
                     "helpUrl": "",
                     "message0": "延时-- %1 秒 %2",
                     "args0": [
+                        {
+                            "type": "field_number",
+                            "name": "timer",
+                            "value": 0,
+                            "min": 0
+                        },
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": '#E6CEAC'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['delay'] = function (block) {
+            const number_timer = block.getFieldValue('timer');
+            let time = number_timer * 1000;
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `bflb_mtimer_delay_ms(${time});\n`;
+            return code;
+        }
+        dartGenerator.forBlock['delay'] = function (block) {
+            const number_timer = block.getFieldValue('timer');
+
+            // TODO: Assemble dart into the code variable.
+            const code = `console.log('延时${number_timer}秒')\n`;
+            return code;
+        }
+    }
+
+    //Light_on:亮灯
+    {
+        Blockly.Blocks['Light_on'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "Light_on",
+                    "tooltip": "亮灯",
+                    "helpUrl": "",
+                    "message0": "亮灯 %1 %2",
+                    "args0": [
+                        {
+                            "type": "field_dropdown",
+                            "name": "options",
+                            "options": [
+                                [
+                                    "左灯",
+                                    "LEFT"
+                                ],
+                                [
+                                    "右灯",
+                                    "RIGHT"
+                                ]
+                            ]
+                        },
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": '#E6CEAC'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['Light_on'] = function (block) {
+            const dropdown_options = block.getFieldValue('options');
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `Light_on(${dropdown_options});\n`;
+            return code;
+        }
+
+        dartGenerator.forBlock['Light_on'] = function (block) {
+            const dropdown_options = block.getFieldValue('options');
+
+            // TODO: Assemble dart into the code variable.
+            const code = `console.log('亮灯${dropdown_options}')\n`;
+            return code;
+        }
+    }
+
+    //Light_off:灭灯
+    {
+        Blockly.Blocks['Light_off'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "Light_off",
+                    "tooltip": "灭灯",
+                    "helpUrl": "",
+                    "message0": "灭灯 %1 %2",
+                    "args0": [
+                        {
+                            "type": "field_dropdown",
+                            "name": "options",
+                            "options": [
+                                [
+                                    "左灯",
+                                    "LEFT"
+                                ],
+                                [
+                                    "右灯",
+                                    "RIGHT"
+                                ]
+                            ]
+                        },
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": '#E6CEAC'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['Light_off'] = function (block) {
+            const dropdown_options = block.getFieldValue('options');
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `Light_off(${dropdown_options});\n`;
+            return code;
+        }
+
+        dartGenerator.forBlock['Light_off'] = function (block) {
+            const dropdown_options = block.getFieldValue('options');
+
+            // TODO: Assemble dart into the code variable.
+            const code = `console.log('灭灯${dropdown_options}')\n`;
+            return code;
+        }
+    }
+
+    //Fmq_control:控制蜂鸣器
+    {
+        Blockly.Blocks['Fmq_control'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "Fmq_control",
+                    "tooltip": "控制蜂鸣器",
+                    "helpUrl": "",
+                    "message0": "蜂鸣器 %1 %2",
+                    "args0": [
                       {
-                        "type": "field_number",
-                        "name": "timer",
-                        "value": 0,
-                        "min": 0
+                        "type": "field_dropdown",
+                        "name": "options",
+                        "options": [
+                          [
+                            "开启",
+                            "on"
+                          ],
+                          [
+                            "关闭",
+                            "off"
+                          ]
+                        ]
                       },
                       {
                         "type": "input_dummy",
@@ -146,110 +338,21 @@ import { dartGenerator } from 'blockly/dart';
                     "nextStatement": null,
                     "colour": '#E6CEAC'
                   })
-            }
+            },
         }
-        javascriptGenerator.forBlock['delay'] = function(block) {
-            const number_timer = block.getFieldValue('timer');
-            let time = number_timer * 100;
+        javascriptGenerator.forBlock['Fmq_control'] = function(block) {
+            const dropdown_options = block.getFieldValue('options');
           
             // TODO: Assemble javascript into the code variable.
-            const code = `bflb_mtimer_delay_ms(${time});\n`;
+            const code = `Fmq_${dropdown_options}(ALL);\n`;
             return code;
           }
-        dartGenerator.forBlock['delay'] = function(block) {
-            const number_timer = block.getFieldValue('timer');
+        dartGenerator.forBlock['Fmq_control'] = function(block) {
+            const dropdown_options = block.getFieldValue('options');
           
-            // TODO: Assemble dart into the code variable.
-            const code = `console.log('延时${number_timer}秒')\n`;
-            return code;
+            return `console.log('${dropdown_options}蜂鸣器')\n`
+
           }
-    }
-
-    //left_led:左转灯
-    {
-        Blockly.Blocks['left_led'] = {
-            init: function () {
-                this.jsonInit({
-                    "type": "left_led",
-                    "tooltip": "亮左转灯",
-                    "helpUrl": "",
-                    "message0": "左转灯 %1",
-                    "args0": [
-                        {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                        }
-                    ],
-                    "previousStatement": null,
-                    "nextStatement": null,
-                    "colour": '#E6CEAC'
-                })
-            }
-        }
-        javascriptGenerator.forBlock['left_led'] = function () {
-            return `ll();\n`
-        },
-        dartGenerator.forBlock['left_led'] = function () {
-                return `console.log('左转灯')\n`
-        }
-    }
-
-    //right_led:右转灯
-    {
-        Blockly.Blocks['right_led'] = {
-            init: function () {
-                this.jsonInit({
-                    "type": "right_led",
-                    "tooltip": "亮右转灯",
-                    "helpUrl": "",
-                    "message0": "右转灯 %1",
-                    "args0": [
-                        {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                        }
-                    ],
-                    "previousStatement": null,
-                    "nextStatement": null,
-                    "colour": '#E6CEAC'
-                })
-            },
-        }
-        javascriptGenerator.forBlock['right_led'] = function () {
-            return `rl();\n`
-        },
-            dartGenerator.forBlock['right_led'] = function () {
-                return `console.log('右转灯')\n`
-            }
-    }
-
-    //bell:蜂鸣器
-    {
-        Blockly.Blocks['bell'] = {
-            init: function () {
-                this.jsonInit({
-                    "type": "bell",
-                    "tooltip": "蜂鸣器",
-                    "helpUrl": "",
-                    "message0": "蜂鸣器 %1",
-                    "args0": [
-                        {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                        }
-                    ],
-                    "previousStatement": null,
-                    "nextStatement": null,
-                    "colour": '#E6CEAC'
-                })
-            },
-        }
-        javascriptGenerator.forBlock['bell'] = function () {
-            return `bell();\n`
-        },
-            dartGenerator.forBlock['bell'] = function () {
-                return `console.log('蜂鸣器')\n`
-            }
     }
 
     //left左转
@@ -276,9 +379,9 @@ import { dartGenerator } from 'blockly/dart';
         javascriptGenerator.forBlock['left'] = function () {
             return `left();\n`
         },
-        dartGenerator.forBlock['left'] = function () {
+            dartGenerator.forBlock['left'] = function () {
                 return `console.log('左转')\n`
-        }
+            }
     }
     //right右转
     {
@@ -305,9 +408,9 @@ import { dartGenerator } from 'blockly/dart';
         javascriptGenerator.forBlock['right'] = function () {
             return `right();\n`
         },
-        dartGenerator.forBlock['right'] = function () {
+            dartGenerator.forBlock['right'] = function () {
                 return `console.log('右转')\n`
-        }
+            }
     }
     //go前进
     {
@@ -333,9 +436,9 @@ import { dartGenerator } from 'blockly/dart';
         javascriptGenerator.forBlock['go'] = function () {
             return `go();\n`
         },
-        dartGenerator.forBlock['go'] = function () {
+            dartGenerator.forBlock['go'] = function () {
                 return `console.log('前进')\n`
-        }
+            }
     }
     //back后退
     {
@@ -361,9 +464,9 @@ import { dartGenerator } from 'blockly/dart';
         javascriptGenerator.forBlock['back'] = function () {
             return `back();\n`
         },
-        dartGenerator.forBlock['back'] = function () {
+            dartGenerator.forBlock['back'] = function () {
                 return `console.log('后退')\n`
-        }
+            }
     }
 
 

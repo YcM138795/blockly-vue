@@ -33,7 +33,11 @@ export default {
               },
               {
                 kind: "block",
-                type: "init_gpio"
+                type: "init_Light"
+              },
+              {
+                kind: "block",
+                type: "init_Fmq"
               },
               {
                 kind: "block",
@@ -49,15 +53,15 @@ export default {
               },
               {
                 kind: "block",
-                type: "left_led"
+                type: "Light_on"
               },
               {
                 kind: "block",
-                type: "right_led"
+                type: "Light_off"
               },
               {
                 kind: "block",
-                type: "bell"
+                type: "Fmq_control"
               },
 
               {
