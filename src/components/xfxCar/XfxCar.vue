@@ -33,6 +33,10 @@ export default {
               },
               {
                 kind: "block",
+                type: "Serial_Port_Burning"
+              },
+              {
+                kind: "block",
                 type: "init_Light"
               },
               {

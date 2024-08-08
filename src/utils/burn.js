@@ -85,6 +85,7 @@ async function serial_open(refs) {
         return;
     }
     if (comport_opened) {
+        stat.value = "端口已打开";
         return;
     }
     try {
@@ -277,7 +278,6 @@ async function kermit_start(refs) {
         kermit_stat.value = "烧录失败：请先选择串口"
         return
     }
-    console.log("开始烧录");
 
     var upload_file = refs.upload_file.files[0];
     console.log(upload_file);
@@ -289,6 +289,8 @@ async function kermit_start(refs) {
     if (krun) {
         return;
     }
+    console.log("开始烧录");
+
     var seq = 0;
     var pkt = [];
     krun = true;

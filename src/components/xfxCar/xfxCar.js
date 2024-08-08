@@ -5,6 +5,39 @@ import { dartGenerator } from 'blockly/dart';
 
 //小飞象智能车
 {
+    //Serial_Port_Burning:板子烧录的处理
+    {
+        Blockly.Blocks['Serial_Port_Burning'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "Serial_Port_Burning",
+                    "tooltip": "板子烧录的处理",
+                    "helpUrl": "",
+                    "message0": "板子烧录的处理 %1",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        }
+                    ],
+                    "previousStatement": null,
+                    "nextStatement": null,
+                    "colour": '#E6CEAC'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['Serial_Port_Burning'] = function () {
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `int Serial_Port_Burning;\n int Serial_Port_Burning_res;\nwhile(1){\ncdc_acm_tx_task();\n Serial_Port_Burning=cdc_acm_getc();\n if(Serial_Port_Burning >= 0){\nkermit_task(Serial_Port_Burning);\n}}\n`;
+            return code;
+        }
+        dartGenerator.forBlock['Serial_Port_Burning'] = function () {
+            // var number_digital = block.getFieldValue('digital');
+            var code = `console.log('板子烧录的处理')\n`
+            return code;
+        };
+    }
     //implement:执行内部逻辑
     {
         Blockly.Blocks['implement'] = {
@@ -78,7 +111,7 @@ import { dartGenerator } from 'blockly/dart';
         javascriptGenerator.forBlock['init_board'] = function () {
 
             // TODO: Assemble javascript into the code variable.
-            const code = `board_init();\n`;
+            const code = `board_init();\ncdc_acm_init();\n`;
             return code;
         }
         dartGenerator.forBlock['init_board'] = function () {
@@ -87,6 +120,7 @@ import { dartGenerator } from 'blockly/dart';
             return code;
         };
     }
+    
 
 
     //init_Light:初始化引脚
@@ -344,7 +378,7 @@ import { dartGenerator } from 'blockly/dart';
             const dropdown_options = block.getFieldValue('options');
           
             // TODO: Assemble javascript into the code variable.
-            const code = `Fmq_${dropdown_options}(ALL);\n`;
+            const code = `Fmq_${dropdown_options}(fengmingqi);\n`;
             return code;
           }
         dartGenerator.forBlock['Fmq_control'] = function(block) {
