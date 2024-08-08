@@ -1,12 +1,6 @@
-import Blockly from 'blockly'
-import javascript from 'blockly/javascript';
-import dart from 'blockly/dart';
-
-import { Order } from 'blockly/javascript';
-
-import * as hans from 'blockly/msg/zh-hans'
-Blockly.setLocale(hans);//汉化
-
+import * as Blockly from 'blockly/core';
+import {javascriptGenerator, Order} from 'blockly/javascript';
+import {dartGenerator} from 'blockly/dart';
 
 // 基础
 {
@@ -41,18 +35,66 @@ Blockly.setLocale(hans);//汉化
         })
       }
     }
-    javascript.javascriptGenerator.forBlock['number_variable'] = function (block, generator) {
+    javascriptGenerator.forBlock['number_variable'] = function (block, generator) {
       var text_value1 = block.getFieldValue('value1');
       var value_value2 = generator.valueToCode(block, 'value2', Order.ATOMIC);
       // TODO: Assemble javascript into code variable.
       var code = `int ${text_value1} = ${value_value2};\n`;
       return code;
     };
-    dart.dartGenerator.forBlock['number_variable'] = function (block, generator) {
+    dartGenerator.forBlock['number_variable'] = function (block, generator) {
       var text_value1 = block.getFieldValue('value1');
       var value_value2 = generator.valueToCode(block, 'value2', Order.ATOMIC);
       // TODO: Assemble javascript into code variable.
       var code = `let ${text_value1} = ${value_value2};\n`;
+      return code;
+    };
+  }
+  //Decrease:变量自减
+  {
+    Blockly.Blocks['Decrease'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "Decrease",
+          "tooltip": "变量自减",
+          "helpUrl": "",
+          "message0": "自减 %1 每次自减 %2 %3",
+          "args0": [
+            {
+              "type": "field_input",
+              "name": "target_value",
+              "text": "a"
+            },
+            {
+              "type": "field_number",
+              "name": "digit",
+              "value": 1
+            },
+            {
+              "type": "input_dummy",
+              "name": "target"
+            }
+          ],
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 180
+        })
+      }
+    }
+    javascriptGenerator.forBlock['Decrease'] = function(block) {
+      const text_target_value = block.getFieldValue('target_value');
+      const number_digit = block.getFieldValue('digit');
+    
+      // TODO: Assemble javascript into the code variable.
+      const code = `${text_target_value} -= ${number_digit};\n`;
+      return code;
+    }
+    dartGenerator.forBlock['Decrease'] = function (block) {
+      const text_target_value = block.getFieldValue('target_value');
+      const number_digit = block.getFieldValue('digit');
+    
+      // TODO: Assemble dart into the code variable.
+      const code = `${text_target_value} -= ${number_digit};\n`;
       return code;
     };
   }
@@ -79,14 +121,14 @@ Blockly.setLocale(hans);//汉化
         })
       }
     }
-    javascript.javascriptGenerator.forBlock['string'] = function (block) {
+    javascriptGenerator.forBlock['string'] = function (block) {
       var text_value = block.getFieldValue('value');
       // TODO: Assemble javascript into code variable.
       var code = `${text_value}`;
       // TODO: Change ORDER_NONE to the correct strength.
       return [code, Order.MEMBER];
     };
-    dart.dartGenerator.forBlock['string'] = function (block) {
+    dartGenerator.forBlock['string'] = function (block) {
       var text_value = block.getFieldValue('value');
       // TODO: Assemble javascript into code variable.
       var code = `${text_value}`;
@@ -127,15 +169,15 @@ Blockly.setLocale(hans);//汉化
         );
       }
     }
-    javascript.javascriptGenerator.forBlock['bracket'] = function (block, generator) {
-      var value_digit = generator.valueToCode(block, 'digit', dart.Order.ATOMIC);
+    javascriptGenerator.forBlock['bracket'] = function (block, generator) {
+      var value_digit = generator.valueToCode(block, 'digit', Order.ATOMIC);
       // TODO: Assemble javascript into code variable.
       var code = '(' + value_digit + ')';
       // TODO: Change ORDER_NONE to the correct strength.
       return [code, Order.NONE];
     };
-    dart.dartGenerator.forBlock['bracket'] = function (block, generator) {
-      var value_digit = generator.valueToCode(block, 'digit', dart.Order.ATOMIC);
+    dartGenerator.forBlock['bracket'] = function (block, generator) {
+      var value_digit = generator.valueToCode(block, 'digit', Order.ATOMIC);
       // TODO: Assemble javascript into code variable.
       var code = '(' + value_digit + ')';
       // TODO: Change ORDER_NONE to the correct strength.
@@ -158,12 +200,20 @@ Blockly.setLocale(hans);//汉化
         this.setDeletable(false);
       }
     };
-    javascript.javascriptGenerator.forBlock['int_main'] = function (block) {
-      var statements_operate = javascript.javascriptGenerator.statementToCode(block, 'operate');
+    javascriptGenerator.forBlock['int_main'] = function (block) {
+      var statements_operate = javascriptGenerator.statementToCode(block, 'operate');
       // TODO: Assemble javascript into code variable.
       var code = `int main(){\n${statements_operate} \nreturn 0;\n}`;
       return code;
     };
+    dartGenerator.forBlock['int_main'] = function (block,generator) {
+      var statements_operate = generator.statementToCode(block, 'operate');
+      // TODO: Assemble javascript into code variable.
+  // var code =`int main(){\n${statements_operate} \nreturn 0;\n}` ;
+  var code =`${statements_operate}` ;
+      return code;
+    };
+  
 
   }
 

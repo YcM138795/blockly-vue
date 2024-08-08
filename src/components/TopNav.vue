@@ -46,6 +46,27 @@
                 <img src="../assets/SVG/灯亮.svg" :style="{ display: imgShow == 'img1' ? 'block' : 'none' }">
                 <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
             </div>
+            <div class="dowmload" :style="{ display: viewShow == 'dowmload' ? 'block' : 'none' }">
+                <br><br><br><br>
+                <button @click="serial_request">请求端口</button>
+                <button @click="serial_forget">忘记端口</button>
+                <br><br>
+                <button @click="serial_open">打开端口</button>
+                <button @click="serial_close">关闭串口</button>
+                <br><br>
+                <span>波率</span>
+                <input type="text" ref="baudrate" value="2000000" size="4">
+                &nbsp;&nbsp;
+                <input type="text" ref="stat" value="串口信息提示" size="18" readonly="readonly">
+                <br><br>
+                <input  type="file" ref="upload_file" name="upload_file" />
+                <br><br>        
+                <input type="text" ref="kermit_stat" value="烧录信息提示" size="24" readonly="readonly">
+                <br><br>
+                <button @click="kermit_start">开始烧录</button>
+                <button @click="kermit_stop">停止烧录</button>
+                <br>
+            </div>
         </div>
     </div>
 
@@ -53,7 +74,7 @@
 
 <script>
 import { postData } from '../utils'
-
+import { serial_request, serial_forget, serial_open, serial_close, kermit_start, kermit_stop } from '../utils/burn'
 export default {
     name: 'TopNav',
 
@@ -66,6 +87,7 @@ export default {
             imgShow: 'img1',
             //右侧视图的展示选择
             viewShow: '',
+            dowmloadShow: '',
             oneShow: false,
             twoShow: false,
             threeShow: false,
@@ -82,6 +104,24 @@ export default {
         },
     },
     methods: {
+        serial_request() {
+            serial_request(this.$refs);
+        },
+        serial_forget() {
+            serial_forget(this.$refs);
+        },
+        serial_open() {
+            serial_open(this.$refs);
+        },
+        serial_close() {
+            serial_close(this.$refs);
+        },
+        kermit_start() {
+            kermit_start(this.$refs);
+        },
+        kermit_stop() {
+            kermit_stop(this.$refs);
+        },
         //返回
         returnAction() {
             alert('返回')
@@ -117,7 +157,7 @@ export default {
                 clearTimeout(this.timerId);
             }
             if (this.viewShow == 'run')
-            console.log('开始亮灭灯操作');
+                console.log('开始亮灭灯操作');
             console.log(this.ledArr);
             //提前保存this,确保executeAction函数内部this的报错
             const that = this
@@ -150,11 +190,24 @@ export default {
             this.$emit('viewShowUpdate', this.viewShow);
         },
 
-        //提示
-        dowmloadAction() {
-            let state = postData(this.code);
-            state.then((result) => {
-                if (result === '二进制文件获取失败') {
+        //下载
+        async dowmloadAction() {
+            this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'code';
+            let state;
+            if (this.viewShow == 'dowmload') {
+                state = await postData(this.code);
+                console.log(state);
+                
+                if (state === '二进制文件获取成功') {
+                    const h = this.$createElement;
+                    this.$notify({
+                        title: '',
+                        message: h('i', { style: 'color: teal' }, '二进制文件获取成功'),
+                        duration: 700,
+                        type: 'success',
+                        offset: 50
+                    });
+                } else {
                     const h = this.$createElement;
                     this.$notify({
                         title: '',
@@ -163,28 +216,14 @@ export default {
                         type: 'error',
                         offset: 50
                     });
-                } else if (result === '未选择串口或串口通信打开错误') {
-                    const h = this.$createElement;
-                    this.$notify({
-                        title: '',
-                        message: h('i', { style: 'color: teal' }, '未选择串口或串口通信打开错误'),
-                        duration: 700,
-                        type: 'error',
-                        offset: 50
-                    });
-                } else if (result === '下载成功') {
-                    const h = this.$createElement;
-                    this.$notify({
-                        title: '',
-                        message: h('i', { style: 'color: teal' }, '下载成功'),
-                        duration: 700,
-                        type: 'success',
-                        offset: 50
-                    });
                 }
 
+            }
+            this.$emit('viewShowUpdate', this.viewShow);
+            state = '';
+            
 
-            })
+
         },
 
         //清除
@@ -220,6 +259,8 @@ export default {
         exampleThree() {
             this.threeShow = !this.threeShow
         },
+
+
 
 
 
@@ -453,5 +494,30 @@ export default {
 #animation img {
     width: 160px;
     height: auto
+}
+
+.dowmload button {
+    margin: 0 5px;
+    background-color: rgb(233, 241, 252);
+    height: 60px;
+    width: 100px;
+    border: none;
+    border-radius: 50%;
+    background-image: url('../assets/SVG/按钮.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* 图片大小适应按钮 */
+    background-position: center;
+    /* 图片居中 */
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+.dowmload Button:hover {
+    transform: scale(1.05);
+    /* filter: brightness(110%); */
+}
+
+.dowmload Button:active {
+    transform: translateY(1px);
 }
 </style>

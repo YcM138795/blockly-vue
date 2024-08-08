@@ -6,9 +6,11 @@
 
 <script>
 
-// import * as monaco from "monaco-editor";
+import 'blockly';
 import "./logic";
-import "./if"
+import 'blockly/msg/zh-hans';
+// import '@blockly/block-plus-minus';
+
 
 export default {
   name: "LogicBlock",
@@ -25,16 +27,13 @@ export default {
               "icon": "logicIcon"
             },
             "contents": [
+            {
+          "kind": "label",
+          "text": "条件"
+        },
               {
                 "kind": "block",
                 "type": "controls_if"
-              },
-              {
-                "kind": "block",
-                "type": "controls_if",
-                "extraState": {
-                  "hasElse": true,
-                }
               },
               {
                 "kind": "block",

@@ -35,6 +35,11 @@
               },
               {
                 kind: "block",
+
+                type: "Decrease"
+              },
+              {
+                kind: "block",
                 type: "bracket"
               },
             ]

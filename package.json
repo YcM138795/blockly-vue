@@ -8,8 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@blockly/block-plus-minus": "^8.0.4",
+    "@blockly/continuous-toolbox": "^6.0.4",
     "axios": "^1.7.2",
-    "blockly": "^10.4.3",
+    "blockly": "^11.1.1",
     "child_process": "^1.0.2",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
