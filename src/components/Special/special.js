@@ -1,6 +1,7 @@
 import * as Blockly from 'blockly/core';
-import {javascriptGenerator, Order} from 'blockly/javascript';
-import {dartGenerator} from 'blockly/dart';
+import { javascriptGenerator, Order } from 'blockly/javascript';
+import { dartGenerator } from 'blockly/dart';
+import '@blockly/field-bitmap';
 
 // 基础
 {
@@ -81,10 +82,10 @@ import {dartGenerator} from 'blockly/dart';
         })
       }
     }
-    javascriptGenerator.forBlock['Decrease'] = function(block) {
+    javascriptGenerator.forBlock['Decrease'] = function (block) {
       const text_target_value = block.getFieldValue('target_value');
       const number_digit = block.getFieldValue('digit');
-    
+
       // TODO: Assemble javascript into the code variable.
       const code = `${text_target_value} -= ${number_digit};\n`;
       return code;
@@ -92,7 +93,7 @@ import {dartGenerator} from 'blockly/dart';
     dartGenerator.forBlock['Decrease'] = function (block) {
       const text_target_value = block.getFieldValue('target_value');
       const number_digit = block.getFieldValue('digit');
-    
+
       // TODO: Assemble dart into the code variable.
       const code = `${text_target_value} -= ${number_digit};\n`;
       return code;
@@ -203,20 +204,41 @@ import {dartGenerator} from 'blockly/dart';
     javascriptGenerator.forBlock['int_main'] = function (block) {
       var statements_operate = javascriptGenerator.statementToCode(block, 'operate');
       // TODO: Assemble javascript into code variable.
-      var code = `int main(){\n${statements_operate} \nreturn 0;\n}`;
+      var code = `int main(){\nboard_init();\ncdc_acm_init();\n${statements_operate} \nreturn 0;\n}`;
       return code;
     };
-    dartGenerator.forBlock['int_main'] = function (block,generator) {
+    dartGenerator.forBlock['int_main'] = function (block, generator) {
       var statements_operate = generator.statementToCode(block, 'operate');
       // TODO: Assemble javascript into code variable.
-  // var code =`int main(){\n${statements_operate} \nreturn 0;\n}` ;
-  var code =`${statements_operate}` ;
+      // var code =`int main(){\n${statements_operate} \nreturn 0;\n}` ;
+      var code = `${statements_operate}`;
       return code;
     };
-  
-
   }
 
+  Blockly.defineBlocksWithJsonArray([
+    {
+      type: 'test_field_bitmap',
+      message0: 'bitmap: %1',
+      args0: [
+        {
+          type: 'field_bitmap',
+          name: 'FIELDNAME',
+          width: 5,
+          height: 5,
+          colours:{filled: '#4d8c8c', empty: '#fff'}
+        },
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 180
+    },
+  ]);
+  javascriptGenerator.forBlock['test_field_bitmap'] = function () {
+    // TODO: Assemble javascript into code variable.
+    var code = ``;
+    return code;
+  };
 
 
 }

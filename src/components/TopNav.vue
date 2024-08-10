@@ -9,7 +9,7 @@
                 <span style="font-family: '阿里妈妈刀隶体 Regular', sans-serif;">积木代码编程</span>
             </div>
             <div class="right">
-                <button class="runButton" title="运行" @click="runAction"></button>
+                <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
                 <button class="dowmloadButton" title="云下载" @click="dowmloadAction"></button>
@@ -141,48 +141,48 @@ export default {
         },
 
         //运行
-        runAction() {
-            this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
-            this.$emit('viewShowUpdate', this.viewShow);
-            //确保this.ledShow();是在主组件ledArr数据修改后调用
-            this.$nextTick(() => {
-                this.ledShow();
-            });
-        },
+        // runAction() {
+        //     this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
+        //     this.$emit('viewShowUpdate', this.viewShow);
+        //     //确保this.ledShow();是在主组件ledArr数据修改后调用
+        //     this.$nextTick(() => {
+        //         this.ledShow();
+        //     });
+        // },
 
         //灯亮灭的展示
-        ledShow() {
-            //判断上一次定时器是否关闭，确保按钮点击过快的多重定时器问题
-            if (this.timerId) {
-                clearTimeout(this.timerId);
-            }
-            if (this.viewShow == 'run')
-                console.log('开始亮灭灯操作');
-            console.log(this.ledArr);
-            //提前保存this,确保executeAction函数内部this的报错
-            const that = this
-            //递归调用函数
-            const executeAction = (index) => {
-                if (this.viewShow !== 'run') return
-                if (index >= that.ledArr.length) return;
-                const led = that.ledArr[index];
-                const time = that.ledArr[index + 1];
-                if (led === 'open_led') {
-                    that.imgShow = 'img1'
-                    console.log('open_led时间:', time);
-                } else if (led === 'close_led') {
-                    that.imgShow = 'img2'
-                    console.log('close_led时间:', time);
-                }
-                if (time == -1) return
-                that.timerId = setTimeout(() => {
-                    //每次加2读取数组open_led或者close_led
-                    executeAction(index + 2);
-                }, time * 1000);
-            };
-            // 初始调用
-            executeAction(0);
-        },
+        // ledShow() {
+        //     //判断上一次定时器是否关闭，确保按钮点击过快的多重定时器问题
+        //     if (this.timerId) {
+        //         clearTimeout(this.timerId);
+        //     }
+        //     if (this.viewShow == 'run')
+        //         console.log('开始亮灭灯操作');
+        //     console.log(this.ledArr);
+        //     //提前保存this,确保executeAction函数内部this的报错
+        //     const that = this
+        //     //递归调用函数
+        //     const executeAction = (index) => {
+        //         if (this.viewShow !== 'run') return
+        //         if (index >= that.ledArr.length) return;
+        //         const led = that.ledArr[index];
+        //         const time = that.ledArr[index + 1];
+        //         if (led === 'open_led') {
+        //             that.imgShow = 'img1'
+        //             console.log('open_led时间:', time);
+        //         } else if (led === 'close_led') {
+        //             that.imgShow = 'img2'
+        //             console.log('close_led时间:', time);
+        //         }
+        //         if (time == -1) return
+        //         that.timerId = setTimeout(() => {
+        //             //每次加2读取数组open_led或者close_led
+        //             executeAction(index + 2);
+        //         }, time * 1000);
+        //     };
+        //     // 初始调用
+        //     executeAction(0);
+        // },
 
         //提示
         tipAction() {
@@ -372,11 +372,11 @@ export default {
 }
 
 /* 右侧运行按钮 */
-
+/* 
 .right .runButton {
     /* margin: 0; */
-    background-image: url('../assets/SVG/运行.svg')
-}
+  /*   background-image: url('../assets/SVG/运行.svg')*/
+/* } */
 
 /* 右侧保存按钮 */
 .right .saveButton {
