@@ -35,6 +35,14 @@ export default {
                 kind: "block",
                 type: "string_length"
               },
+              {
+                kind: "block",
+                type: "break"
+              },
+              {
+                kind: "block",
+                type: "continue"
+              },
             ]
           },
         ],

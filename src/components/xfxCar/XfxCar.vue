@@ -29,19 +29,7 @@ export default {
               },
               {
                 kind: "block",
-                type: "init_board"
-              },
-              {
-                kind: "block",
                 type: "Serial_Port_Burning"
-              },
-              {
-                kind: "block",
-                type: "init_Light"
-              },
-              {
-                kind: "block",
-                type: "init_Fmq"
               },
               {
                 kind: "block",
@@ -52,8 +40,16 @@ export default {
                 type: "delay"
               },
               {
+                kind: "block",
+                type: "init_all"
+              },
+              {
                 "kind": "label",
                 "text": "灯控制"
+              },
+              {
+                kind: "block",
+                type: "init_Light"
               },
               {
                 kind: "block",
@@ -62,6 +58,14 @@ export default {
               {
                 kind: "block",
                 type: "Light_off"
+              },
+              {
+                "kind": "label",
+                "text": "蜂鸣器控制"
+              },
+              {
+                kind: "block",
+                type: "init_Fmq"
               },
               {
                 kind: "block",
@@ -74,15 +78,15 @@ export default {
               },
               {
                 kind: "block",
-                type: "steering_gear180"
+                type: "init_Servo"
               },
               {
                 kind: "block",
-                type: "steering_gear270"
+                type: "init_Servo_state"
               },
               {
                 kind: "block",
-                type: "steering_gear360"
+                type: "Servo_operation"
               },
               {
                 kind: "label",
@@ -90,35 +94,35 @@ export default {
               },
               {
                 kind: "block",
-                type: "motor_single"
+                type: "init_Motors"
               },
               {
                 kind: "block",
-                type: "motor_double"
+                type: "Motors_move"
+              },
+              // {
+              //   kind: "block",
+              //   type: "Motors_left"
+              // },
+              // {
+              //   kind: "block",
+              //   type: "Motors_right"
+              // },
+              {
+                kind: "block",
+                type: "Motors_left_right"
               },
               {
                 kind: "block",
-                type: "stop_all_motor"
-              },
-              {
-                kind: "label",
-                text: "运动控制"
+                type: "Motors_around"
               },
               {
                 kind: "block",
-                type: "left"
+                type: "motor_control_single"
               },
               {
                 kind: "block",
-                type: "right"
-              },
-              {
-                kind: "block",
-                type: "go"
-              },
-              {
-                kind: "block",
-                type: "back"
+                type: "stop_motor"
               },
             ]
           },

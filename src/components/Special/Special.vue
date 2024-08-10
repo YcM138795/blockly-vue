@@ -26,6 +26,11 @@
               {
                 kind: "block",
 
+                type: "test_field_bitmap"
+              },
+              {
+                kind: "block",
+
                 type: "string"
               },
               {
