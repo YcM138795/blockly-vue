@@ -23,6 +23,10 @@ export default {
               "icon": "methodIcon"
             },
             "contents": [
+            {
+                kind: "label",
+                text: "方法"
+              },
               {
                 kind: "block",
                 type: "string_printf"

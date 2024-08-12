@@ -23,6 +23,10 @@
               "icon": "specialIcon",
             },
             "contents": [
+            {
+                kind: "label",
+                text: "特殊"
+              },
               {
                 kind: "block",
 
