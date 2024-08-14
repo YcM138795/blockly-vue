@@ -10,6 +10,111 @@ import '@blockly/block-plus-minus';
 
 
 
+// false:逻辑块false
+{
+  Blockly.Blocks['false'] = {
+    init: function () {
+      this.jsonInit({
+        "type": "false",
+        "tooltip": "逻辑块false",
+        "helpUrl": "",
+        "message0": "false %1",
+        "args0": [
+          {
+            "type": "input_dummy",
+            "name": "NAME"
+          }
+        ],
+        "output": "Boolean",
+        "colour": 210
+      })
+    }
+  }
+  javascriptGenerator.forBlock['false'] = function() {
+
+    // TODO: Assemble javascript into the code variable.
+    const code = 'false';
+    // TODO: Change Order.NONE to the correct operator precedence strength
+    return [code, Order.NONE];
+  }
+
+}
+// true:逻辑块true
+{
+  Blockly.Blocks['true'] = {
+    init: function () {
+      this.jsonInit({
+        "type": "true",
+        "tooltip": "逻辑块true",
+        "helpUrl": "",
+        "message0": "true %1",
+        "args0": [
+          {
+            "type": "input_dummy",
+            "name": "NAME"
+          }
+        ],
+        "output": "Boolean",
+        "colour": 210
+      })
+    }
+  }
+  javascriptGenerator.forBlock['true'] = function() {
+
+    // TODO: Assemble javascript into the code variable.
+    const code = 'true';
+    // TODO: Change Order.NONE to the correct operator precedence strength
+    return [code, Order.NONE];
+  }
+
+}
+
+// if_else:if-else的执行块
+{
+  Blockly.Blocks['if_else'] = {
+    init: function () {
+      this.jsonInit({
+        "type": "if_else",
+        "tooltip": "if-else的执行块",
+        "helpUrl": "",
+        "message0": "如果 %1 %2 否则 %3",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "if",
+            "check": "Boolean"
+          },
+          {
+            "type": "input_statement",
+            "name": "do"
+          },
+          {
+            "type": "input_statement",
+            "name": "else"
+          }
+        ],
+        "previousStatement": null,
+        "nextStatement": null,
+        "colour": 210,
+        "inputsInline": true
+      })
+    }
+  }
+  javascriptGenerator.forBlock['if_else'] = function(block, generator) {
+    // TODO: change Order.ATOMIC to the correct operator precedence strength
+    const value_if = generator.valueToCode(block, 'if', Order.ATOMIC);
+  
+    const statement_do = generator.statementToCode(block, 'do');
+  
+    const statement_else = generator.statementToCode(block, 'else');
+  
+    // TODO: Assemble javascript into the code variable.
+    const code = `if (${value_if}) {\n${statement_do}} else {\n${statement_else}}`;
+    return code;
+  }
+
+}
+
 // cycle:循环
 {
   Blockly.Blocks['cycle'] = {
