@@ -10,7 +10,7 @@ async function downloadFile(url) {
         });
         console.log(response);
         // 调用自动下载文件的函数
-        autoDownloadFile(response.data, 'binary_file.bin');
+        autoDownloadFile(response.data, 'binary_file.ota');
         
     } catch (error) {
         console.error('下载文件时出错:', error);

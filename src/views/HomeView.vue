@@ -83,6 +83,10 @@ export default {
     XfxCarBlock
   },
   mounted() {
+    // 假设你把文件放在 public/blockly-media 文件夹中
+    // Blockly.assetUrl = function (path) {
+    //   return `/blockly-media/${path}`;
+    // };
 
     // 自定义主题
     const customTheme = Blockly.Theme.defineTheme('customTheme', {
@@ -146,6 +150,7 @@ export default {
       theme: customTheme,
       //渲染方式
       renderer: 'Zelos',
+      media: '/blockly-media/', // 设置媒体文件路径
     });
 
     this.addInt_Main();

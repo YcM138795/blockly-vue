@@ -10,9 +10,11 @@
             </div>
             <div class="right">
                 <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
+                <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
+                    element-loading-text="文件下载中" element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(240,255,255, 0.7)"></button>
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
-                <button class="dowmloadButton" title="云下载" @click="dowmloadAction"></button>
                 <button class="clearButton" title="清空所有块" @click="clearAction"></button>
             </div>
 
@@ -20,6 +22,7 @@
         </div>
         <div class="view">
             <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
+
                 <h3>提示</h3>
                 <span>(再次点击提示收起)</span>
                 <br>
@@ -59,10 +62,11 @@
                 &nbsp;&nbsp;
                 <input type="text" ref="stat" value="串口信息提示" size="18" readonly="readonly">
                 <br><br>
-                <input  type="file" ref="upload_file" name="upload_file" />
-                <br><br>        
+                <input type="file" ref="upload_file" name="upload_file" accept=".ota" />
+                <br><br>
                 <input type="text" ref="kermit_stat" value="烧录信息提示" size="24" readonly="readonly">
                 <br><br>
+                <div id="progressContainer" style="width: 200px; height: 16px; margin: 0 auto; border: 1px solid #000;"></div>
                 <button @click="kermit_start">开始烧录</button>
                 <button @click="kermit_stop">停止烧录</button>
                 <br>
@@ -75,6 +79,10 @@
 <script>
 import { postData } from '../utils'
 import { serial_request, serial_forget, serial_open, serial_close, kermit_start, kermit_stop } from '../utils/burn'
+
+import { EventBus } from '../utils/eventBus';
+import ProgressBar from 'progressbar.js';
+
 export default {
     name: 'TopNav',
 
@@ -91,7 +99,18 @@ export default {
             oneShow: false,
             twoShow: false,
             threeShow: false,
+            loading: false, // 控制加载状态
         }
+    },
+    mounted() {
+        this.progressBar = new ProgressBar.Line('#progressContainer', {
+            strokeWidth: 8,
+            color: '#008000',
+            duration: 1400,
+        });
+        EventBus.$on('progress', (data) => {
+            this.progressBar.set(data.sended / data.total);
+        });
     },
     props: {
         code: {
@@ -188,16 +207,19 @@ export default {
         tipAction() {
             this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
             this.$emit('viewShowUpdate', this.viewShow);
+
         },
 
         //下载
         async dowmloadAction() {
+            this.loading = true; // 开始显示加载动画
+
             this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'code';
             let state;
             if (this.viewShow == 'dowmload') {
                 state = await postData(this.code);
                 console.log(state);
-                
+
                 if (state === '二进制文件获取成功') {
                     const h = this.$createElement;
                     this.$notify({
@@ -221,7 +243,11 @@ export default {
             }
             this.$emit('viewShowUpdate', this.viewShow);
             state = '';
-            
+
+            // 模拟下载过程，例如调用API
+            this.loading = false; // 完成后隐藏加载动画
+            // 其他下载完成后的操作
+
 
 
         },
@@ -375,12 +401,12 @@ export default {
 /* 
 .right .runButton {
     /* margin: 0; */
-  /*   background-image: url('../assets/SVG/运行.svg')*/
+/*   background-image: url('../assets/SVG/运行.svg')*/
 /* } */
 
 /* 右侧保存按钮 */
 .right .saveButton {
-    margin: 0 50px;
+    margin-right: 50px;
     background-image: url('../assets/SVG/save.svg');
 }
 
@@ -512,6 +538,7 @@ export default {
     cursor: pointer;
     transition: background-color 0.5s;
 }
+
 .dowmload Button:hover {
     transform: scale(1.05);
     /* filter: brightness(110%); */

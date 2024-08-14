@@ -13,6 +13,7 @@ import {
     kermit_seq_inc
 } from './kermit.js';
 
+import { EventBus } from './eventBus';
 
 "use strict";
 
@@ -309,7 +310,7 @@ async function kermit_start(refs) {
 
     pkt = [];
     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'ota-flash-erase');
-    kermit_stat.value = "ERASE FLASH"
+    kermit_stat.value = "烧录程序初始化中"
     await kermit_transloop(pkt);
     seq = kermit_seq_inc(seq);
 
@@ -325,8 +326,10 @@ async function kermit_start(refs) {
 
     while (sended < total) {
         console.log('循环烧录');
+        EventBus.$emit('progress', { sended, total }); // 触发进度事件
 
-        kermit_stat.value = [sended, total];
+        const percentage = (sended / total) * 100;
+        kermit_stat.value = `烧录中：${percentage.toFixed(2)}%`;
         pkt = [];
         kermit_header_make(pkt, seq, 'D'.charCodeAt());
         while ((kermit_packet_size(pkt) < (kermit_packet_max() - kermit_enc_max())) &&
@@ -353,7 +356,7 @@ async function kermit_start(refs) {
 
     pkt = [];
     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'flash-dump-part');
-    kermit_stat.value = "FLASH DUMP PART"
+    kermit_stat.value = "烧录完成"
     await kermit_transloop(pkt);
     seq = kermit_seq_inc(seq);
 
@@ -370,6 +373,8 @@ async function kermit_start(refs) {
 
     krun = false;
     console.log("烧录完成");
+    serial_forget(refs);
+    EventBus.$emit('progress', { sended: total, total }); // 最终进度
 }
 
 function kermit_stop() {
