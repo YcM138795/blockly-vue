@@ -124,6 +124,22 @@ export default {
                 kind: "block",
                 type: "stop_motor"
               },
+              {
+                kind: "label",
+                text: "超声波控制"
+              },
+              {
+                kind: "block",
+                type: "init_Ultrasonic"
+              },
+              {
+                kind: "block",
+                type: "distance"
+              },
+              {
+                kind: "block",
+                type: "Ultrasonic_ranging"
+              },
             ]
           },
         ],

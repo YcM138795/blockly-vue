@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly/core';
-import { javascriptGenerator } from 'blockly/javascript';
+import { javascriptGenerator,Order } from 'blockly/javascript';
 import { dartGenerator } from 'blockly/dart';
 import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块的插件
 
@@ -1063,6 +1063,96 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
         }
 
     }
+
+    //超声波
+    {
+        //init_Ultrasonic:初始化超声波
+        {
+            Blockly.Blocks['init_Ultrasonic'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "init_Ultrasonic",
+                        "tooltip": "初始化超声波",
+                        "helpUrl": "",
+                        "message0": "初始化超声波 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": '#E6CEAC'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['init_Ultrasonic'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `Ultrasonic_Init();\nfloat distance;\n`;
+                return code;
+            }
+        }
+
+
+        //distance:超声波测出的距离
+        {
+            Blockly.Blocks['distance'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "distance",
+                        "tooltip": "超声波测出的距离",
+                        "helpUrl": "",
+                        "message0": "距离:distance %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "output": "Number",
+                        "colour": '#E6CEAC'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['distance'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `distance`;
+                return [code, Order.NONE];
+            }
+        }
+        //Ultrasonic_ranging:超声波测距
+        {
+            Blockly.Blocks['Ultrasonic_ranging'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "Ultrasonic_ranging",
+                        "tooltip": "超声波触发测距，并计算距离",
+                        "helpUrl": "",
+                        "message0": "超声波测距 %1",
+                        "args0": [
+                          {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                          }
+                        ],
+                        "output": null,
+                        "colour": '#E6CEAC'
+                      })
+                }
+            }
+            javascriptGenerator.forBlock['Ultrasonic_ranging'] = function() {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `Ultrasonic_get_distance(&distance)`;
+                // TODO: Change Order.NONE to the correct operator precedence strength
+                return [code, Order.NONE];
+              }
+        }
+    }
+
 
 }
 

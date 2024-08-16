@@ -27,13 +27,25 @@ export default {
               "icon": "logicIcon"
             },
             "contents": [
-            {
-          "kind": "label",
-          "text": "条件"
-        },
+              {
+                "kind": "label",
+                "text": "条件"
+              },
+              {
+                "kind": "block",
+                "type": "true"
+              },
+              {
+                "kind": "block",
+                "type": "false"
+              },
               {
                 "kind": "block",
                 "type": "controls_if"
+              },
+              {
+                "kind": "block",
+                "type": "if_else"
               },
               {
                 "kind": "block",

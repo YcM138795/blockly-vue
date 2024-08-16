@@ -146,6 +146,7 @@ export default {
       theme: customTheme,
       //渲染方式
       renderer: 'Zelos',
+      media: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/blockly-media/' // 更新媒体文件路径
     });
 
     this.addInt_Main();

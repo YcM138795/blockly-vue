@@ -13,6 +13,7 @@ import {
     kermit_seq_inc
 } from './kermit.js';
 
+import { EventBus } from './eventBus';
 
 "use strict";
 
@@ -37,20 +38,8 @@ async function serial_request(refs) {
         console.log(comport.getInfo());
 
         if(comport){
-            stat.value = "端口连接";
+           serial_open(refs);
         }
-        // 添加连接事件监听器
-        // comport.addEventListener("connect", () => {
-        //     stat.value = "端口连接";
-        // });
-
-        // 添加断开连接事件监听器
-        // comport.addEventListener("disconnect", () => {
-        //     stat.value = "COM PORT DISCONNECTED";
-        //     comport.forget();
-        //     comport = undefined;
-        //     comport_opened = false;
-        // });
 
     } catch (error) {
         console.error('Error requesting serial port:', error);
@@ -271,7 +260,113 @@ async function kermit_transloop(pkt) {
     }
 }
 
-async function kermit_start(refs) {
+// async function kermit_start(refs) {
+//     const kermit_stat = refs.kermit_stat;
+
+//     if (comport == undefined) {
+//         kermit_stat.value = "烧录失败：请先选择串口"
+//         return
+//     }
+
+//     var upload_file = refs.upload_file.files[0];
+//     console.log(upload_file);
+
+//     if (upload_file == undefined) {
+//         kermit_stat.value = "请先选择烧录文件"
+//         return;
+//     }
+//     if (krun) {
+//         return;
+//     }
+//     console.log("开始烧录");
+
+//     var seq = 0;
+//     var pkt = [];
+//     krun = true;
+//     serial_txs("kermit\n\r");
+//     delay_ms(1);
+//     serial_txs("kermit\n\r");
+//     delay_ms(1);
+//     serial_txs("kermit\n\r");
+//     delay_ms(1);
+//     serial_txs("kermit\n\r");
+//     delay_ms(1);
+//     serial_txs("kermit\n\r");
+//     delay_ms(1);
+//     serial_txs("kermit\n\r");
+//     delay_ms(1);
+
+//     pkt = [];
+//     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'ota-flash-erase');
+//     kermit_stat.value = "烧录程序初始化中"
+//     await kermit_transloop(pkt);
+//     seq = kermit_seq_inc(seq);
+
+//     pkt = [];
+//     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'ota-flash-write-reset');
+//     kermit_stat.value = "FLASH WRITE RESET"
+//     await kermit_transloop(pkt);
+//     seq = kermit_seq_inc(seq);
+
+//     var sended = 0;
+//     var firmware_content = new Uint8Array(await upload_file.arrayBuffer());
+//     var total = firmware_content.length;
+
+//     while (sended < total) {
+//         console.log('循环烧录');
+//         EventBus.$emit('progress', { sended, total }); // 触发进度事件
+
+//         const percentage = (sended / total) * 100;
+//         kermit_stat.value = `烧录中：${percentage.toFixed(2)}%`;
+//         pkt = [];
+//         kermit_header_make(pkt, seq, 'D'.charCodeAt());
+//         while ((kermit_packet_size(pkt) < (kermit_packet_max() - kermit_enc_max())) &&
+//             (sended < total)) {
+//             kermit_data_push(pkt, firmware_content[sended]);
+//             sended += 1;
+//         }
+//         kermit_sum_set(pkt, kermit_sum_make(pkt));
+//         await kermit_transloop(pkt);
+//         seq = kermit_seq_inc(seq);
+//     }
+
+//     pkt = [];
+//     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'ota-header-info');
+//     kermit_stat.value = "OTA HEADER INFO"
+//     await kermit_transloop(pkt);
+//     seq = kermit_seq_inc(seq);
+
+//     pkt = [];
+//     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'ota-part-switch');
+//     kermit_stat.value = "OTA PART SWITCH"
+//     await kermit_transloop(pkt);
+//     seq = kermit_seq_inc(seq);
+
+//     pkt = [];
+//     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'flash-dump-part');
+//     kermit_stat.value = "烧录完成"
+//     await kermit_transloop(pkt);
+//     seq = kermit_seq_inc(seq);
+
+
+//     // send some ctrl-c
+//     var i;
+//     for (i = 0; i < 40; i++) {
+//         serial_txs("\x03");
+//     }
+//     // send some CR
+//     for (i = 0; i < 20; i++) {
+//         serial_txs("\x0D");
+//     }
+
+//     krun = false;
+//     console.log("烧录完成");
+//     serial_forget(refs);
+//     EventBus.$emit('progress', { sended: total, total }); // 最终进度
+// }
+
+
+async function kermit_start(refs,file) {
     const kermit_stat = refs.kermit_stat;
 
     if (comport == undefined) {
@@ -279,8 +374,8 @@ async function kermit_start(refs) {
         return
     }
 
-    var upload_file = refs.upload_file.files[0];
-    console.log(upload_file);
+    var upload_file = file;
+    console.log('upload_file',upload_file);
 
     if (upload_file == undefined) {
         kermit_stat.value = "请先选择烧录文件"
@@ -309,7 +404,7 @@ async function kermit_start(refs) {
 
     pkt = [];
     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'ota-flash-erase');
-    kermit_stat.value = "ERASE FLASH"
+    kermit_stat.value = "烧录程序初始化中"
     await kermit_transloop(pkt);
     seq = kermit_seq_inc(seq);
 
@@ -322,11 +417,15 @@ async function kermit_start(refs) {
     var sended = 0;
     var firmware_content = new Uint8Array(await upload_file.arrayBuffer());
     var total = firmware_content.length;
+    console.log('total',total);
+    
 
     while (sended < total) {
         console.log('循环烧录');
+        EventBus.$emit('progress', { sended, total }); // 触发进度事件
 
-        kermit_stat.value = [sended, total];
+        const percentage = (sended / total) * 100;
+        kermit_stat.value = `烧录中：${percentage.toFixed(2)}%`;
         pkt = [];
         kermit_header_make(pkt, seq, 'D'.charCodeAt());
         while ((kermit_packet_size(pkt) < (kermit_packet_max() - kermit_enc_max())) &&
@@ -353,7 +452,7 @@ async function kermit_start(refs) {
 
     pkt = [];
     kermit_packet_make_msg(pkt, seq, 'C'.charCodeAt(), 'flash-dump-part');
-    kermit_stat.value = "FLASH DUMP PART"
+    kermit_stat.value = "烧录完成"
     await kermit_transloop(pkt);
     seq = kermit_seq_inc(seq);
 
@@ -370,7 +469,10 @@ async function kermit_start(refs) {
 
     krun = false;
     console.log("烧录完成");
+    serial_forget(refs);
+    EventBus.$emit('progress', { sended: total, total }); // 最终进度
 }
+
 
 function kermit_stop() {
     krun = false;

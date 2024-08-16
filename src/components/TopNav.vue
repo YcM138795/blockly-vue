@@ -10,9 +10,11 @@
             </div>
             <div class="right">
                 <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
+                <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
+                    element-loading-text="文件下载中" element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(240,255,255, 0.7)"></button>
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
-                <button class="dowmloadButton" title="云下载" @click="dowmloadAction"></button>
                 <button class="clearButton" title="清空所有块" @click="clearAction"></button>
             </div>
 
@@ -20,6 +22,7 @@
         </div>
         <div class="view">
             <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
+
                 <h3>提示</h3>
                 <span>(再次点击提示收起)</span>
                 <br>
@@ -47,25 +50,17 @@
                 <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
             </div>
             <div class="dowmload" :style="{ display: viewShow == 'dowmload' ? 'block' : 'none' }">
-                <br><br><br><br>
-                <button @click="serial_request">请求端口</button>
-                <button @click="serial_forget">忘记端口</button>
+                <button @click="recompile" title="点击重新编译"></button>
                 <br><br>
-                <button @click="serial_open">打开端口</button>
-                <button @click="serial_close">关闭串口</button>
-                <br><br>
-                <span>波率</span>
-                <input type="text" ref="baudrate" value="2000000" size="4">
-                &nbsp;&nbsp;
                 <input type="text" ref="stat" value="串口信息提示" size="18" readonly="readonly">
                 <br><br>
-                <input  type="file" ref="upload_file" name="upload_file" />
-                <br><br>        
+                <button @click="serial_request">请求端口</button>
+                <button @click="kermit_start">开始烧录</button>
+                <br><br>
                 <input type="text" ref="kermit_stat" value="烧录信息提示" size="24" readonly="readonly">
                 <br><br>
-                <button @click="kermit_start">开始烧录</button>
-                <button @click="kermit_stop">停止烧录</button>
-                <br>
+                <div id="progressContainer" style="width: 200px; height: 16px; margin: 0 auto; border: 1px solid #000;">
+                </div>
             </div>
         </div>
     </div>
@@ -74,7 +69,11 @@
 
 <script>
 import { postData } from '../utils'
-import { serial_request, serial_forget, serial_open, serial_close, kermit_start, kermit_stop } from '../utils/burn'
+import { serial_request, kermit_start } from '../utils/burn'
+
+import { EventBus } from '../utils/eventBus';
+import ProgressBar from 'progressbar.js';
+
 export default {
     name: 'TopNav',
 
@@ -91,7 +90,27 @@ export default {
             oneShow: false,
             twoShow: false,
             threeShow: false,
+            loading: false, // 控制加载状态
+            //二进制文件数据
+            file: null,
         }
+    },
+    mounted() {
+        this.progressBar = new ProgressBar.Line('#progressContainer', {
+            strokeWidth: 8,
+            color: '#008000',
+            duration: 1400,
+        });
+        //进度条的全局事件监听
+        EventBus.$on('progress', (data) => {
+            this.progressBar.set(data.sended / data.total);
+        });
+        //二进制文件数据的全局事件监听
+        EventBus.$on('file', (file) => {
+            this.file = file;
+            console.log('file:', this.file);
+
+        });
     },
     props: {
         code: {
@@ -107,20 +126,8 @@ export default {
         serial_request() {
             serial_request(this.$refs);
         },
-        serial_forget() {
-            serial_forget(this.$refs);
-        },
-        serial_open() {
-            serial_open(this.$refs);
-        },
-        serial_close() {
-            serial_close(this.$refs);
-        },
         kermit_start() {
-            kermit_start(this.$refs);
-        },
-        kermit_stop() {
-            kermit_stop(this.$refs);
+            kermit_start(this.$refs, this.file);
         },
         //返回
         returnAction() {
@@ -188,16 +195,19 @@ export default {
         tipAction() {
             this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
             this.$emit('viewShowUpdate', this.viewShow);
+
         },
 
         //下载
         async dowmloadAction() {
+            this.loading = true; // 开始显示加载动画
+
             this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'code';
             let state;
             if (this.viewShow == 'dowmload') {
                 state = await postData(this.code);
                 console.log(state);
-                
+
                 if (state === '二进制文件获取成功') {
                     const h = this.$createElement;
                     this.$notify({
@@ -221,7 +231,11 @@ export default {
             }
             this.$emit('viewShowUpdate', this.viewShow);
             state = '';
-            
+
+            // 模拟下载过程，例如调用API
+            this.loading = false; // 完成后隐藏加载动画
+            // 其他下载完成后的操作
+
 
 
         },
@@ -260,7 +274,11 @@ export default {
             this.threeShow = !this.threeShow
         },
 
-
+        //重新编译
+        recompile() {
+            this.dowmloadAction();
+            this.dowmloadAction();
+        }
 
 
 
@@ -375,12 +393,12 @@ export default {
 /* 
 .right .runButton {
     /* margin: 0; */
-  /*   background-image: url('../assets/SVG/运行.svg')*/
+/*   background-image: url('../assets/SVG/运行.svg')*/
 /* } */
 
 /* 右侧保存按钮 */
 .right .saveButton {
-    margin: 0 50px;
+    margin-right: 50px;
     background-image: url('../assets/SVG/save.svg');
 }
 
@@ -512,6 +530,7 @@ export default {
     cursor: pointer;
     transition: background-color 0.5s;
 }
+
 .dowmload Button:hover {
     transform: scale(1.05);
     /* filter: brightness(110%); */
@@ -520,4 +539,11 @@ export default {
 .dowmload Button:active {
     transform: translateY(1px);
 }
+
+.dowmload button:first-child{
+    margin-top: 40px;
+    margin-right: 360px;
+    background-image: url('../assets/SVG/重新编译.svg');
+}
+
 </style>
