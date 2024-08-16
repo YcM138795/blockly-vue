@@ -50,26 +50,17 @@
                 <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
             </div>
             <div class="dowmload" :style="{ display: viewShow == 'dowmload' ? 'block' : 'none' }">
-                <br><br><br><br>
-                <button @click="serial_request">请求端口</button>
-                <button @click="serial_forget">忘记端口</button>
+                <button @click="recompile" title="点击重新编译"></button>
                 <br><br>
-                <button @click="serial_open">打开端口</button>
-                <button @click="serial_close">关闭串口</button>
-                <br><br>
-                <span>波率</span>
-                <input type="text" ref="baudrate" value="2000000" size="4">
-                &nbsp;&nbsp;
                 <input type="text" ref="stat" value="串口信息提示" size="18" readonly="readonly">
                 <br><br>
-                <input type="file" ref="upload_file" name="upload_file" accept=".ota" />
+                <button @click="serial_request">请求端口</button>
+                <button @click="kermit_start">开始烧录</button>
                 <br><br>
                 <input type="text" ref="kermit_stat" value="烧录信息提示" size="24" readonly="readonly">
                 <br><br>
-                <div id="progressContainer" style="width: 200px; height: 16px; margin: 0 auto; border: 1px solid #000;"></div>
-                <button @click="kermit_start">开始烧录</button>
-                <button @click="kermit_stop">停止烧录</button>
-                <br>
+                <div id="progressContainer" style="width: 200px; height: 16px; margin: 0 auto; border: 1px solid #000;">
+                </div>
             </div>
         </div>
     </div>
@@ -78,7 +69,7 @@
 
 <script>
 import { postData } from '../utils'
-import { serial_request, serial_forget, serial_open, serial_close, kermit_start, kermit_stop } from '../utils/burn'
+import { serial_request, kermit_start } from '../utils/burn'
 
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
@@ -100,6 +91,8 @@ export default {
             twoShow: false,
             threeShow: false,
             loading: false, // 控制加载状态
+            //二进制文件数据
+            file: null,
         }
     },
     mounted() {
@@ -108,8 +101,15 @@ export default {
             color: '#008000',
             duration: 1400,
         });
+        //进度条的全局事件监听
         EventBus.$on('progress', (data) => {
             this.progressBar.set(data.sended / data.total);
+        });
+        //二进制文件数据的全局事件监听
+        EventBus.$on('file', (file) => {
+            this.file = file;
+            console.log('file:', this.file);
+
         });
     },
     props: {
@@ -126,20 +126,8 @@ export default {
         serial_request() {
             serial_request(this.$refs);
         },
-        serial_forget() {
-            serial_forget(this.$refs);
-        },
-        serial_open() {
-            serial_open(this.$refs);
-        },
-        serial_close() {
-            serial_close(this.$refs);
-        },
         kermit_start() {
-            kermit_start(this.$refs);
-        },
-        kermit_stop() {
-            kermit_stop(this.$refs);
+            kermit_start(this.$refs, this.file);
         },
         //返回
         returnAction() {
@@ -286,7 +274,11 @@ export default {
             this.threeShow = !this.threeShow
         },
 
-
+        //重新编译
+        recompile() {
+            this.dowmloadAction();
+            this.dowmloadAction();
+        }
 
 
 
@@ -547,4 +539,11 @@ export default {
 .dowmload Button:active {
     transform: translateY(1px);
 }
+
+.dowmload button:first-child{
+    margin-top: 40px;
+    margin-right: 360px;
+    background-image: url('../assets/SVG/重新编译.svg');
+}
+
 </style>
