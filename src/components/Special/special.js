@@ -197,6 +197,7 @@ import '@blockly/field-bitmap';
           .setCheck(null);
         this.setColour(180);
         this.setTooltip("开始(唯一且不可删除)");
+        this.setPreviousStatement(true, null);
         this.setHelpUrl("");
         this.setDeletable(false);
       }
@@ -204,7 +205,16 @@ import '@blockly/field-bitmap';
     javascriptGenerator.forBlock['int_main'] = function (block) {
       var statements_operate = javascriptGenerator.statementToCode(block, 'operate');
       // TODO: Assemble javascript into code variable.
-      var code = `int main(){\nboard_init();\ncdc_acm_init();\n${statements_operate} \nreturn 0;\n}`;
+      var code = `int main(void){
+  board_init();
+  usbdev_init();
+  board_sdh_gpio_init();
+  fatfs_sdh_driver_register();
+  ota_init();
+  cdc_acm_init();\n
+${statements_operate}
+  vTaskStartScheduler();
+	while (1);\n}`;
       return code;
     };
     dartGenerator.forBlock['int_main'] = function (block, generator) {
@@ -216,6 +226,175 @@ import '@blockly/field-bitmap';
     };
   }
 
+  // light_task:灯操作函数
+  {
+    Blockly.Blocks['light_task'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "light_task",
+          "tooltip": "灯操作函数(仅一个)",
+          "helpUrl": "",
+          "message0": "灯操作函数 %1 %2",
+          "args0": [
+            {
+              "type": "input_dummy",
+              "name": "NAME"
+            },
+            {
+              "type": "input_statement",
+              "name": "operate"
+            }
+          ],
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 180
+        })
+      }
+    };
+    javascriptGenerator.forBlock['light_task'] = function (block, generator) {
+      var statements_operate = generator.statementToCode(block, 'operate');
+      // TODO: Assemble javascript into code variable.
+      var code = `void light_task(void *param){\n${statements_operate}}\n`;
+      return code;
+    };
+  }
+
+  // fmq_task:蜂鸣器操作函数
+  {
+    Blockly.Blocks['fmq_task'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "fmq_task",
+          "tooltip": "蜂鸣器操作函数(仅一个)",
+          "helpUrl": "",
+          "message0": "蜂鸣器操作函数 %1 %2",
+          "args0": [
+            {
+              "type": "input_dummy",
+              "name": "NAME"
+            },
+            {
+              "type": "input_statement",
+              "name": "operate"
+            }
+          ],
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 180
+        })
+      }
+    };
+    javascriptGenerator.forBlock['fmq_task'] = function (block, generator) {
+      var statements_operate = generator.statementToCode(block, 'operate');
+      // TODO: Assemble javascript into code variable.
+      var code = `void fmq_task(void *param){\n${statements_operate}}\n`;
+      return code;
+    };
+  }
+
+  // motors_task:电机操作函数
+  {
+    Blockly.Blocks['motors_task'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "motors_task",
+          "tooltip": "电机操作函数(仅一个)",
+          "helpUrl": "",
+          "message0": "电机操作函数 %1 %2",
+          "args0": [
+            {
+              "type": "input_dummy",
+              "name": "NAME"
+            },
+            {
+              "type": "input_statement",
+              "name": "operate"
+            }
+          ],
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 180
+        })
+      }
+    };
+    javascriptGenerator.forBlock['motors_task'] = function (block, generator) {
+      var statements_operate = generator.statementToCode(block, 'operate');
+      // TODO: Assemble javascript into code variable.
+      var code = `void motors_task(void *param){\n${statements_operate}}\n`;
+      return code;
+    };
+  }
+
+  // ultrasonic_task:超声波操作函数
+  {
+    Blockly.Blocks['ultrasonic_task'] = {
+      init: function () {
+        this.jsonInit({
+          "type": "ultrasonic_task",
+          "tooltip": "超声波操作函数(仅一个)",
+          "helpUrl": "",
+          "message0": "超声波操作函数 %1 %2",
+          "args0": [
+            {
+              "type": "input_dummy",
+              "name": "NAME"
+            },
+            {
+              "type": "input_statement",
+              "name": "operate"
+            }
+          ],
+          "previousStatement": null,
+          "nextStatement": null,
+          "colour": 180
+        })
+      }
+    };
+    javascriptGenerator.forBlock['ultrasonic_task'] = function (block, generator) {
+      var statements_operate = generator.statementToCode(block, 'operate');
+      // TODO: Assemble javascript into code variable.
+      var code = `void ultrasonic_task(void *param){\n${statements_operate}}\n`;
+      return code;
+    };
+  }
+
+  // // light_task:灯操作函数
+  // {
+  //   Blockly.Blocks['light_task'] = {
+  //     init: function () {
+  //       this.jsonInit({
+  //         "type": "light_task",
+  //         "tooltip": "灯操作函数(仅一个)",
+  //         "helpUrl": "",
+  //         "message0": "灯操作函数 %1 %2",
+  //         "args0": [
+  //           {
+  //             "type": "input_dummy",
+  //             "name": "NAME"
+  //           },
+  //           {
+  //             "type": "input_statement",
+  //             "name": "operate"
+  //           }
+  //         ],
+  //         "previousStatement": null,
+  //         "nextStatement": null,
+  //         "colour": 180
+  //       })
+  //     }
+  //   };
+  //   javascriptGenerator.forBlock['light_task'] = function (block,generator) {
+  //     var statements_operate = generator.statementToCode(block, 'operate');
+  //     // TODO: Assemble javascript into code variable.
+  //     var code = `void light_task(void *param){\n${statements_operate}}\n`;
+  //     return code;
+  //   };
+  // }
+
+
+
+
+
   Blockly.defineBlocksWithJsonArray([
     {
       type: 'test_field_bitmap',
@@ -226,7 +405,7 @@ import '@blockly/field-bitmap';
           name: 'FIELDNAME',
           width: 5,
           height: 5,
-          colours:{filled: '#4d8c8c', empty: '#fff'}
+          colours: { filled: '#4d8c8c', empty: '#fff' }
         },
       ],
       "previousStatement": null,

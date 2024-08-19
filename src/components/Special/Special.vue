@@ -30,6 +30,26 @@
               {
                 kind: "block",
 
+                type: "light_task"
+              },
+              {
+                kind: "block",
+
+                type: "fmq_task"
+              },
+              {
+                kind: "block",
+
+                type: "motors_task"
+              },
+              {
+                kind: "block",
+
+                type: "ultrasonic_task"
+              },
+              {
+                kind: "block",
+
                 type: "test_field_bitmap"
               },
               {

@@ -175,6 +175,34 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 
     //灯
     {
+        //XTask_light_task:灯操作任务执行函数
+        {
+            Blockly.Blocks['XTask_light_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_light_task",
+                        "tooltip": "灯操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "灯操作任务执行 %1",
+                        "args0": [
+                          {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                          }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": '#E6CEAC'
+                      })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_light_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(light_task, (char *)"light_task",  512, NULL,   configMAX_PRIORITIES - 3, &light_handle);\n`;
+                return code;
+            }
+        }
         //init_Light:初始化灯
         {
             Blockly.Blocks['init_Light'] = {
@@ -318,6 +346,35 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 
     //蜂鸣器
     {
+        //XTask_fmq_task:蜂鸣器操作任务执行函数
+        {
+            Blockly.Blocks['XTask_fmq_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_fmq_task",
+                        "tooltip": "蜂鸣器操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "蜂鸣器操作任务执行 %1",
+                        "args0": [
+                          {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                          }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": '#E6CEAC'
+                      })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_fmq_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(fmq_task, (char *)"fmq_task",  512, NULL, configMAX_PRIORITIES - 3, &fmq_handle);\n`;
+                return code;
+            }
+        }
+
         //init_Fmq:初始化蜂鸣器
         {
             Blockly.Blocks['init_Fmq'] = {
@@ -634,6 +691,35 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 
     //电机
     {
+        //XTask_motors_task:电机操作任务执行函数
+        {
+            Blockly.Blocks['XTask_motors_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_motors_task",
+                        "tooltip": "电机操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "电机操作任务执行函数 %1",
+                        "args0": [
+                          {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                          }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": '#E6CEAC'
+                      })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_motors_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(motors_task, (char *)"motors_task",  512, NULL, configMAX_PRIORITIES - 3, &motors_handle);\n`;
+                return code;
+            }
+        }
+
         //init_Motors:初始化电机
         {
             Blockly.Blocks['init_Motors'] = {
@@ -1066,6 +1152,35 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 
     //超声波
     {
+        //XTask_ultrasonic_task:超声波操作任务执行函数
+        {
+            Blockly.Blocks['XTask_ultrasonic_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_ultrasonic_task",
+                        "tooltip": "超声波操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "超声波操作任务执行函数 %1",
+                        "args0": [
+                          {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                          }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": '#E6CEAC'
+                      })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_ultrasonic_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(ultrasonic_task, (char *)"ultrasonic_task",  1024, NULL, configMAX_PRIORITIES - 3, &ultrasonic_handle);\n`;
+                return code;
+            }
+        }
+
         //init_Ultrasonic:初始化超声波
         {
             Blockly.Blocks['init_Ultrasonic'] = {
