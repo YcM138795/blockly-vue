@@ -49,6 +49,10 @@ export default {
               },
               {
                 kind: "block",
+                type: "XTask_light_task"
+              },
+              {
+                kind: "block",
                 type: "init_Light"
               },
               {
@@ -62,6 +66,10 @@ export default {
               {
                 "kind": "label",
                 "text": "蜂鸣器控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_fmq_task"
               },
               {
                 kind: "block",
@@ -91,6 +99,10 @@ export default {
               {
                 kind: "label",
                 text: "电机控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_motors_task"
               },
               {
                 kind: "block",
@@ -127,6 +139,10 @@ export default {
               {
                 kind: "label",
                 text: "超声波控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_ultrasonic_task"
               },
               {
                 kind: "block",

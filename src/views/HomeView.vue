@@ -223,59 +223,56 @@ export default {
       entryBlock.moveBy(50, 50);
     },
     workspaceChangeListener() {
-      const allBlocks = this.workspace.getAllBlocks();
-      if (allBlocks.length === 0) {
-        this.addInt_Main();
-      }
-      if (allBlocks.length !== 0) {
-        const entryBlocks = allBlocks.filter(block => block.type === 'int_main');
+    const allBlocks = this.workspace.getAllBlocks();
+    const entryBlockTypes = ['int_main', 'light_task','ultrasonic_task','motors_task','fmq_task'];  // 定义入口块类型
 
-        // 保证只有一个入口块
+    // 保证每种类型只有一个入口块
+    entryBlockTypes.forEach(type => {
+        const entryBlocks = allBlocks.filter(block => block.type === type);
         if (entryBlocks.length > 1) {
-          for (let i = 1; i < entryBlocks.length; i++) {
-            entryBlocks[i].dispose();
-          }
+            for (let i = 1; i < entryBlocks.length; i++) {
+                entryBlocks[i].dispose();
+            }
         }
+    });
 
-        const entryBlock = entryBlocks[0];
-        const connectedBlocks = this.getAllConnectedBlocks(entryBlock);
+    // 获取所有入口块
+    const remainingEntryBlocks = allBlocks.filter(block => entryBlockTypes.includes(block.type));
 
-        //代码区的块的禁用
-        allBlocks.forEach(block => {
-          if (block.type !== 'int_main' && !connectedBlocks.includes(block)) {
+    // 计算所有连接的块
+    const allConnectedBlocks = [];
+    remainingEntryBlocks.forEach(entryBlock => {
+        allConnectedBlocks.push(...this.getAllConnectedBlocks(entryBlock));
+    });
+
+    // 代码区的块的禁用
+    allBlocks.forEach(block => {
+        if (!remainingEntryBlocks.includes(block) && !allConnectedBlocks.includes(block)) {
             block.setEnabled(false);
-          } else {
+        } else {
             block.setEnabled(true);
-          }
-        });
-        // allBlocks.forEach(block => {
-        //   if (block.type !== 'int_main' && !connectedBlocks.includes(block)){
-        //     block.setDisabledReason(true, '未连接到入口块');
-        //   }else{
-        //     block.setDisabledReason(false, '连接到入口块');
-        //   }
-        // });
+        }
+    });
+},
 
-      }
+getAllConnectedBlocks(block) {
+    const connectedBlocks = [];
+    let currentBlock = block.getNextBlock();
 
-    },
-    getAllConnectedBlocks(block) {
-      const connectedBlocks = [];
-      let currentBlock = block.getNextBlock();
-
-      while (currentBlock) {
+    while (currentBlock) {
         connectedBlocks.push(currentBlock);
         connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
         currentBlock = currentBlock.getNextBlock();
-      }
+    }
 
-      block.getChildren().forEach(childBlock => {
+    block.getChildren().forEach(childBlock => {
         connectedBlocks.push(childBlock);
         connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
-      });
+    });
 
-      return connectedBlocks;
-    },
+    return connectedBlocks;
+},
+
 
     //添加合并工作箱
     addToolbox() {
