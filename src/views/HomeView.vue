@@ -202,7 +202,7 @@ export default {
       lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
       lineNumbersMinChars: 1, // 行号最小字符   number
       enableSplitViewResizing: false,
-      readOnly: false, //是否只读  取值 true | false
+      readOnly: true, //是否只读  取值 true | false
       minimap: {
         enabled: true // 启用迷你地图
       }
