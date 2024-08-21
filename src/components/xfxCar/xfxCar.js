@@ -123,7 +123,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                 let time = number_timer * 1000;
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `bflb_mtimer_delay_ms(${time});\n`;
+                const code = `vTaskDelay(${time});\n`;
                 return code;
             }
             dartGenerator.forBlock['delay'] = function (block) {

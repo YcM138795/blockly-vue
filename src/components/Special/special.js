@@ -210,8 +210,9 @@ import '@blockly/field-bitmap';
   usbdev_init();
   board_sdh_gpio_init();
   fatfs_sdh_driver_register();
-  ota_init();
-  cdc_acm_init();\n
+  ota_init();\n
+  xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);//刷机
+  xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);//处理usb从机
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}`;
