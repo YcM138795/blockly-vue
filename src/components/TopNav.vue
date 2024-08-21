@@ -44,6 +44,13 @@
                 <button @click="exampleThree">例3</button>
                 <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }"
                     src="../assets/img/exampleThree.png" alt="">
+                <br><br><br><br><br><br>
+
+                <span>例4:烧录--循环操作小车灯的亮灭,每次亮灭持续两秒<br></span>
+                <button @click="exampleFour">例4</button>
+                <img class="exampleFour" :style="{ display: fourShow ? 'block' : 'none' }"
+                    src="../assets/img/exampleFour.png" alt="">
+                <br><br><br><br><br><br>
             </div>
             <div id="animation" :style="{ display: viewShow == 'run' ? 'block' : 'none' }">
                 <img src="../assets/SVG/灯亮.svg" :style="{ display: imgShow == 'img1' ? 'block' : 'none' }">
@@ -90,6 +97,7 @@ export default {
             oneShow: false,
             twoShow: false,
             threeShow: false,
+            fourShow: false,
             loading: false, // 控制加载状态
             //二进制文件数据
             file: null,
@@ -272,6 +280,9 @@ export default {
         },
         exampleThree() {
             this.threeShow = !this.threeShow
+        },
+        exampleFour(){
+            this.fourShow = !this.fourShow
         },
 
         //重新编译
@@ -502,6 +513,13 @@ export default {
     margin-left: 80px;
     width: 347px;
     height: 266px;
+}
+
+.exampleFour {
+    /* margin-left: 50px; */
+    margin-left: 80px;
+    width: 331px;
+    height: 418px;
 }
 
 #animation {
