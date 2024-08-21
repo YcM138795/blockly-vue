@@ -151,6 +151,22 @@ export default {
 
     this.addInt_Main();
 
+    try {
+      // 尝试从本地存储中读取数据
+      const savedData = localStorage.getItem('workspaceData');
+      if (savedData) {
+        const state = JSON.parse(savedData);
+        // 尝试加载数据到工作区
+        Blockly.serialization.workspaces.load(state, this.workspace);
+      }
+    } catch (error) {
+      console.error('加载工作区数据时出错:', error);
+      // 如果出现错误，删除本地存储的无效数据
+      localStorage.removeItem('workspaceData');
+      // 刷新页面
+      location.reload();
+
+    }
 
     // 监听工作区变化事件
     this.workspace.addChangeListener(this.workspaceChangeListener);
@@ -160,14 +176,8 @@ export default {
       this.codeViewIns.setValue(this.code);
     });
 
-    // 从本地浏览器中读取数据
-    const savedData = localStorage.getItem('workspaceData');
-    if (savedData) {
-      const state = JSON.parse(savedData);
-      //读取数据
-      Blockly.serialization.workspaces.load(state, this.workspace);
-    }
 
+    console.log('test');
     // monaco.editor编译器自定义主题
     monaco.editor.defineTheme('my-custom-theme', {
       base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
@@ -222,56 +232,63 @@ export default {
       // 设置入口块的位置
       entryBlock.moveBy(50, 50);
     },
-    workspaceChangeListener() {
-    const allBlocks = this.workspace.getAllBlocks();
-    const entryBlockTypes = ['int_main', 'light_task','ultrasonic_task','motors_task','fmq_task'];  // 定义入口块类型
 
-    // 保证每种类型只有一个入口块
-    entryBlockTypes.forEach(type => {
+    workspaceChangeListener() {
+      const allBlocks = this.workspace.getAllBlocks();
+      if (allBlocks.length === 0) {
+        this.addInt_Main()
+        return;
+      }
+
+
+      const entryBlockTypes = ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'fmq_task'];  // 定义入口块类型
+
+      // 保证每种类型只有一个入口块
+      entryBlockTypes.forEach(type => {
         const entryBlocks = allBlocks.filter(block => block.type === type);
         if (entryBlocks.length > 1) {
-            for (let i = 1; i < entryBlocks.length; i++) {
-                entryBlocks[i].dispose();
-            }
+          for (let i = 1; i < entryBlocks.length; i++) {
+            entryBlocks[i].dispose();
+          }
         }
-    });
+      });
 
-    // 获取所有入口块
-    const remainingEntryBlocks = allBlocks.filter(block => entryBlockTypes.includes(block.type));
+      // 获取所有入口块
+      const remainingEntryBlocks = allBlocks.filter(block => entryBlockTypes.includes(block.type));
 
-    // 计算所有连接的块
-    const allConnectedBlocks = [];
-    remainingEntryBlocks.forEach(entryBlock => {
+      // 计算所有连接的块
+      const allConnectedBlocks = [];
+      remainingEntryBlocks.forEach(entryBlock => {
         allConnectedBlocks.push(...this.getAllConnectedBlocks(entryBlock));
-    });
+      });
 
-    // 代码区的块的禁用
-    allBlocks.forEach(block => {
+      // 代码区的块的禁用
+      allBlocks.forEach(block => {
         if (!remainingEntryBlocks.includes(block) && !allConnectedBlocks.includes(block)) {
-            block.setEnabled(false);
+          block.setEnabled(false);
         } else {
-            block.setEnabled(true);
+          block.setEnabled(true);
         }
-    });
-},
+      });
+    },
 
-getAllConnectedBlocks(block) {
-    const connectedBlocks = [];
-    let currentBlock = block.getNextBlock();
+    getAllConnectedBlocks(block) {
+      const connectedBlocks = [];
+      let currentBlock = block.getNextBlock();
 
-    while (currentBlock) {
+      while (currentBlock) {
         connectedBlocks.push(currentBlock);
         connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
         currentBlock = currentBlock.getNextBlock();
-    }
+      }
 
-    block.getChildren().forEach(childBlock => {
+      block.getChildren().forEach(childBlock => {
         connectedBlocks.push(childBlock);
         connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
-    });
+      });
 
-    return connectedBlocks;
-},
+      return connectedBlocks;
+    },
 
 
     //添加合并工作箱

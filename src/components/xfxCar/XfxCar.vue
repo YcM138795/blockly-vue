@@ -29,19 +29,11 @@ export default {
               },
               {
                 kind: "block",
-                type: "Serial_Port_Burning"
-              },
-              {
-                kind: "block",
                 type: "implement"
               },
               {
                 kind: "block",
                 type: "delay"
-              },
-              {
-                kind: "block",
-                type: "init_all"
               },
               {
                 "kind": "label",
@@ -112,14 +104,6 @@ export default {
                 kind: "block",
                 type: "Motors_move"
               },
-              // {
-              //   kind: "block",
-              //   type: "Motors_left"
-              // },
-              // {
-              //   kind: "block",
-              //   type: "Motors_right"
-              // },
               {
                 kind: "block",
                 type: "Motors_left_right"
@@ -150,11 +134,11 @@ export default {
               },
               {
                 kind: "block",
-                type: "distance"
+                type: "Ultrasonic_ranging"
               },
               {
                 kind: "block",
-                type: "Ultrasonic_ranging"
+                type: "distance"
               },
             ]
           },

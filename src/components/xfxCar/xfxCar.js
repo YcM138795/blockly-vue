@@ -8,39 +8,6 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 {
     //基础
     {
-        //Serial_Port_Burning:板子烧录的处理
-        {
-            Blockly.Blocks['Serial_Port_Burning'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "Serial_Port_Burning",
-                        "tooltip": "板子烧录的处理",
-                        "helpUrl": "",
-                        "message0": "板子烧录的处理 %1",
-                        "args0": [
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                            }
-                        ],
-                        "previousStatement": null,
-                        "nextStatement": null,
-                        "colour": '#E6CEAC'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['Serial_Port_Burning'] = function () {
-
-                // TODO: Assemble javascript into the code variable.
-                const code = `\n\n\nint Serial_Port_Burning;\n int Serial_Port_Burning_res;\nwhile(1){\ncdc_acm_tx_task();\n Serial_Port_Burning=cdc_acm_getc();\n if(Serial_Port_Burning >= 0){\nkermit_task(Serial_Port_Burning);\n}}\n`;
-                return code;
-            }
-            dartGenerator.forBlock['Serial_Port_Burning'] = function () {
-                // var number_digital = block.getFieldValue('digital');
-                var code = `console.log('板子烧录的处理')\n`
-                return code;
-            };
-        }
 
         //implement:执行内部逻辑
         {
@@ -135,39 +102,6 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
             }
         }
 
-        //init_all:初始化灯,蜂鸣器,电机,舵机
-        {
-            Blockly.Blocks['init_all'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "init_all",
-                        "tooltip": "初始化灯,蜂鸣器,电机,舵机",
-                        "helpUrl": "",
-                        "message0": "初始化灯,蜂鸣器,电机,舵机 %1",
-                        "args0": [
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                            }
-                        ],
-                        "previousStatement": null,
-                        "nextStatement": null,
-                        "colour": '#E6CEAC'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['init_all'] = function () {
-
-                // TODO: Assemble javascript into the code variable.
-                const code = `Light_init();\nFmq_init();\nMotors_init();\nServo_init();\n`;
-                return code;
-            }
-            dartGenerator.forBlock['init_all'] = function () {
-                // var number_digital = block.getFieldValue('digital');
-                var code = `console.log('初始化全部')\n`
-                return code;
-            };
-        }
 
     }
 
