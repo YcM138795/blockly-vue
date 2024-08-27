@@ -31,7 +31,6 @@ function handleFile(blob, fileName) {
         // 这里不需要实际的 `<input>` 元素，可以直接使用 `file` 对象
         console.log('文件对象:', file);
 
-
     } catch (error) {
         console.error('处理文件时出错:', error);
     }

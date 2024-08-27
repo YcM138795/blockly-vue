@@ -23,34 +23,9 @@
               "icon": "specialIcon",
             },
             "contents": [
-            {
+              {
                 kind: "label",
-                text: "特殊"
-              },
-              {
-                kind: "block",
-
-                type: "light_task"
-              },
-              {
-                kind: "block",
-
-                type: "fmq_task"
-              },
-              {
-                kind: "block",
-
-                type: "motors_task"
-              },
-              {
-                kind: "block",
-
-                type: "ultrasonic_task"
-              },
-              {
-                kind: "block",
-
-                type: "test_field_bitmap"
+                text: "字符"
               },
               {
                 kind: "block",
@@ -60,12 +35,20 @@
               {
                 kind: "block",
 
-                type: "number_variable"
+                type: "string_length"
+              },
+              {
+                kind: "label",
+                text: "图像显示"
               },
               {
                 kind: "block",
 
-                type: "Decrease"
+                type: "test_field_bitmap"
+              },
+              {
+                kind: "label",
+                text: "括号"
               },
               {
                 kind: "block",
