@@ -10,6 +10,7 @@
             </div>
             <div class="right">
                 <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
+                <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
                 <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
                     element-loading-text="文件下载中" element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(240,255,255, 0.7)"></button>
@@ -57,7 +58,6 @@
                 <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
             </div>
             <div class="dowmload" :style="{ display: viewShow == 'dowmload' ? 'block' : 'none' }">
-                <button @click="recompile" title="点击重新编译"></button>
                 <br><br>
                 <input type="text" ref="stat" value="串口信息提示" size="18" readonly="readonly">
                 <br><br>
@@ -117,7 +117,6 @@ export default {
         EventBus.$on('file', (file) => {
             this.file = file;
             console.log('file:', this.file);
-
         });
     },
     props: {
@@ -206,7 +205,17 @@ export default {
 
         },
 
-        //下载
+        //重新编译
+        recompileAction() {
+            if (this.viewShow != 'dowmload') {
+                this.dowmloadAction();
+            } else {
+                this.dowmloadAction();
+                this.dowmloadAction();
+            }
+        },
+
+        //云下载
         async dowmloadAction() {
             this.loading = true; // 开始显示加载动画
 
@@ -281,15 +290,10 @@ export default {
         exampleThree() {
             this.threeShow = !this.threeShow
         },
-        exampleFour(){
+        exampleFour() {
             this.fourShow = !this.fourShow
         },
 
-        //重新编译
-        recompile() {
-            this.dowmloadAction();
-            this.dowmloadAction();
-        }
 
 
 
@@ -388,7 +392,7 @@ export default {
 /* 右侧按钮样式 */
 .right Button {
     height: 60px;
-    width: 60px;
+    width: 65px;
     border: none;
     border-radius: 50%;
     background-repeat: no-repeat;
@@ -406,6 +410,12 @@ export default {
     /* margin: 0; */
 /*   background-image: url('../assets/SVG/运行.svg')*/
 /* } */
+
+/* 右侧重新编译按钮 */
+.right .recompileButton {
+    margin-right: 50px;
+    background-image: url('../assets/SVG/重新编译.svg');
+}
 
 /* 右侧保存按钮 */
 .right .saveButton {
@@ -556,12 +566,6 @@ export default {
 
 .dowmload Button:active {
     transform: translateY(1px);
-}
-
-.dowmload button:first-child{
-    margin-top: 40px;
-    margin-right: 360px;
-    background-image: url('../assets/SVG/重新编译.svg');
 }
 
 </style>

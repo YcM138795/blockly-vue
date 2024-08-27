@@ -10,8 +10,9 @@
       <div class="code-wrap">
         <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%"></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
+        <DominateBlock @dominateBox="dominateBox"></DominateBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
-        <MethodBlock @methodBox="methodBox"></MethodBlock>
+        <OperationBlock @methodBox="methodBox"></OperationBlock>
         <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
 
@@ -29,9 +30,10 @@ import { javascriptGenerator } from "blockly/javascript";
 import { test } from '../utils/test'
 //引入其他组件
 import TopNav from '../components/TopNav.vue'
+import DominateBlock from '../components/Dominate/Dominate.vue';
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
-import MethodBlock from '../components/Method/Method.vue'
+import OperationBlock from '../components/Operation/Operation.vue'
 import SpecialBlock from '../components/Special/Special.vue'
 import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
 //引入controls_if的插件包
@@ -75,9 +77,10 @@ export default {
   },
   //引用的组件
   components: {
+    DominateBlock,
     LogicBlock,
     MathBlock,
-    MethodBlock,
+    OperationBlock,
     TopNav,
     SpecialBlock,
     XfxCarBlock
@@ -89,6 +92,11 @@ export default {
       base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
       categoryStyles: {
         // 定义自定义类别样式
+        dominate_category: {
+          colour: '#4e72b8', // 背景颜色（十六进制表示）
+          colourSecondary: '#FF8C61', // 二次背景颜色
+          colourTertiary: '#C73F1E', // 三次背景颜色
+        },
         logic_category: {
           colour: '#5B80A5', // 背景颜色（十六进制表示）
           colourSecondary: '#FF8C61', // 二次背景颜色
@@ -99,7 +107,7 @@ export default {
           colourSecondary: '#FF8C61', // 二次背景颜色
           colourTertiary: '#C73F1E', // 三次背景颜色
         },
-        method_category: {
+        operation_category: {
           colour: '#5B67A5', // 背景颜色（十六进制表示）
           colourSecondary: '#5B67A5', // 二次背景颜色
           colourTertiary: '#C73F1E', // 三次背景颜色
@@ -300,6 +308,7 @@ export default {
           // 主组件的工具箱内容
           // ...this.toolbox.contents,
           // 子组件的工具箱内容
+          ...this.dominateToolbox.contents,
           ...this.specialToolbox.contents,
           ...this.logicToolbox.contents,
           ...this.mathToolbox.contents,
@@ -352,6 +361,9 @@ export default {
     specialBox(specialBox) {
       this.specialToolbox = specialBox
     },
+    dominateBox(dominateBox) {
+      this.dominateToolbox = dominateBox
+    },
     logicBox(logicBox) {
       this.logicToolbox = logicBox
     },
@@ -402,7 +414,7 @@ body {
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
-  padding-top: 10%;
+  padding-top: 7%;
   background-color: rgb(218, 227, 234);
   background-image: url('../assets//SVG/积木.svg');
   background-size: 180px auto;

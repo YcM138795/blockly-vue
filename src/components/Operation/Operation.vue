@@ -7,25 +7,25 @@
 <script>
 
 // import * as monaco from "monaco-editor";
-import "./method";
+import "./operation";
 export default {
-  name: "MethodBlock",
+  name: "OperationBlock",
   data() {
     return {
       toolbox: {
         contents: [
           {
             "kind": "category",
-            "name": "功能",
-            "categoryStyle": "method_category",
+            "name": "操作",
+            "categoryStyle": "operation_category",
             "cssConfig": {
-              "container": "method",
-              "icon": "methodIcon"
+              "container": "operation",
+              "icon": "operationIcon"
             },
             "contents": [
-            {
+              {
                 kind: "label",
-                text: "方法"
+                text: "输出"
               },
               {
                 kind: "block",
@@ -36,8 +36,20 @@ export default {
                 type: "number_printf"
               },
               {
+                kind: "label",
+                text: "输入"
+              },
+              {
                 kind: "block",
-                type: "string_length"
+                type: "when_button_dowm"
+              },
+              {
+                kind: "block",
+                type: "cheak_button_dowm"
+              },
+              {
+                kind: "label",
+                text: "函数跳出"
               },
               {
                 kind: "block",
@@ -46,6 +58,18 @@ export default {
               {
                 kind: "block",
                 type: "continue"
+              },
+              {
+                kind: "label",
+                text: "常量操作"
+              },
+              {
+                kind: "block",
+                type: "number_variable"
+              },
+              {
+                kind: "block",
+                type: "Decrease"
               },
             ]
           },
@@ -60,12 +84,12 @@ export default {
 </script>
 
 <style>
-.method {
+.operation {
   color: #5B67A5;
   font-size: 60px;
 }
 
-.methodIcon {
+.operationIcon {
   content: url('../../assets/SVG/方法.svg');
   height: 32px;
 }
