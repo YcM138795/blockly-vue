@@ -142,7 +142,6 @@ import '@blockly/field-bitmap';
           .setCheck(null);
         this.setColour(180);
         this.setTooltip("开始(唯一且不可删除)");
-        this.setPreviousStatement(true, null);
         this.setHelpUrl("");
         this.setDeletable(false);
       }
@@ -160,7 +159,7 @@ import '@blockly/field-bitmap';
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);//处理usb从机
 ${statements_operate}
   vTaskStartScheduler();
-	while (1);\n}`;
+	while (1);\n}\n`;
       return code;
     };
     dartGenerator.forBlock['int_main'] = function (block, generator) {

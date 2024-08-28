@@ -23,8 +23,6 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "name": "operate"
                         }
                     ],
-                    "previousStatement": null,
-                    "nextStatement": null,
                     "colour": '#4e72b8'
                 })
             }
@@ -56,8 +54,6 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "name": "operate"
                         }
                     ],
-                    "previousStatement": null,
-                    "nextStatement": null,
                     "colour": '#4e72b8'
                 })
             }
@@ -89,8 +85,6 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "name": "operate"
                         }
                     ],
-                    "previousStatement": null,
-                    "nextStatement": null,
                     "colour": '#4e72b8'
                 })
             }
@@ -122,8 +116,6 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "name": "operate"
                         }
                     ],
-                    "previousStatement": null,
-                    "nextStatement": null,
                     "colour": '#4e72b8'
                 })
             }

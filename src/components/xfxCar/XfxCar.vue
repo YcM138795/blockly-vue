@@ -29,6 +29,10 @@ export default {
               },
               {
                 kind: "block",
+                type: "forever"
+              },
+              {
+                kind: "block",
                 type: "implement"
               },
               {

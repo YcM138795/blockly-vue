@@ -63,6 +63,7 @@
                 <br><br>
                 <button @click="serial_request">请求端口</button>
                 <button @click="kermit_start">开始烧录</button>
+                <button @click="kermit_stop">停止烧录</button>
                 <br><br>
                 <input type="text" ref="kermit_stat" value="烧录信息提示" size="24" readonly="readonly">
                 <br><br>
@@ -76,7 +77,7 @@
 
 <script>
 import { postData } from '../utils'
-import { serial_request, kermit_start } from '../utils/burn'
+import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
 
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
@@ -101,6 +102,8 @@ export default {
             loading: false, // 控制加载状态
             //二进制文件数据
             file: null,
+            //是否停止烧录
+            flashing: {boolean:true,first:true},
         }
     },
     mounted() {
@@ -118,6 +121,14 @@ export default {
             this.file = file;
             console.log('file:', this.file);
         });
+        //是否正在烧录的全局事件监听
+        EventBus.$on('flashing', (data) => {
+        // 更新 flashing 对象的具体属性
+            this.flashing.boolean = data.boolean;
+            this.flashing.first = data.first;
+        // 打印更新后的 flashing 对象到控制台
+        console.log('flashing:', this.flashing);
+});
     },
     props: {
         code: {
@@ -134,7 +145,10 @@ export default {
             serial_request(this.$refs);
         },
         kermit_start() {
-            kermit_start(this.$refs, this.file);
+            kermit_start(this.$refs, this.file,this.flashing);
+        },
+        kermit_stop() {
+            kermit_stop(this.$refs,this.flashing);
         },
         //返回
         returnAction() {

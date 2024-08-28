@@ -324,5 +324,67 @@ import { dartGenerator } from 'blockly/dart';
 
 
 }
+Blockly.defineBlocksWithJsonArray([
+  {
+    "type": "function_definition",
+    "message0": "函数 %1 执行 %2",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "NAME",
+        "text": "myFunction"
+      },
+      {
+        "type": "input_statement",
+        "name": "STACK"
+      }
+    ],
+    "style": "function_definition",
+    "tooltip": "自定义函数块",
+    "helpUrl": ""
+  }
+]);
+
+Blockly.Themes.Classic.blockStyles["function_definition"] = {
+    "colourPrimary": "#5b67a5",
+    "colourSecondary": "#4a56a3",
+    "colourTertiary": "#3a46a1",
+    "hat": "cap",
+    "shape": "irregular"
+};
+
+
+javascriptGenerator.forBlock['function_definition'] = function (block,generator) {
+  const statement_name = generator.statementToCode(block, 'STACK');
+  var code =`a{${statement_name}}\n`;
+  return code;
+};
+
+
+Blockly.Blocks['create_function_button'] = {
+  init: function() {
+      this.appendDummyInput()
+          .appendField("创建函数");
+      this.setColour(160);
+      this.setTooltip("点击创建函数");
+      this.setHelpUrl("");
+      this.setOutput(false);
+      this.setOnChange(this.onChange);
+  },
+
+  onChange: function(event) {
+      if (event.type == Blockly.Events.BLOCK_CREATE) {
+          // 当积木被创建时触发的逻辑
+          this.showFunctionEditor();
+      }
+  },
+
+  showFunctionEditor: function() {
+      // 显示函数编辑对话框或界面
+      console.log('显示函数编辑对话框');
+      
+      // 这里可以实现更复杂的功能，例如弹出自定义的编辑窗口
+  }
+};
 
 
