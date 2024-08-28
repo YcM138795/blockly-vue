@@ -71,6 +71,14 @@ export default {
                 kind: "block",
                 type: "Decrease"
               },
+              // {
+              //   kind: "block",
+              //   type: "function_definition"
+              // },
+              // {
+              //   kind: "block",
+              //   type: "create_function_button"
+              // },
             ]
           },
         ],

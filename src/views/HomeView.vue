@@ -179,7 +179,29 @@ export default {
     // 监听工作区变化事件
     this.workspace.addChangeListener(this.workspaceChangeListener);
     this.workspace.addChangeListener(() => {
-      const JSCode = javascriptGenerator.workspaceToCode(this.workspace);
+
+      javascriptGenerator.init(this.workspace);
+      const entryBlockTypes = ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'fmq_task','function_definition'];  // 定义入口块类型
+      let functionBlocks = [];
+      this.workspace.getAllBlocks().forEach(block => {
+        if (block.type === 'function_definition') {
+          functionBlocks.push(block);
+        }
+      });
+      let JSCode = '';
+      // 先生成所有函数定义的代码
+      if (functionBlocks.length > 0) {
+        functionBlocks.forEach(block => {
+          JSCode += javascriptGenerator.blockToCode(block);
+        });
+      }
+
+      const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => entryBlockTypes.includes(block.type));
+      // 再生成其他积木的代码
+      remainingEntryBlocks.forEach(block => {
+          JSCode += javascriptGenerator.blockToCode(block);
+      });
+      // javascriptGenerator.finish(this.workspace);
       this.code = JSCode;
       this.codeViewIns.setValue(this.code);
     });
@@ -249,7 +271,7 @@ export default {
       }
 
 
-      const entryBlockTypes = ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'fmq_task'];  // 定义入口块类型
+      const entryBlockTypes = ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'fmq_task','function_definition'];  // 定义入口块类型
 
       // 保证每种类型只有一个入口块
       entryBlockTypes.forEach(type => {
