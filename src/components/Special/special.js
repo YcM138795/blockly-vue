@@ -155,8 +155,8 @@ import '@blockly/field-bitmap';
   board_sdh_gpio_init();
   fatfs_sdh_driver_register();
   ota_init();\n
-  xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);//刷机
-  xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);//处理usb从机
+  xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);
+  xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}\n`;

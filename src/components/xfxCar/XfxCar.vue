@@ -82,6 +82,10 @@ export default {
               },
               {
                 kind: "block",
+                type: "XTask_servo_task"
+              },
+              {
+                kind: "block",
                 type: "init_Servo"
               },
               {
