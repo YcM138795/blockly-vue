@@ -1,6 +1,8 @@
 import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from 'blockly/javascript';
 
+// import { EventBus } from '../../utils/eventBus';
+
 
 //操作函数
 {
@@ -97,6 +99,37 @@ import { javascriptGenerator } from 'blockly/javascript';
         };
     }
 
+    // servo_task:舵机操作函数
+    {
+        Blockly.Blocks['servo_task'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "servo_task",
+                    "tooltip": "舵机操作函数(仅一个)",
+                    "helpUrl": "",
+                    "message0": "舵机操作函数 %1 %2",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "operate"
+                        }
+                    ],
+                    "colour": '#4e72b8'
+                })
+            }
+        };
+        javascriptGenerator.forBlock['servo_task'] = function (block, generator) {
+            var statements_operate = generator.statementToCode(block, 'operate');
+            // TODO: Assemble javascript into code variable.
+            var code = `void servo_task(void *param){\n${statements_operate}}\n`;
+            return code;
+        };
+    }
+
     // ultrasonic_task:超声波操作函数
     {
         Blockly.Blocks['ultrasonic_task'] = {
@@ -129,3 +162,29 @@ import { javascriptGenerator } from 'blockly/javascript';
     }
 
 }
+
+Blockly.Blocks['create_function_button'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField("创建函数");
+        this.setColour(160);
+        this.setTooltip("点击创建函数");
+        this.setHelpUrl("");
+        this.setOutput(false);
+
+        // 设置事件处理器
+        // this.setOnChange(this.onChange.bind(this)); 
+    },
+
+    // 当积木已经在工作区并被点击时触发
+    // onChange: function(event) {
+    //     console.log(event.type);    
+
+    //     if (event.type === 'selected' ) {
+    //         console.log('创建函数块被点击');
+    //             // 触发显示函数编辑器的事件
+    //             EventBus.$emit('showFunctionEditor');   
+    //     }
+    // },
+};
+

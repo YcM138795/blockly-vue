@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly/core';
-import { javascriptGenerator,Order } from 'blockly/javascript';
+import { javascriptGenerator, Order } from 'blockly/javascript';
 import { dartGenerator } from 'blockly/dart';
 import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块的插件
 
@@ -19,28 +19,28 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "helpUrl": "",
                         "message0": "无限循环 %1 %2",
                         "args0": [
-                          {
-                            "type": "input_end_row",
-                            "name": "NAME"
-                          },
-                          {
-                            "type": "input_statement",
-                            "name": "inner"
-                          }
+                            {
+                                "type": "input_end_row",
+                                "name": "NAME"
+                            },
+                            {
+                                "type": "input_statement",
+                                "name": "inner"
+                            }
                         ],
                         "previousStatement": null,
                         "nextStatement": null,
                         "colour": '#E6CEAC'
-                      })
+                    })
                 }
             }
-            javascriptGenerator.forBlock['forever'] = function(block,generator) {
+            javascriptGenerator.forBlock['forever'] = function (block, generator) {
                 const statement_inner = generator.statementToCode(block, 'inner');
-              
+
                 // TODO: Assemble javascript into the code variable.
                 const code = `while(1){\n${statement_inner}\n}\n`;
                 return code;
-              }
+            }
         }
         //implement:执行内部逻辑
         {
@@ -152,15 +152,15 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "helpUrl": "",
                         "message0": "灯操作任务执行 %1",
                         "args0": [
-                          {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                          }
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
                         ],
                         "previousStatement": null,
                         "nextStatement": null,
                         "colour": '#E6CEAC'
-                      })
+                    })
                 }
             }
             javascriptGenerator.forBlock['XTask_light_task'] = function () {
@@ -323,15 +323,15 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "helpUrl": "",
                         "message0": "蜂鸣器操作任务执行 %1",
                         "args0": [
-                          {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                          }
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
                         ],
                         "previousStatement": null,
                         "nextStatement": null,
                         "colour": '#E6CEAC'
-                      })
+                    })
                 }
             }
             javascriptGenerator.forBlock['XTask_fmq_task'] = function () {
@@ -430,6 +430,34 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 
     //舵机
     {
+        //XTask_servo_task:电机操作任务执行函数
+        {
+            Blockly.Blocks['XTask_servo_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_servo_task",
+                        "tooltip": "舵机操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "舵机操作任务执行函数 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": '#E6CEAC'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_servo_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(servo_task, (char *)"servo_task",  512, NULL, configMAX_PRIORITIES - 3, &servo_handle);\n`;
+                return code;
+            }
+        }
         //init_Servo:初始化舵机
         {
             Blockly.Blocks['init_Servo'] = {
@@ -668,15 +696,15 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "helpUrl": "",
                         "message0": "电机操作任务执行函数 %1",
                         "args0": [
-                          {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                          }
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
                         ],
                         "previousStatement": null,
                         "nextStatement": null,
                         "colour": '#E6CEAC'
-                      })
+                    })
                 }
             }
             javascriptGenerator.forBlock['XTask_motors_task'] = function () {
@@ -1129,15 +1157,15 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "helpUrl": "",
                         "message0": "超声波操作任务执行函数 %1",
                         "args0": [
-                          {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                          }
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
                         ],
                         "previousStatement": null,
                         "nextStatement": null,
                         "colour": '#E6CEAC'
-                      })
+                    })
                 }
             }
             javascriptGenerator.forBlock['XTask_ultrasonic_task'] = function () {
@@ -1215,23 +1243,23 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "helpUrl": "",
                         "message0": "超声波测距 %1",
                         "args0": [
-                          {
-                            "type": "input_dummy",
-                            "name": "NAME"
-                          }
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
                         ],
                         "output": null,
                         "colour": '#E6CEAC'
-                      })
+                    })
                 }
             }
-            javascriptGenerator.forBlock['Ultrasonic_ranging'] = function() {
+            javascriptGenerator.forBlock['Ultrasonic_ranging'] = function () {
 
                 // TODO: Assemble javascript into the code variable.
                 const code = `Ultrasonic_get_distance(&distance)`;
                 // TODO: Change Order.NONE to the correct operator precedence strength
                 return [code, Order.NONE];
-              }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 <template>
   <div ref="container" style="width: 100%; height: 100%;">
+    <ContentView ></ContentView>
     <div style="width: 100%; height: 60px">
       <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" :ledArr="ledArr">
       </TopNav>
@@ -30,6 +31,7 @@ import { javascriptGenerator } from "blockly/javascript";
 import { test } from '../utils/test'
 //引入其他组件
 import TopNav from '../components/TopNav.vue'
+import ContentView from '@/components/ContentView.vue';
 import DominateBlock from '../components/Dominate/Dominate.vue';
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
@@ -39,6 +41,7 @@ import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
 //引入controls_if的插件包
 import '@blockly/block-plus-minus';
 import * as zh_hans from 'blockly/msg/zh-hans';
+import { EventBus } from '../utils/eventBus';
 //设置语言
 Blockly.setLocale(zh_hans);
 // import {
@@ -64,6 +67,8 @@ export default {
       code: '',
       horizontalLayout: true, //工具箱水平
       toolboxPosition: "end", //工具箱在底部
+      //特殊块
+      entryBlockTypes : ['int_main', 'light_task', 'ultrasonic_task', 'motors_task','servo_task', 'fmq_task','function_definition'],
       toolbox: {
         contents: [
           {
@@ -82,6 +87,7 @@ export default {
     MathBlock,
     OperationBlock,
     TopNav,
+    ContentView,
     SpecialBlock,
     XfxCarBlock
   },
@@ -181,7 +187,6 @@ export default {
     this.workspace.addChangeListener(() => {
 
       javascriptGenerator.init(this.workspace);
-      const entryBlockTypes = ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'fmq_task','function_definition'];  // 定义入口块类型
       let functionBlocks = [];
       this.workspace.getAllBlocks().forEach(block => {
         if (block.type === 'function_definition') {
@@ -196,7 +201,7 @@ export default {
         });
       }
 
-      const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => entryBlockTypes.includes(block.type));
+      const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
       // 再生成其他积木的代码
       remainingEntryBlocks.forEach(block => {
           JSCode += javascriptGenerator.blockToCode(block);
@@ -251,6 +256,8 @@ export default {
     // Toolbox添加
     this.addToolbox();
 
+    
+
   },
   methods: {
     addInt_Main() {
@@ -271,10 +278,9 @@ export default {
       }
 
 
-      const entryBlockTypes = ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'fmq_task','function_definition'];  // 定义入口块类型
 
       // 保证每种类型只有一个入口块
-      entryBlockTypes.forEach(type => {
+      this.entryBlockTypes.forEach(type => {
         const entryBlocks = allBlocks.filter(block => block.type === type);
         if (entryBlocks.length > 1) {
           for (let i = 1; i < entryBlocks.length; i++) {
@@ -284,7 +290,7 @@ export default {
       });
 
       // 获取所有入口块
-      const remainingEntryBlocks = allBlocks.filter(block => entryBlockTypes.includes(block.type));
+      const remainingEntryBlocks = allBlocks.filter(block => this.entryBlockTypes.includes(block.type));
 
       // 计算所有连接的块
       const allConnectedBlocks = [];
@@ -296,29 +302,29 @@ export default {
       allBlocks.forEach(block => {
         if (!remainingEntryBlocks.includes(block) && !allConnectedBlocks.includes(block)) {
           block.setEnabled(false);
+          if(block.type === 'create_function_button') {
+            block.dispose();
+            EventBus.$emit('showFunctionEditor');   
+          }
         } else {
           block.setEnabled(true);
         }
       });
     },
 
-    getAllConnectedBlocks(block) {
-      const connectedBlocks = [];
-      let currentBlock = block.getNextBlock();
-
-      while (currentBlock) {
-        connectedBlocks.push(currentBlock);
-        connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
-        currentBlock = currentBlock.getNextBlock();
-      }
-
-      block.getChildren().forEach(childBlock => {
-        connectedBlocks.push(childBlock);
-        connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
-      });
-
-      return connectedBlocks;
-    },
+    getAllConnectedBlocks(block, visited = new Set()) {
+    const connectedBlocks = [];
+    if (block.getChildren) {
+        block.getChildren().forEach(childBlock => {
+            if (!visited.has(childBlock)) {
+                visited.add(childBlock);
+                connectedBlocks.push(childBlock);
+                connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
+            }
+        });
+    }
+    return connectedBlocks;
+},
 
 
     //添加合并工作箱
@@ -485,4 +491,5 @@ body {
   border-radius: 30px;
   flex: 1;
 }
+
 </style>

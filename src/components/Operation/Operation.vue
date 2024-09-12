@@ -29,6 +29,10 @@ export default {
               },
               {
                 kind: "block",
+                type: "function_definition"
+              },
+              {
+                kind: "block",
                 type: "string_printf"
               },
               {
@@ -71,14 +75,6 @@ export default {
                 kind: "block",
                 type: "Decrease"
               },
-              // {
-              //   kind: "block",
-              //   type: "function_definition"
-              // },
-              // {
-              //   kind: "block",
-              //   type: "create_function_button"
-              // },
             ]
           },
         ],
