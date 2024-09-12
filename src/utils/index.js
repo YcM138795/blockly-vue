@@ -68,6 +68,7 @@ async function postData(data) {
     static TaskHandle_t light_handle;
     static TaskHandle_t fmq_handle;
     static TaskHandle_t motors_handle;
+    static TaskHandle_t servo_handle;
     static TaskHandle_t ultrasonic_handle;
     
     void version(void) {
@@ -78,6 +79,7 @@ async function postData(data) {
 
     void ultrasonic_task(void *param);
     void motors_task(void *param);
+    void servo_task(void *param);
     void fmq_task(void *param);
     void light_task(void *param);\n`+ data;
     try {
