@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { postData } from '../utils'
+import { Compile } from '../utils'
 import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
 
 import { EventBus } from '../utils/eventBus';
@@ -231,12 +231,16 @@ export default {
 
         //云下载
         async dowmloadAction() {
+            if(this.loading == true)
+            {
+                return;
+            }
             this.loading = true; // 开始显示加载动画
 
             this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'code';
             let state;
             if (this.viewShow == 'dowmload') {
-                state = await postData(this.code);
+                state = await Compile(this.code);
                 console.log(state);
 
                 if (state === '二进制文件获取成功') {

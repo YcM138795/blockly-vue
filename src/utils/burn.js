@@ -382,6 +382,7 @@ function kermit_stop(refs,flashing) {
     if(flashing.first){
     kermit_stat.value = "请先进行烧录";
     }else{
+    serial_forget(refs);
     EventBus.$emit('flashing', {boolean:false,first:false}); 
     }
     console.log(flashing);
