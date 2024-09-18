@@ -145,7 +145,7 @@ async function Compile(data) {
         const blob = await getBlob(fileUrl);  // 下载文件
 
         BlobToFile(blob, 'binary_file.ota');  // 处理文件
-        downFile(blob, 'binary_file.ota');  // 下载文件
+        // downFile(blob, 'binary_file.ota');  // 下载文件
 
         return '二进制文件获取成功';
     } catch (error) {
@@ -154,25 +154,25 @@ async function Compile(data) {
     }
 }
 
-// 转换blob，下载文件
-function downFile(blob, fileName) {
-    try {
-        // 触发文件下载
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(downloadUrl); // 释放URL对象
+// // 转换blob，下载文件
+// function downFile(blob, fileName) {
+//     try {
+//         // 触发文件下载
+//         const downloadUrl = URL.createObjectURL(blob);
+//         const a = document.createElement('a');
+//         a.href = downloadUrl;
+//         a.download = fileName;
+//         document.body.appendChild(a);
+//         a.click();
+//         document.body.removeChild(a);
+//         URL.revokeObjectURL(downloadUrl); // 释放URL对象
 
-        console.log('文件下载完成:', fileName);
+//         console.log('文件下载完成:', fileName);
 
-    } catch (error) {
-        console.error('处理文件时出错:', error);
-    }
-}
+//     } catch (error) {
+//         console.error('处理文件时出错:', error);
+//     }
+// }
 
 // 导出函数
 export { Compile };
