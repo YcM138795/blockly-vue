@@ -8,15 +8,15 @@
           <button @click="addParm('布尔值')">布尔值</button>
           <select ref="numberSelect" @change="handleChange('numberSelect')">
             <option value="" disabled selected>数字</option>
-            <option value="number_int">整形</option>
-            <option value="number_double">浮点数</option>
-            <option value="number_long">长整形</option>
+            <option value="整形">整形</option>
+            <option value="浮点数">浮点数</option>
+            <option value="长整形">长整形</option>
           </select>
           <select ref="arraySelect" @change="handleChange('arraySelect')">
             <option value="" selected disabled>数组</option>
-            <option value="array_int">数字数组</option>
-            <option value="array_string">字符数组</option>
-            <option value="array_double">浮点数数组</option>
+            <option value="数字数组">数字数组</option>
+            <option value="字符数组">字符数组</option>
+            <option value="浮点数数组">浮点数数组</option>
           </select>
         </el-form-item>
       </el-form>
@@ -38,6 +38,12 @@ import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import 'blockly/javascript';
 import './Operation/operation'
+import {
+  ScrollOptions,
+  ScrollBlockDragger,
+  ScrollMetricsManager,
+} from '@blockly/plugin-scroll-options';
+
 
 export default {
   name: 'ContentView',
@@ -47,7 +53,8 @@ export default {
       workspace: null,
       selectedParams: [], // 存储选中的参数类型
       currentDeleteButton: null,//当前删除按钮的存储
-      newBlock: null
+      newBlock: null,//新块的存储
+      newBlockPosition: { x: 50, y: 50 },//新块的位置
     };
   },
   methods: {
@@ -58,6 +65,7 @@ export default {
         this.initializeBlockly();
       });
     },
+
     // 关闭函数编辑对话框
     closeEditor() {
       this.isVisible = false;
@@ -65,16 +73,33 @@ export default {
         this.workspace.dispose(); // 清理 Blockly 工作区
       }
     },
+
     // 初始化 Blockly
     initializeBlockly() {
       const blockly_container = document.getElementById('blockly-container');
       this.workspace = Blockly.inject(blockly_container, {
         renderer: 'zelos', // 设置渲染器为 Zelos
         theme: Blockly.Themes.Classic, // 使用 Classic 主题
+        plugins: {
+          // These are both required.
+          // Note that the ScrollBlockDragger drags things besides blocks.
+          // Block is included in the name for backwards compatibility.
+          blockDragger: ScrollBlockDragger,
+          metricsManager: ScrollMetricsManager,
+        },
+        move: {
+          wheel: true, // Required for wheel scroll to work.
+        },
       });
+
+      const plugin = new ScrollOptions(this.workspace);
+      console.log(plugin);
+      plugin.init();
+
       this.updateBlock();
     },
 
+    // 更新块
     updateBlock() {
       if (!this.workspace) return;
 
@@ -86,9 +111,21 @@ export default {
       this.newBlock.render();
 
       // 设置块的位置
-      const x = 50; // x坐标，可以根据需要设置
-      const y = 50; // y坐标，可以根据需要设置
+      const x = this.newBlockPosition.x; // x坐标，可以根据需要设置
+      const y = this.newBlockPosition.y; // y坐标，可以根据需要设置
       this.newBlock.moveBy(x, y);
+
+      // 注册全局事件监听器
+      this.workspace.addChangeListener((event) => {
+        if (event.type === Blockly.Events.BLOCK_MOVE && event.blockId === this.newBlock.id) {
+          const block = this.workspace.getBlockById(event.blockId);
+          if (block) {
+            const position = block.getRelativeToSurfaceXY();
+            this.newBlockPosition.x = position.x;
+            this.newBlockPosition.y = position.y;
+          }
+        }
+      });
 
       // 创建一个横向排列的容器
       const horizontalInput = this.newBlock.appendDummyInput('PARAMS_CONTAINER').appendField('参数');
@@ -96,33 +133,44 @@ export default {
       if (this.selectedParams.length !== 0) {
         // 根据 selectedParams 更新块的输入
         this.selectedParams.forEach((param, index) => {
+          let name = ''
+          let parts = param.split('--&&--');   // 使用 "--" 分隔字符串
+
+          let valueBeforePrefix = parts[0]; // 获取 "--" 前面的部分
+          let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
+          if (valueBeforePrefix === '') {
+            name = valueAfterPrefix;
+          } else {
+            name = valueBeforePrefix;
+          }
+
           let inputField;
           let inputName;
 
           // 为每种参数类型创建对应的输入字段
-          if (param === '文本') {
-            inputField = new Blockly.FieldTextInput('文本');
+          if (valueAfterPrefix === '文本') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'text_' + index;
-          } else if (param === '布尔值') {
-            inputField = new Blockly.FieldTextInput('布尔值');
+          } else if (valueAfterPrefix === '布尔值') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'boolean_' + index;
-          } else if (param === 'number_int') {
-            inputField = new Blockly.FieldTextInput("整形");
+          } else if (valueAfterPrefix === '整形') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'number_int_' + index;
-          } else if (param === 'number_double') {
-            inputField = new Blockly.FieldTextInput("浮点数");
+          } else if (valueAfterPrefix === '浮点数') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'number_double_' + index;
-          } else if (param === 'number_long') {
-            inputField = new Blockly.FieldTextInput("长整形");
+          } else if (valueAfterPrefix === '长整形') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'number_long_' + index;
-          } else if (param === 'array_int') {
-            inputField = new Blockly.FieldTextInput("数字数组");
+          } else if (valueAfterPrefix === '数字数组') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'array_int_' + index;
-          } else if (param === 'array_string') {
-            inputField = new Blockly.FieldTextInput("字符数组");
+          } else if (valueAfterPrefix === '字符数组') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'array_string_' + index;
-          } else if (param === 'array_double') {
-            inputField = new Blockly.FieldTextInput('浮点数数组');
+          } else if (valueAfterPrefix === '浮点数数组') {
+            inputField = new Blockly.FieldTextInput(`${name}`);
             inputName = 'array_double_' + index;
           }
 
@@ -133,15 +181,28 @@ export default {
           inputField.getSvgRoot().addEventListener('click', (event) => {
             this.showDeleteIcon(event, inputField, index);
           });
+
+          // 设置一个回调函数来监听输入字段的变化
+          inputField.onFinishEditing_ = (newValue) => {
+            // 确保 selectedParams 被正确初始化
+            if (this.selectedParams && index >= 0 && index < this.selectedParams.length) {
+              this.selectedParams[index] = newValue + '--&&--' + valueAfterPrefix;
+            } else {
+              console.error('selectedParams is not defined or index is out of bounds');
+            }
+          };
+
         });
       }
 
       // 添加其他的块内容（如执行部分）
       this.newBlock.appendStatementInput('inner').appendField('执行');
       // 添加鼠标离开事件监听器
-    }
-    ,
-    showDeleteIcon(event, fieldRef, index) {
+    },
+
+    // 显示删除图标
+    showDeleteIcon(event, inputField, index) {
+
       // 移除当前显示的删除图标（如果有的话）
       if (this.currentDeleteButton) {
         this.currentDeleteButton.remove();
@@ -149,7 +210,7 @@ export default {
       }
 
       // 获取输入字段的 SVG 根元素
-      const inputFieldElement = fieldRef.getSvgRoot();
+      const inputFieldElement = inputField.getSvgRoot();
       if (!inputFieldElement) {
         console.error('无法获取输入字段的 SVG 根元素');
         return;
@@ -186,8 +247,7 @@ export default {
         // 检查点击位置是否在当前字段或垃圾桶上
         const clickedInsideField = this.selectedParams.some((param, idx) => {
           const fieldName = this.getFieldName(param, idx);
-          console.log(fieldName);
-          
+
           const fieldElement = this.newBlock.getField(fieldName)?.getSvgRoot();
           return fieldElement && fieldElement.contains(event.target);
         });
@@ -217,31 +277,30 @@ export default {
       document.addEventListener('click', hideDeleteButton);
     },
 
-    // Helper function to dynamically get field name
+    // 获取字段名称
     getFieldName(param, index) {
-      if (param === '文本') {
+      let parts = param.split('--&&--');   // 使用 "--" 分隔字符串
+      let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
+
+      if (valueAfterPrefix === '文本') {
         return 'text_' + index;
-      } else if (param === '布尔值') {
+      } else if (valueAfterPrefix === '布尔值') {
         return 'boolean_' + index;
-      } else if (param === 'number_int') {
+      } else if (valueAfterPrefix === '整形') {
         return 'number_int_' + index;
-      } else if (param === 'number_double') {
+      } else if (valueAfterPrefix === '浮点数') {
         return 'number_double_' + index;
-      } else if (param === 'number_long') {
+      } else if (valueAfterPrefix === '长整形') {
         return 'number_long_' + index;
-      } else if (param === 'array_int') {
+      } else if (valueAfterPrefix === '数字数组') {
         return 'array_int_' + index;
-      } else if (param === 'array_string') {
+      } else if (valueAfterPrefix === '字符数组') {
         return 'array_string_' + index;
-      } else if (param === 'array_double') {
+      } else if (valueAfterPrefix === '浮点数数组') {
         return 'array_double_' + index;
       }
       return '';
-    }
-
-    ,
-
-
+    },
 
     // 删除指定索引的参数
     removeParam(index) {
@@ -254,11 +313,13 @@ export default {
 
     // 处理下拉框变化
     handleChange(selectType) {
-      const selectedValue = this.$refs[selectType].value;
+      let selectedValue = this.$refs[selectType].value;
 
       if (selectType === 'numberSelect' && selectedValue) {
+        selectedValue = '--&&--' + selectedValue;
         this.selectedParams.push(selectedValue);
       } else if (selectType === 'arraySelect' && selectedValue) {
+        selectedValue = '--&&--' + selectedValue;
         this.selectedParams.push(selectedValue);
       }
 
@@ -266,18 +327,21 @@ export default {
       this.updateBlock();
       this.$refs[selectType].selectedIndex = 0; // 重置下拉框为默认选项
     },
+
     // 添加参数
     addParm(item) {
       if (item) {
+        item = '--&&--' + item;
         this.selectedParams.push(item);
         this.updateBlock();
       }
     },
+
     saveFunction() {
       console.log('保存函数');
+      console.log(this.selectedParams);
 
     },
-
   },
 
   created() {

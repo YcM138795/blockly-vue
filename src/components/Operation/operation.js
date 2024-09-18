@@ -323,41 +323,5 @@ import { dartGenerator } from 'blockly/dart';
 
 
 }
-Blockly.Blocks['function_definition'] = {
-  init:function(){
-    this.jsonInit({
-      "type": "function_definition",
-      "tooltip": "",
-      "helpUrl": "",
-      "message0": "函数 %1 %2",
-      "args0": [
-        {
-          "type": "field_input",
-          "name": "FUNC_NAME",
-          "text": "myFunction"
-        },
-        {
-          "type": "input_dummy",
-          "name": "funName"
-        },
-      ],
-      "style": "function_definition1", 
-    });
-  }
-};
-
-Blockly.Themes.Classic.blockStyles["function_definition1"] = {
-  "colourPrimary": "#5b67a5",
-  "colourSecondary": "#4a56a3",
-  "colourTertiary": "#3a46a1",
-  "hat": "cap"  
-};
-
-
-javascriptGenerator.forBlock['function_definition'] = function (block,generator) {
-  const statement_name = generator.statementToCode(block, 'STACK');
-  var code =`a{${statement_name}}\n`;
-  return code;
-};
 
 

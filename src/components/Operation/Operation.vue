@@ -29,10 +29,6 @@ export default {
               },
               {
                 kind: "block",
-                type: "function_definition"
-              },
-              {
-                kind: "block",
                 type: "string_printf"
               },
               {
