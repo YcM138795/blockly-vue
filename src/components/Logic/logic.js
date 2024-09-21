@@ -86,15 +86,17 @@ import '@blockly/block-plus-minus';
           },
           {
             "type": "input_statement",
-            "name": "do"
+            "name": "do",
+            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
           },
           {
             "type": "input_statement",
-            "name": "else"
+            "name": "else",
+            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
           }
         ],
-        "previousStatement": null,
-        "nextStatement": null,
+        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
         "colour": 210,
         "inputsInline": true
       })
@@ -133,11 +135,12 @@ import '@blockly/block-plus-minus';
           },
           {
             "type": "input_statement",
-            "name": "operate"
+            "name": "operate",
+            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
           }
         ],
-        "previousStatement": null,
-        "nextStatement": null,
+        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
         "colour": 210,
         "tooltip": "循环",
         "helpUrl": ""
@@ -338,13 +341,13 @@ dartGenerator.forBlock['compare'] = function(block) {
           },
           {
             "type": "input_statement",
-            "name": "operation"
+            "name": "operation",
+            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
           }
         ],
-
+        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
         "inputsInline": true,
-        "previousStatement": null,
-        "nextStatement": null,
         "colour": 210,
         "tooltip": "if单判断",
         "helpUrl": ""

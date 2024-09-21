@@ -41,7 +41,7 @@ export default {
               },
               {
                 "kind": "block",
-                "type": "controls_if"
+                "type": "if_judge"
               },
               {
                 "kind": "block",
