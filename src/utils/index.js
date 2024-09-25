@@ -44,6 +44,7 @@ async function getId(data) {
         console.log('C代码:', data);
         console.log('返回消息:', response.data.msg);
         return response.data.msg;  // 返回 taskId
+
     } catch (error) {
         console.error('获取任务id失败:', error);
     }

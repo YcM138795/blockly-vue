@@ -136,14 +136,27 @@ import '@blockly/field-bitmap';
   {
     Blockly.Blocks['int_main'] = {
       init: function () {
-        this.appendDummyInput()
-          .appendField("开始入口");
-        this.appendStatementInput("operate")
-          .setCheck(null);
-        this.setColour(180);
-        this.setTooltip("开始(唯一且不可删除)");
-        this.setHelpUrl("");
-        this.setDeletable(false);
+        this.jsonInit({
+          "type": "int_main",
+          "message0": "开始入口",
+          "args0": [],
+          "message1": "%1",
+          "args1": [
+            {
+              "type": "input_statement",
+              "name": "operate",
+              "check": ['']
+            }
+          ],
+          "colour": 180,
+          "tooltip": "开始(唯一且不可删除)",
+          "helpUrl": "",
+          "deletable": false,
+          "style": {
+            "hat": "cap"              // 使用帽子块的外观，这样这个块看起来像程序的开始
+          }
+        }
+      )
       }
     };
     javascriptGenerator.forBlock['int_main'] = function (block) {
@@ -185,8 +198,8 @@ ${statements_operate}
           colours: { filled: '#4d8c8c', empty: '#fff' }
         },
       ],
-      "previousStatement": null,
-      "nextStatement": null,
+      "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+      "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
       "colour": 180
     },
   ]);

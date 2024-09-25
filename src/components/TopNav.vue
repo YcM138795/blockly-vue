@@ -77,7 +77,7 @@
 
 <script>
 import { Compile } from '../utils'
-import { serial_request, kermit_start, kermit_stop } from '../utils/burn'
+import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
 
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
@@ -103,7 +103,7 @@ export default {
             //二进制文件数据
             file: null,
             //是否停止烧录
-            flashing: { boolean: true, first: true },
+            flashing: {boolean:true,first:true},
         }
     },
     mounted() {
@@ -123,12 +123,12 @@ export default {
         });
         //是否正在烧录的全局事件监听
         EventBus.$on('flashing', (data) => {
-            // 更新 flashing 对象的具体属性
+        // 更新 flashing 对象的具体属性
             this.flashing.boolean = data.boolean;
             this.flashing.first = data.first;
-            // 打印更新后的 flashing 对象到控制台
-            console.log('flashing:', this.flashing);
-        });
+        // 打印更新后的 flashing 对象到控制台
+        console.log('flashing:', this.flashing);
+});
     },
     props: {
         code: {
@@ -145,10 +145,10 @@ export default {
             serial_request(this.$refs);
         },
         kermit_start() {
-            kermit_start(this.$refs, this.file, this.flashing);
+            kermit_start(this.$refs, this.file,this.flashing);
         },
         kermit_stop() {
-            kermit_stop(this.$refs, this.flashing);
+            kermit_stop(this.$refs,this.flashing);
         },
         //返回
         returnAction() {
@@ -231,14 +231,15 @@ export default {
 
         //云下载
         async dowmloadAction() {
+            if(this.loading == true)
+            {
+                return;
+            }
             if (this.viewShow == 'dowmload') {
                 this.viewShow = 'code';
                 this.$emit('viewShowUpdate', this.viewShow);
                 return;
             }
-
-            if (this.loading == true)
-                return;
 
             this.loading = true; // 开始显示加载动画
 
@@ -609,4 +610,5 @@ export default {
 .dowmload Button:active {
     transform: translateY(1px);
 }
+
 </style>

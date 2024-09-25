@@ -40,6 +40,7 @@ import 'blockly/javascript';
 import './Operation/operation'
 
 
+
 export default {
   name: 'ContentView',
   data() {
@@ -65,6 +66,7 @@ export default {
     // 关闭函数编辑对话框
     closeEditor() {
       this.isVisible = false;
+
     },
 
     // 初始化 Blockly
@@ -81,6 +83,7 @@ export default {
     // 更新块
     updateBlock() {
       if (!this.workspace) return;
+
       this.workspace.clear(); // 清除之前的所有块
 
       // 创建新的块并添加到工作区

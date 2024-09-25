@@ -67,7 +67,7 @@ export default {
       horizontalLayout: true, //工具箱水平
       toolboxPosition: "end", //工具箱在底部
       //特殊块
-      entryBlockTypes: ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'function_definition'],
+      entryBlockTypes : ['int_main', 'light_task', 'ultrasonic_task', 'motors_task','servo_task', 'fmq_task','function_definition'],
       toolbox: {
         contents: [
           {
@@ -258,11 +258,15 @@ export default {
     // Toolbox添加
     this.addToolbox();
 
-
+    
 
   },
   methods: {
-    //添加int_main块
+    //检测代码块有无重复添加
+    hasCustomBlock(type) {
+    const allBlocks = this.workspace.getAllBlocks();
+    return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
+  },
     addInt_Main() {
       // 添加int_main块加到工作区
       const entryBlock = this.workspace.newBlock('int_main');
@@ -273,15 +277,62 @@ export default {
       entryBlock.moveBy(50, 50);
     },
 
-    //工作区变化监听
     workspaceChangeListener() {
-      const allBlocks = this.workspace.getAllBlocks();
+      var allBlocks = this.workspace.getAllBlocks();
+      allBlocks.forEach((block)=>{
+        if(block.type==='XTask_light_task'){
+        if (!this.hasCustomBlock('light_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('light_task'); 
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(250, 50);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_fmq_task'){
+        if (!this.hasCustomBlock('fmq_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('fmq_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_servo_task'){
+        if (!this.hasCustomBlock('servo_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('servo_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(250, 250);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_motors_task'){
+        if (!this.hasCustomBlock('motors_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('motors_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(450, 250);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_ultrasonic_task'){
+        if (!this.hasCustomBlock('ultrasonic_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('ultrasonic_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(250, 450);  // 可根据需要修改坐标
+      } 
+      }
+      })
+      
+      allBlocks = this.workspace.getAllBlocks();
       if (allBlocks.length === 0) {
         this.addInt_Main()
         return;
       }
-
-
 
       // 保证每种类型只有一个入口块
       this.entryBlockTypes.forEach(type => {
@@ -306,30 +357,30 @@ export default {
       allBlocks.forEach(block => {
         if (!remainingEntryBlocks.includes(block) && !allConnectedBlocks.includes(block)) {
           block.setEnabled(false);
-          if (block.type === 'create_function_button') {
+          if(block.type === 'create_function_button') {
             block.dispose();
-            EventBus.$emit('showFunctionEditor');
+            EventBus.$emit('showFunctionEditor');   
           }
         } else {
           block.setEnabled(true);
         }
       });
+      
     },
 
-    //获取所有连接的块
     getAllConnectedBlocks(block, visited = new Set()) {
-      const connectedBlocks = [];
-      if (block.getChildren) {
+    const connectedBlocks = [];
+    if (block.getChildren) {
         block.getChildren().forEach(childBlock => {
-          if (!visited.has(childBlock)) {
-            visited.add(childBlock);
-            connectedBlocks.push(childBlock);
-            connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
-          }
+            if (!visited.has(childBlock)) {
+                visited.add(childBlock);
+                connectedBlocks.push(childBlock);
+                connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
+            }
         });
-      }
-      return connectedBlocks;
-    },
+    }
+    return connectedBlocks;
+},
 
 
     //添加合并工作箱
@@ -554,4 +605,5 @@ body {
   border-radius: 30px;
   flex: 1;
 }
+
 </style>

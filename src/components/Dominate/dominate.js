@@ -22,7 +22,8 @@ import { javascriptGenerator } from 'blockly/javascript';
                         },
                         {
                             "type": "input_statement",
-                            "name": "operate"
+                            "name": "operate",
+                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#4e72b8'
@@ -53,7 +54,8 @@ import { javascriptGenerator } from 'blockly/javascript';
                         },
                         {
                             "type": "input_statement",
-                            "name": "operate"
+                            "name": "operate",
+                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#4e72b8'
@@ -84,7 +86,8 @@ import { javascriptGenerator } from 'blockly/javascript';
                         },
                         {
                             "type": "input_statement",
-                            "name": "operate"
+                            "name": "operate",
+                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#4e72b8'
@@ -115,7 +118,8 @@ import { javascriptGenerator } from 'blockly/javascript';
                         },
                         {
                             "type": "input_statement",
-                            "name": "operate"
+                            "name": "operate",
+                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#4e72b8'
@@ -146,7 +150,8 @@ import { javascriptGenerator } from 'blockly/javascript';
                         },
                         {
                             "type": "input_statement",
-                            "name": "operate"
+                            "name": "operate",
+                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#4e72b8'

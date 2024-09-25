@@ -260,8 +260,8 @@ async function kermit_transloop(pkt) {
 }
 
 
-async function kermit_start(refs, file, flashing) {
-    EventBus.$emit('flashing', { boolean: true, first: false });
+async function kermit_start(refs,file,flashing) {
+    EventBus.$emit('flashing', {boolean:true,first:false}); 
     const kermit_stat = refs.kermit_stat;
 
     if (comport == undefined) {
@@ -316,10 +316,10 @@ async function kermit_start(refs, file, flashing) {
 
 
     while (sended < total) {
-        if (!flashing.boolean) {
+        if(!flashing.boolean){
             kermit_stat.value = `已取消烧录`;
             sended = total;
-            EventBus.$emit('progress', { sended, total }); // 触发进度事件
+            EventBus.$emit('progress', { sended,total  }); // 触发进度事件
             return;
         }
         console.log('循环烧录');

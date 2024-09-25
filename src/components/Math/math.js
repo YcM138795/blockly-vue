@@ -606,8 +606,8 @@ import {dartGenerator} from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
+            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
             "colour": 150,
             "tooltip": "定义一个随机数",
             "helpUrl": ""
