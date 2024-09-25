@@ -44,6 +44,7 @@ async function getId(data) {
         console.log('C代码:', data);
         console.log('返回消息:', response.data.msg);
         return response.data.msg;  // 返回 taskId
+
     } catch (error) {
         console.error('获取任务id失败:', error);
     }
@@ -62,15 +63,23 @@ async function getCompileResult(taskId) {
 }
 
 // 轮询函数，直到获取到成功的编译结果或超时
-async function pollCompileResult(taskId, timeout = 10000, interval = 1000) {
+async function pollCompileResult(taskId, timeout = 20000, interval = 1000) {
     console.log('开始轮询编译结果');
     return new Promise((resolve, reject) => {
         const startTime = Date.now();
+        let count = 0;//记录当前轮询次数
 
         // 创建一个轮询定时器
         const pollInterval = setInterval(async () => {
+            count++;
             const elapsed = Date.now() - startTime;
 
+            if(count==21){
+                console.log('轮询次数:', count);
+                const result = await getCompileResult(taskId);
+                    clearInterval(pollInterval);  // 超时，停止轮询
+                    resolve(result.msg);  // 返回第二个接口信息
+            }
             // 检查是否超过超时时间
             if (elapsed > timeout) {
                 clearInterval(pollInterval);  // 超时，停止轮询
@@ -86,6 +95,10 @@ async function pollCompileResult(taskId, timeout = 10000, interval = 1000) {
             if (result && result.msg && result.msg.startsWith('https://')) {  // 判断是否包含有效的 URL
                 clearInterval(pollInterval);  // 成功，停止轮询
                 resolve(result.msg);  // 解析成功，返回下载文件 URL
+            }
+            if (result && result.msg && result.msg.startsWith('Failed')) {  // 判断是否包含有效的 URL
+                clearInterval(pollInterval);  // 编译出错，停止轮询
+                resolve('代码编译出错,积木代码逻辑有误');  // 解析成功，返回字符串
             }
         }, interval);  // 每隔 interval 时间（500 毫秒）调用一次
     });
@@ -142,15 +155,29 @@ async function Compile(data) {
         console.log('开始编译');
         const taskId = await getId(data);  // 获取 taskId
         const fileUrl = await pollCompileResult(taskId);  // 获取编译结果文件 URL
+
+        if(fileUrl.startsWith('Compiling')){
+            return '代码编译超时,请稍后再试';
+        }
+        if(fileUrl=='代码编译出错,积木代码逻辑有误'){
+            return '代码编译出错,积木代码逻辑有误';
+        }
+        if(fileUrl.startsWith('Task')){
+            return '服务器繁忙，请稍后再试';
+        }
+        if(fileUrl.startsWith('Error')){
+            return '阿里云服务器出错，请稍后再试';
+        }
+
         const blob = await getBlob(fileUrl);  // 下载文件
 
         BlobToFile(blob, 'binary_file.ota');  // 处理文件
         // downFile(blob, 'binary_file.ota');  // 下载文件
 
-        return '二进制文件获取成功';
+        return '代码编译成功';
     } catch (error) {
         console.error('主函数错误:', error);
-        return '二进制文件获取失败';
+        return '代码编译超时,请稍后再试';
     }
 }
 

@@ -325,4 +325,42 @@ import { dartGenerator } from 'blockly/dart';
 
 }
 
+Blockly.Blocks['function_definition'] = {
+  init: function () {
+    this.jsonInit({
+      "type": "function_definition",
+      "tooltip": "",
+      "helpUrl": "",
+      "message0": "",
+      "args0": [
+      ],
+      "style": "function_definition_style",
+    });
+  }
+};
+Blockly.Themes.Classic.blockStyles["function_definition_style"] = {
+  "colourPrimary": "#5b67a5",
+  "colourSecondary": "#4a56a3",
+  "colourTertiary": "#3a46a1",
+  "hat": "cap"
+};
+javascriptGenerator.forBlock['function_definition'] = function (block, generator) {
+  console.log(block.inputList[1].fieldRow);
+  
+  block.inputList[1].fieldRow.forEach((field,index) => {
+    if(index>0){
+    console.log(field.name);
+    }
+  });
+  const text_name = block.getFieldValue('NAME');
+
+  const text_text_0 = block.getFieldValue('text_1');
+  const text_boolean_1 = block.getFieldValue('boolean_2');
+
+  const statement_inner = generator.statementToCode(block, 'inner');
+
+  // TODO: Assemble javascript into the code variable.
+  const code = `void ${text_name}(${text_text_0},${text_boolean_1}){\n${statement_inner}}\n`;
+  return code;
+}
 

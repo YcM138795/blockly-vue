@@ -38,11 +38,7 @@ import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import 'blockly/javascript';
 import './Operation/operation'
-import {
-  ScrollOptions,
-  ScrollBlockDragger,
-  ScrollMetricsManager,
-} from '@blockly/plugin-scroll-options';
+
 
 
 export default {
@@ -55,6 +51,7 @@ export default {
       currentDeleteButton: null,//当前删除按钮的存储
       newBlock: null,//新块的存储
       newBlockPosition: { x: 50, y: 50 },//新块的位置
+      block: 0,//已经添加的存储块
     };
   },
   methods: {
@@ -69,9 +66,7 @@ export default {
     // 关闭函数编辑对话框
     closeEditor() {
       this.isVisible = false;
-      if (this.workspace) {
-        this.workspace.dispose(); // 清理 Blockly 工作区
-      }
+
     },
 
     // 初始化 Blockly
@@ -80,21 +75,7 @@ export default {
       this.workspace = Blockly.inject(blockly_container, {
         renderer: 'zelos', // 设置渲染器为 Zelos
         theme: Blockly.Themes.Classic, // 使用 Classic 主题
-        plugins: {
-          // These are both required.
-          // Note that the ScrollBlockDragger drags things besides blocks.
-          // Block is included in the name for backwards compatibility.
-          blockDragger: ScrollBlockDragger,
-          metricsManager: ScrollMetricsManager,
-        },
-        move: {
-          wheel: true, // Required for wheel scroll to work.
-        },
       });
-
-      const plugin = new ScrollOptions(this.workspace);
-      console.log(plugin);
-      plugin.init();
 
       this.updateBlock();
     },
@@ -127,8 +108,11 @@ export default {
         }
       });
 
+      this.newBlock.appendDummyInput('funName').appendField('函数').appendField(new Blockly.FieldTextInput('myFunction'), 'NAME');
+
+
       // 创建一个横向排列的容器
-      const horizontalInput = this.newBlock.appendDummyInput('PARAMS_CONTAINER').appendField('参数');
+      const horizontalInput = this.newBlock.appendDummyInput('Param').appendField('参数');
 
       if (this.selectedParams.length !== 0) {
         // 根据 selectedParams 更新块的输入
@@ -197,7 +181,7 @@ export default {
 
       // 添加其他的块内容（如执行部分）
       this.newBlock.appendStatementInput('inner').appendField('执行');
-      // 添加鼠标离开事件监听器
+      this.block = this.newBlock;
     },
 
     // 显示删除图标
@@ -338,8 +322,17 @@ export default {
     },
 
     saveFunction() {
+      this.isVisible = false
+
+      if (this.selectedParams.length === 0) {
+        this.$message({
+          message: '参数个数不能为0',
+          type: 'warning'
+        });
+        return;
+      }
       console.log('保存函数');
-      console.log(this.selectedParams);
+      EventBus.$emit('addMyFunction', this.selectedParams, this.block);
 
     },
   },

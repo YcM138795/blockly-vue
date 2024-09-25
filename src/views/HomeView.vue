@@ -1,6 +1,6 @@
 <template>
   <div ref="container" style="width: 100%; height: 100%;">
-    <ContentView ></ContentView>
+    <ContentView></ContentView>
     <div style="width: 100%; height: 60px">
       <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" :ledArr="ledArr">
       </TopNav>
@@ -21,7 +21,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -91,9 +90,12 @@ export default {
     SpecialBlock,
     XfxCarBlock
   },
+  created() {
+    EventBus.$on('addMyFunction', this.handleAddMyFunction);
+  },
   mounted() {
 
-    // 自定义主题
+    // 创建自定义主题
     const customTheme = Blockly.Theme.defineTheme('customTheme', {
       base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
       categoryStyles: {
@@ -204,7 +206,7 @@ export default {
       const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
       // 再生成其他积木的代码
       remainingEntryBlocks.forEach(block => {
-          JSCode += javascriptGenerator.blockToCode(block);
+        JSCode += javascriptGenerator.blockToCode(block);
       });
       // javascriptGenerator.finish(this.workspace);
       this.code = JSCode;
@@ -457,8 +459,67 @@ export default {
     },
     xfxCarBlock(xfxCarBlock) {
       this.xfxCarToolbox = xfxCarBlock
-    }
-  }
+    },
+
+    //添加自定义函数
+    handleAddMyFunction(data, block) {
+      console.log('工作区创建自定义函数', data, block);
+
+      // 创建新的块实例
+      const clonedBlock = this.workspace.newBlock(block.type); // 使用传递的类型创建新块
+
+      clonedBlock.appendDummyInput('funName').appendField('函数').appendField(new Blockly.FieldTextInput(`${block.inputList[0].fieldRow[1].value_}`), 'NAME');
+
+      const horizontalInput = clonedBlock.appendDummyInput('Param').appendField('参数');
+
+      let inputField;
+      let inputName;
+
+      // 复制块的所有字段和参数
+      block.inputList.forEach((input, index) => {
+        if (index == 1) {
+          input.fieldRow.forEach((field, index) => {
+            if (index > 0) {
+              inputField = new Blockly.FieldTextInput(`${field.value_}`);
+              inputName = this.getFieldName(field.value_, index);
+              horizontalInput.appendField(inputField, inputName);
+            }
+          });
+        }
+
+      });
+      // 添加其他的块内容（如执行部分）
+      clonedBlock.appendStatementInput('inner').appendField('执行');
+
+      // 初始化和渲染块
+      clonedBlock.initSvg();
+      clonedBlock.render();
+
+    },
+    getFieldName(param, index) {
+      if (param === '文本') {
+        return 'text_' + index;
+      } else if (param === '布尔值') {
+        return 'boolean_' + index;
+      } else if (param === '整形') {
+        return 'number_int_' + index;
+      } else if (param === '浮点数') {
+        return 'number_double_' + index;
+      } else if (param === '长整形') {
+        return 'number_long_' + index;
+      } else if (param === '数字数组') {
+        return 'array_int_' + index;
+      } else if (param === '字符数组') {
+        return 'array_string_' + index;
+      } else if (param === '浮点数数组') {
+        return 'array_double_' + index;
+      }
+    },
+
+
+
+  },
+
 };
 </script>
 
