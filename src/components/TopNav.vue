@@ -9,10 +9,13 @@
                 <span style="font-family: '阿里妈妈刀隶体 Regular', sans-serif;">积木代码编程</span>
             </div>
             <div class="right">
-                <button class="runButton" title="运行" @click="runAction"></button>
+                <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
+                <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
+                <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
+                    element-loading-text="文件下载中" element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(240,255,255, 0.7)"></button>
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
-                <button class="dowmloadButton" title="云下载" @click="dowmloadAction"></button>
                 <button class="clearButton" title="清空所有块" @click="clearAction"></button>
             </div>
 
@@ -20,6 +23,7 @@
         </div>
         <div class="view">
             <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
+
                 <h3>提示</h3>
                 <span>(再次点击提示收起)</span>
                 <br>
@@ -41,10 +45,30 @@
                 <button @click="exampleThree">例3</button>
                 <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }"
                     src="../assets/img/exampleThree.png" alt="">
+                <br><br><br><br><br><br>
+
+                <span>例4:烧录--循环操作小车灯的亮灭,每次亮灭持续两秒<br></span>
+                <button @click="exampleFour">例4</button>
+                <img class="exampleFour" :style="{ display: fourShow ? 'block' : 'none' }"
+                    src="../assets/img/exampleFour.png" alt="">
+                <br><br><br><br><br><br>
             </div>
             <div id="animation" :style="{ display: viewShow == 'run' ? 'block' : 'none' }">
                 <img src="../assets/SVG/灯亮.svg" :style="{ display: imgShow == 'img1' ? 'block' : 'none' }">
                 <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
+            </div>
+            <div class="dowmload" :style="{ display: viewShow == 'dowmload' ? 'block' : 'none' }">
+                <br><br>
+                <input type="text" ref="stat" value="串口信息提示" size="18" readonly="readonly">
+                <br><br>
+                <button @click="serial_request">请求端口</button>
+                <button @click="kermit_start">开始烧录</button>
+                <button @click="kermit_stop">停止烧录</button>
+                <br><br>
+                <input type="text" ref="kermit_stat" value="烧录信息提示" size="24" readonly="readonly">
+                <br><br>
+                <div id="progressContainer" style="width: 200px; height: 16px; margin: 0 auto; border: 1px solid #000;">
+                </div>
             </div>
         </div>
     </div>
@@ -52,7 +76,11 @@
 </template>
 
 <script>
-import { postData } from '../utils'
+import { Compile } from '../utils'
+import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
+
+import { EventBus } from '../utils/eventBus';
+import ProgressBar from 'progressbar.js';
 
 export default {
     name: 'TopNav',
@@ -66,10 +94,41 @@ export default {
             imgShow: 'img1',
             //右侧视图的展示选择
             viewShow: '',
+            dowmloadShow: '',
             oneShow: false,
             twoShow: false,
             threeShow: false,
+            fourShow: false,
+            loading: false, // 控制加载状态
+            //二进制文件数据
+            file: null,
+            //是否停止烧录
+            flashing: {boolean:true,first:true},
         }
+    },
+    mounted() {
+        this.progressBar = new ProgressBar.Line('#progressContainer', {
+            strokeWidth: 8,
+            color: '#008000',
+            duration: 1400,
+        });
+        //进度条的全局事件监听
+        EventBus.$on('progress', (data) => {
+            this.progressBar.set(data.sended / data.total);
+        });
+        //二进制文件数据的全局事件监听
+        EventBus.$on('file', (file) => {
+            this.file = file;
+            console.log('file:', this.file);
+        });
+        //是否正在烧录的全局事件监听
+        EventBus.$on('flashing', (data) => {
+        // 更新 flashing 对象的具体属性
+            this.flashing.boolean = data.boolean;
+            this.flashing.first = data.first;
+        // 打印更新后的 flashing 对象到控制台
+        console.log('flashing:', this.flashing);
+});
     },
     props: {
         code: {
@@ -82,6 +141,15 @@ export default {
         },
     },
     methods: {
+        serial_request() {
+            serial_request(this.$refs);
+        },
+        kermit_start() {
+            kermit_start(this.$refs, this.file,this.flashing);
+        },
+        kermit_stop() {
+            kermit_stop(this.$refs,this.flashing);
+        },
         //返回
         returnAction() {
             alert('返回')
@@ -101,60 +169,90 @@ export default {
         },
 
         //运行
-        runAction() {
-            this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
-            this.$emit('viewShowUpdate', this.viewShow);
-            //确保this.ledShow();是在主组件ledArr数据修改后调用
-            this.$nextTick(() => {
-                this.ledShow();
-            });
-        },
+        // runAction() {
+        //     this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
+        //     this.$emit('viewShowUpdate', this.viewShow);
+        //     //确保this.ledShow();是在主组件ledArr数据修改后调用
+        //     this.$nextTick(() => {
+        //         this.ledShow();
+        //     });
+        // },
 
         //灯亮灭的展示
-        ledShow() {
-            //判断上一次定时器是否关闭，确保按钮点击过快的多重定时器问题
-            if (this.timerId) {
-                clearTimeout(this.timerId);
-            }
-            if (this.viewShow == 'run')
-            console.log('开始亮灭灯操作');
-            console.log(this.ledArr);
-            //提前保存this,确保executeAction函数内部this的报错
-            const that = this
-            //递归调用函数
-            const executeAction = (index) => {
-                if (this.viewShow !== 'run') return
-                if (index >= that.ledArr.length) return;
-                const led = that.ledArr[index];
-                const time = that.ledArr[index + 1];
-                if (led === 'open_led') {
-                    that.imgShow = 'img1'
-                    console.log('open_led时间:', time);
-                } else if (led === 'close_led') {
-                    that.imgShow = 'img2'
-                    console.log('close_led时间:', time);
-                }
-                if (time == -1) return
-                that.timerId = setTimeout(() => {
-                    //每次加2读取数组open_led或者close_led
-                    executeAction(index + 2);
-                }, time * 1000);
-            };
-            // 初始调用
-            executeAction(0);
-        },
+        // ledShow() {
+        //     //判断上一次定时器是否关闭，确保按钮点击过快的多重定时器问题
+        //     if (this.timerId) {
+        //         clearTimeout(this.timerId);
+        //     }
+        //     if (this.viewShow == 'run')
+        //         console.log('开始亮灭灯操作');
+        //     console.log(this.ledArr);
+        //     //提前保存this,确保executeAction函数内部this的报错
+        //     const that = this
+        //     //递归调用函数
+        //     const executeAction = (index) => {
+        //         if (this.viewShow !== 'run') return
+        //         if (index >= that.ledArr.length) return;
+        //         const led = that.ledArr[index];
+        //         const time = that.ledArr[index + 1];
+        //         if (led === 'open_led') {
+        //             that.imgShow = 'img1'
+        //             console.log('open_led时间:', time);
+        //         } else if (led === 'close_led') {
+        //             that.imgShow = 'img2'
+        //             console.log('close_led时间:', time);
+        //         }
+        //         if (time == -1) return
+        //         that.timerId = setTimeout(() => {
+        //             //每次加2读取数组open_led或者close_led
+        //             executeAction(index + 2);
+        //         }, time * 1000);
+        //     };
+        //     // 初始调用
+        //     executeAction(0);
+        // },
 
         //提示
         tipAction() {
             this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
             this.$emit('viewShowUpdate', this.viewShow);
+
         },
 
-        //提示
-        dowmloadAction() {
-            let state = postData(this.code);
-            state.then((result) => {
-                if (result === '二进制文件获取失败') {
+        //重新编译
+        recompileAction() {
+            if (this.viewShow != 'dowmload') {
+                this.dowmloadAction();
+            } else {
+                this.dowmloadAction();
+                this.dowmloadAction();
+            }
+        },
+
+        //云下载
+        async dowmloadAction() {
+            if(this.loading == true)
+            {
+                return;
+            }
+            this.loading = true; // 开始显示加载动画
+
+            this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'code';
+            let state;
+            if (this.viewShow == 'dowmload') {
+                state = await Compile(this.code);
+                console.log(state);
+
+                if (state === '二进制文件获取成功') {
+                    const h = this.$createElement;
+                    this.$notify({
+                        title: '',
+                        message: h('i', { style: 'color: teal' }, '二进制文件获取成功'),
+                        duration: 700,
+                        type: 'success',
+                        offset: 50
+                    });
+                } else {
                     const h = this.$createElement;
                     this.$notify({
                         title: '',
@@ -163,28 +261,18 @@ export default {
                         type: 'error',
                         offset: 50
                     });
-                } else if (result === '未选择串口或串口通信打开错误') {
-                    const h = this.$createElement;
-                    this.$notify({
-                        title: '',
-                        message: h('i', { style: 'color: teal' }, '未选择串口或串口通信打开错误'),
-                        duration: 700,
-                        type: 'error',
-                        offset: 50
-                    });
-                } else if (result === '下载成功') {
-                    const h = this.$createElement;
-                    this.$notify({
-                        title: '',
-                        message: h('i', { style: 'color: teal' }, '下载成功'),
-                        duration: 700,
-                        type: 'success',
-                        offset: 50
-                    });
                 }
 
+            }
+            this.$emit('viewShowUpdate', this.viewShow);
+            state = '';
 
-            })
+            // 模拟下载过程，例如调用API
+            this.loading = false; // 完成后隐藏加载动画
+            // 其他下载完成后的操作
+
+
+
         },
 
         //清除
@@ -220,6 +308,10 @@ export default {
         exampleThree() {
             this.threeShow = !this.threeShow
         },
+        exampleFour() {
+            this.fourShow = !this.fourShow
+        },
+
 
 
 
@@ -318,7 +410,7 @@ export default {
 /* 右侧按钮样式 */
 .right Button {
     height: 60px;
-    width: 60px;
+    width: 65px;
     border: none;
     border-radius: 50%;
     background-repeat: no-repeat;
@@ -331,15 +423,21 @@ export default {
 }
 
 /* 右侧运行按钮 */
-
+/* 
 .right .runButton {
     /* margin: 0; */
-    background-image: url('../assets/SVG/运行.svg')
+/*   background-image: url('../assets/SVG/运行.svg')*/
+/* } */
+
+/* 右侧重新编译按钮 */
+.right .recompileButton {
+    margin-right: 50px;
+    background-image: url('../assets/SVG/重新编译.svg');
 }
 
 /* 右侧保存按钮 */
 .right .saveButton {
-    margin: 0 50px;
+    margin-right: 50px;
     background-image: url('../assets/SVG/save.svg');
 }
 
@@ -445,6 +543,13 @@ export default {
     height: 266px;
 }
 
+.exampleFour {
+    /* margin-left: 50px; */
+    margin-left: 80px;
+    width: 331px;
+    height: 418px;
+}
+
 #animation {
     margin-top: 50px;
     margin-left: 50px;
@@ -454,4 +559,31 @@ export default {
     width: 160px;
     height: auto
 }
+
+.dowmload button {
+    margin: 0 5px;
+    background-color: rgb(233, 241, 252);
+    height: 60px;
+    width: 100px;
+    border: none;
+    border-radius: 50%;
+    background-image: url('../assets/SVG/按钮.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* 图片大小适应按钮 */
+    background-position: center;
+    /* 图片居中 */
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+.dowmload Button:hover {
+    transform: scale(1.05);
+    /* filter: brightness(110%); */
+}
+
+.dowmload Button:active {
+    transform: translateY(1px);
+}
+
 </style>

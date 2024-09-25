@@ -1,12 +1,9 @@
-import Blockly from 'blockly'
-import javascript from 'blockly/javascript';
-import dart from 'blockly/dart';
+import * as Blockly from 'blockly/core';
+import {javascriptGenerator, Order} from 'blockly/javascript';
+import {dartGenerator} from 'blockly/dart';
 
 
-import { Order } from 'blockly/javascript';
 
-import * as hans from 'blockly/msg/zh-hans'
-Blockly.setLocale(hans);//汉化
 
 
 
@@ -37,7 +34,7 @@ Blockly.setLocale(hans);//汉化
           })
         }
       }
-      javascript.javascriptGenerator.forBlock['number_single'] = function (block) {
+      javascriptGenerator.forBlock['number_single'] = function (block) {
         var number_digit = block.getFieldValue('digit');
         // TODO: Assemble javascript into code variable.
         var code = number_digit;
@@ -45,7 +42,7 @@ Blockly.setLocale(hans);//汉化
         // TODO: Change ORDER_NONE to the correct strength. 
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['number_single'] = function (block) {
+      dartGenerator.forBlock['number_single'] = function (block) {
         var number_digit = block.getFieldValue('digit');
         // TODO: Assemble javascript into code variable.
         var code = number_digit;
@@ -81,17 +78,17 @@ Blockly.setLocale(hans);//汉化
           )
         }
       }
-      javascript.javascriptGenerator.forBlock['number_double'] = function (block, generator) {
+      javascriptGenerator.forBlock['number_double'] = function (block, generator) {
         var number_digit = block.getFieldValue('digit');
-        var value_operate = generator.valueToCode(block, 'operate', javascript.Order.NONE);
+        var value_operate = generator.valueToCode(block, 'operate', Order.NONE);
         // TODO: Assemble javascript into code variable.
         var code = number_digit + value_operate;
         // TODO: Change ORDER_NONE to the correct strength.
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['number_double'] = function (block, generator) {
+      dartGenerator.forBlock['number_double'] = function (block, generator) {
         var number_digit = block.getFieldValue('digit');
-        var value_operate = generator.valueToCode(block, 'operate', dart.Order.NONE);
+        var value_operate = generator.valueToCode(block, 'operate', Order.NONE);
         // TODO: Assemble javascript into code variable.
         var code = number_digit + value_operate;
         // TODO: Change ORDER_NONE to the correct strength.
@@ -149,17 +146,17 @@ Blockly.setLocale(hans);//汉化
           )
         }
       }
-      javascript.javascriptGenerator.forBlock['single_operation'] = function (block, generator) {
+      javascriptGenerator.forBlock['single_operation'] = function (block, generator) {
         var dropdown_maths = block.getFieldValue('maths');
-        var value_operate = generator.valueToCode(block, 'operate', javascript.Order.ATOMIC);
+        var value_operate = generator.valueToCode(block, 'operate', Order.ATOMIC);
         // TODO: Assemble javascript into code variable.
         var code = dropdown_maths + value_operate;
         // TODO: Change ORDER_NONE to the correct strength.
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['single_operation'] = function (block, generator) {
+      dartGenerator.forBlock['single_operation'] = function (block, generator) {
         var dropdown_maths = block.getFieldValue('maths');
-        var value_operate = generator.valueToCode(block, 'operate', dart.Order.ATOMIC);
+        var value_operate = generator.valueToCode(block, 'operate', Order.ATOMIC);
         // TODO: Assemble javascript into code variable.
         var code = dropdown_maths + value_operate;
         // TODO: Change ORDER_NONE to the correct strength.
@@ -266,13 +263,13 @@ Blockly.setLocale(hans);//汉化
         }
       }
   
-      javascript.javascriptGenerator.forBlock['operation'] = function (block, generator) {
+      javascriptGenerator.forBlock['operation'] = function (block, generator) {
         11
         var number_digit1 = block.getFieldValue('digit1');
         var dropdown_maths1 = block.getFieldValue('maths1');
         var number_digit2 = block.getFieldValue('digit2');
         var dropdown_maths2 = block.getFieldValue('maths2');
-        var digit3 = generator.valueToCode(block, 'digit3', javascript.Order.ATOMIC);
+        var digit3 = generator.valueToCode(block, 'digit3', Order.ATOMIC);
         var code
         if (dropdown_maths2==='null') {
           code = number_digit1 + dropdown_maths1 + number_digit2;
@@ -281,13 +278,13 @@ Blockly.setLocale(hans);//汉化
         }
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['operation'] = function (block, generator) {
+      dartGenerator.forBlock['operation'] = function (block, generator) {
         11
         var number_digit1 = block.getFieldValue('digit1');
         var dropdown_maths1 = block.getFieldValue('maths1');
         var number_digit2 = block.getFieldValue('digit2');
         var dropdown_maths2 = block.getFieldValue('maths2');
-        var digit3 = generator.valueToCode(block, 'digit3', dart.Order.ATOMIC);
+        var digit3 = generator.valueToCode(block, 'digit3', Order.ATOMIC);
         var code
         if (dropdown_maths2==='null') {
           code = number_digit1 + dropdown_maths1 + number_digit2;
@@ -329,8 +326,8 @@ Blockly.setLocale(hans);//汉化
           })
         }
       }
-      javascript.javascriptGenerator.forBlock['remainder'] = function (block, generator) {
-        var value_digit1 = generator.valueToCode(block, 'digit1', javascript.Order.ATOMIC) || 0;
+      javascriptGenerator.forBlock['remainder'] = function (block, generator) {
+        var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || 0;
         var number_digit2 = block.getFieldValue('digit2');
         if (number_digit2 === 0) {
           number_digit2 = 1
@@ -341,8 +338,8 @@ Blockly.setLocale(hans);//汉化
         // TODO: Change ORDER_NONE to the correct strength.
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['remainder'] = function (block, generator) {
-        var value_digit1 = generator.valueToCode(block, 'digit1', dart.Order.ATOMIC) || 0;
+      dartGenerator.forBlock['remainder'] = function (block, generator) {
+        var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || 0;
         var number_digit2 = block.getFieldValue('digit2');
         if (number_digit2 === 0) {
           number_digit2 = 1
@@ -402,18 +399,18 @@ Blockly.setLocale(hans);//汉化
           )
         }
       }
-      javascript.javascriptGenerator.forBlock['big_small'] = function (block, generator) {
-        var value_digit1 = generator.valueToCode(block, 'digit1', javascript.Order.ATOMIC);
-        var value_digit2 = generator.valueToCode(block, 'digit2', javascript.Order.ATOMIC);
+      javascriptGenerator.forBlock['big_small'] = function (block, generator) {
+        var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC);
+        var value_digit2 = generator.valueToCode(block, 'digit2', Order.ATOMIC);
         var dropdown_maths = block.getFieldValue('maths');
         // TODO: Assemble javascript into code variable.
         var code = `${value_digit1}${dropdown_maths}${value_digit2}?${value_digit1}:${value_digit2}`;
         // TODO: Change ORDER_NONE to the correct strength.
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['big_small'] = function (block, generator) {
-        var value_digit1 = generator.valueToCode(block, 'digit1', dart.Order.ATOMIC);
-        var value_digit2 = generator.valueToCode(block, 'digit2', dart.Order.ATOMIC);
+      dartGenerator.forBlock['big_small'] = function (block, generator) {
+        var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC);
+        var value_digit2 = generator.valueToCode(block, 'digit2', Order.ATOMIC);
         var dropdown_maths = block.getFieldValue('maths');
         // TODO: Assemble javascript into code variable.
         var code = `${value_digit1}${dropdown_maths}${value_digit2}?${value_digit1}:${value_digit2}`;
@@ -532,7 +529,7 @@ Blockly.setLocale(hans);//汉化
         }
         
       }
-      javascript.javascriptGenerator.forBlock['math_fun'] = function (block, generator) {
+      javascriptGenerator.forBlock['math_fun'] = function (block, generator) {
         var dropdown_maths = block.getFieldValue('maths');
 
         var value_input1
@@ -541,10 +538,10 @@ Blockly.setLocale(hans);//汉化
           value_input1 = block.getFieldValue('ANGLE');
         } else {
           // 获取数值输入的值
-          value_input1 = generator.valueToCode(block, 'input1', javascript.Order.ATOMIC) || 0;
+          value_input1 = generator.valueToCode(block, 'input1', Order.ATOMIC) || 0;
         }
         
-        var value_input2 = generator.valueToCode(block, 'input2', javascript.Order.ATOMIC) || 0; 
+        var value_input2 = generator.valueToCode(block, 'input2', Order.ATOMIC) || 0; 
         var code
 
         if (dropdown_maths !== 'pow') {
@@ -554,7 +551,7 @@ Blockly.setLocale(hans);//汉化
         }
         return [code, Order.MEMBER];
       };
-      dart.dartGenerator.forBlock['math_fun'] = function (block, generator) {
+      dartGenerator.forBlock['math_fun'] = function (block, generator) {
         var dropdown_maths = block.getFieldValue('maths');
 
         var value_input1
@@ -563,10 +560,10 @@ Blockly.setLocale(hans);//汉化
           value_input1 = block.getFieldValue('ANGLE');
         } else {
           // 获取数值输入的值
-          value_input1 = generator.valueToCode(block, 'input1', javascript.Order.ATOMIC) || 0;
+          value_input1 = generator.valueToCode(block, 'input1', Order.ATOMIC) || 0;
         }
 
-        var value_input2 = generator.valueToCode(block, 'input2', dart.Order.ATOMIC) || 0;
+        var value_input2 = generator.valueToCode(block, 'input2', Order.ATOMIC) || 0;
 
 
         var code
@@ -609,8 +606,8 @@ Blockly.setLocale(hans);//汉化
               }
             ],
             "inputsInline": true,
-            "previousStatement": null,
-            "nextStatement": null,
+            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
             "colour": 150,
             "tooltip": "定义一个随机数",
             "helpUrl": ""
@@ -618,7 +615,7 @@ Blockly.setLocale(hans);//汉化
         }
   
       }
-      javascript.javascriptGenerator.forBlock['random'] = function(block) {
+      javascriptGenerator.forBlock['random'] = function(block) {
         var text_variable = block.getFieldValue('variable');
         var number_digit1 = block.getFieldValue('digit1');
         var number_digit2 = block.getFieldValue('digit2');
@@ -627,7 +624,7 @@ Blockly.setLocale(hans);//汉化
         var code = 'srand(time(NULL));\nint '+text_variable+'=rand()%'+number+'+'+number_digit1+';\n';
         return code;
       };
-      dart.dartGenerator.forBlock['random'] = function(block) {
+      dartGenerator.forBlock['random'] = function(block) {
         var text_variable = block.getFieldValue('variable');
         var number_digit1 = block.getFieldValue('digit1');
         var number_digit2 = block.getFieldValue('digit2');

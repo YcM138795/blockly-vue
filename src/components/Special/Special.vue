@@ -24,6 +24,10 @@
             },
             "contents": [
               {
+                kind: "label",
+                text: "字符"
+              },
+              {
                 kind: "block",
 
                 type: "string"
@@ -31,7 +35,20 @@
               {
                 kind: "block",
 
-                type: "number_variable"
+                type: "string_length"
+              },
+              {
+                kind: "label",
+                text: "图像显示"
+              },
+              {
+                kind: "block",
+
+                type: "test_field_bitmap"
+              },
+              {
+                kind: "label",
+                text: "括号"
               },
               {
                 kind: "block",

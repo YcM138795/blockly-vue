@@ -23,6 +23,10 @@
               "icon":"mathIcon"
             },
             "contents": [
+            {
+                kind: "label",
+                text: "数学"
+              },
               {
                 kind: "block",
                 type: "number_single",

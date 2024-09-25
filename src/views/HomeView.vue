@@ -1,5 +1,6 @@
 <template>
   <div ref="container" style="width: 100%; height: 100%;">
+    <ContentView ></ContentView>
     <div style="width: 100%; height: 60px">
       <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" :ledArr="ledArr">
       </TopNav>
@@ -10,8 +11,9 @@
       <div class="code-wrap">
         <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%"></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
+        <DominateBlock @dominateBox="dominateBox"></DominateBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
-        <MethodBlock @methodBox="methodBox"></MethodBlock>
+        <OperationBlock @methodBox="methodBox"></OperationBlock>
         <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
 
@@ -23,15 +25,31 @@
 </template>
 
 <script>
-import Blockly from "blockly";
+import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from "blockly/javascript";
+//测试函数，输出工作区代码
 import { test } from '../utils/test'
+//引入其他组件
 import TopNav from '../components/TopNav.vue'
+import ContentView from '@/components/ContentView.vue';
+import DominateBlock from '../components/Dominate/Dominate.vue';
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
-import MethodBlock from '../components/Method/Method.vue'
+import OperationBlock from '../components/Operation/Operation.vue'
 import SpecialBlock from '../components/Special/Special.vue'
 import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
+//引入controls_if的插件包
+import '@blockly/block-plus-minus';
+import * as zh_hans from 'blockly/msg/zh-hans';
+import { EventBus } from '../utils/eventBus';
+//设置语言
+Blockly.setLocale(zh_hans);
+// import {
+//   ContinuousToolbox,
+//   ContinuousFlyout,
+//   ContinuousMetrics,
+// } from '@blockly/continuous-toolbox';
+
 
 
 import * as monaco from 'monaco-editor';
@@ -49,32 +67,12 @@ export default {
       code: '',
       horizontalLayout: true, //工具箱水平
       toolboxPosition: "end", //工具箱在底部
+      //特殊块
+      entryBlockTypes : ['int_main', 'light_task', 'ultrasonic_task', 'motors_task','servo_task', 'fmq_task','function_definition'],
       toolbox: {
         contents: [
           {
             "kind": "category",
-            // "name": "特殊",
-            // "categoryStyle": "special_category",
-            // "cssConfig": {
-            //   "container": "special",
-            //   "icon": "specialIcon",
-            // },
-            // "contents": [
-              // {
-              //   kind: "block",
-
-              //   type: "string"
-              // },
-              // {
-              //   kind: "block",
-
-              //   type: "number_variable"
-              // },
-              // {
-              //   kind: "block",
-              //   type: "bracket"
-              // },
-            // ]
           },
         ],
       },
@@ -84,19 +82,27 @@ export default {
   },
   //引用的组件
   components: {
+    DominateBlock,
     LogicBlock,
     MathBlock,
-    MethodBlock,
+    OperationBlock,
     TopNav,
+    ContentView,
     SpecialBlock,
     XfxCarBlock
   },
   mounted() {
+
     // 自定义主题
     const customTheme = Blockly.Theme.defineTheme('customTheme', {
       base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
       categoryStyles: {
         // 定义自定义类别样式
+        dominate_category: {
+          colour: '#4e72b8', // 背景颜色（十六进制表示）
+          colourSecondary: '#FF8C61', // 二次背景颜色
+          colourTertiary: '#C73F1E', // 三次背景颜色
+        },
         logic_category: {
           colour: '#5B80A5', // 背景颜色（十六进制表示）
           colourSecondary: '#FF8C61', // 二次背景颜色
@@ -107,7 +113,7 @@ export default {
           colourSecondary: '#FF8C61', // 二次背景颜色
           colourTertiary: '#C73F1E', // 三次背景颜色
         },
-        method_category: {
+        operation_category: {
           colour: '#5B67A5', // 背景颜色（十六进制表示）
           colourSecondary: '#5B67A5', // 二次背景颜色
           colourTertiary: '#C73F1E', // 三次背景颜色
@@ -131,6 +137,7 @@ export default {
 
     //加载工作区
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
+
       toolbox: this.toolbox,
       zoom:
       {
@@ -153,27 +160,59 @@ export default {
       theme: customTheme,
       //渲染方式
       renderer: 'Zelos',
+      media: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/blockly-media/' // 更新媒体文件路径
     });
 
     this.addInt_Main();
 
+    try {
+      // 尝试从本地存储中读取数据
+      const savedData = localStorage.getItem('workspaceData');
+      if (savedData) {
+        const state = JSON.parse(savedData);
+        // 尝试加载数据到工作区
+        Blockly.serialization.workspaces.load(state, this.workspace);
+      }
+    } catch (error) {
+      console.error('加载工作区数据时出错:', error);
+      // 如果出现错误，删除本地存储的无效数据
+      localStorage.removeItem('workspaceData');
+      // 刷新页面
+      location.reload();
+
+    }
 
     // 监听工作区变化事件
     this.workspace.addChangeListener(this.workspaceChangeListener);
     this.workspace.addChangeListener(() => {
-      const JSCode = javascriptGenerator.workspaceToCode(this.workspace);
+
+      javascriptGenerator.init(this.workspace);
+      let functionBlocks = [];
+      this.workspace.getAllBlocks().forEach(block => {
+        if (block.type === 'function_definition') {
+          functionBlocks.push(block);
+        }
+      });
+      let JSCode = '';
+      // 先生成所有函数定义的代码
+      if (functionBlocks.length > 0) {
+        functionBlocks.forEach(block => {
+          JSCode += javascriptGenerator.blockToCode(block);
+        });
+      }
+
+      const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
+      // 再生成其他积木的代码
+      remainingEntryBlocks.forEach(block => {
+          JSCode += javascriptGenerator.blockToCode(block);
+      });
+      // javascriptGenerator.finish(this.workspace);
       this.code = JSCode;
       this.codeViewIns.setValue(this.code);
     });
 
-    // 从本地浏览器中读取数据
-    const savedData = localStorage.getItem('workspaceData');
-    if (savedData) {
-      const state = JSON.parse(savedData);
-      //读取数据
-      Blockly.serialization.workspaces.load(state, this.workspace);
-    }
 
+    console.log('test');
     // monaco.editor编译器自定义主题
     monaco.editor.defineTheme('my-custom-theme', {
       base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
@@ -208,7 +247,7 @@ export default {
       lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
       lineNumbersMinChars: 1, // 行号最小字符   number
       enableSplitViewResizing: false,
-      readOnly: false, //是否只读  取值 true | false
+      readOnly: true, //是否只读  取值 true | false
       minimap: {
         enabled: true // 启用迷你地图
       }
@@ -217,8 +256,15 @@ export default {
     // Toolbox添加
     this.addToolbox();
 
+    
+
   },
   methods: {
+    //检测代码块有无重复添加
+    hasCustomBlock(type) {
+    const allBlocks = this.workspace.getAllBlocks();
+    return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
+  },
     addInt_Main() {
       // 添加int_main块加到工作区
       const entryBlock = this.workspace.newBlock('int_main');
@@ -228,52 +274,112 @@ export default {
       // 设置入口块的位置
       entryBlock.moveBy(50, 50);
     },
-    workspaceChangeListener() {
-      const allBlocks = this.workspace.getAllBlocks();
-      if (allBlocks.length === 0) {
-        this.addInt_Main();
-      }
-      if (allBlocks.length !== 0) {
-        const entryBlocks = allBlocks.filter(block => block.type === 'int_main');
 
-        // 保证只有一个入口块
+    workspaceChangeListener() {
+      var allBlocks = this.workspace.getAllBlocks();
+      allBlocks.forEach((block)=>{
+        if(block.type==='XTask_light_task'){
+        if (!this.hasCustomBlock('light_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('light_task'); 
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(250, 50);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_fmq_task'){
+        if (!this.hasCustomBlock('fmq_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('fmq_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_servo_task'){
+        if (!this.hasCustomBlock('servo_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('servo_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(250, 250);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_motors_task'){
+        if (!this.hasCustomBlock('motors_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('motors_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(450, 250);  // 可根据需要修改坐标
+      } 
+      }else if(block.type==='XTask_ultrasonic_task'){
+        if (!this.hasCustomBlock('ultrasonic_task')) {
+        // 仅当工作区没有指定块时，才添加块，防止重复添加
+          const customBlock = this.workspace.newBlock('ultrasonic_task');
+          customBlock.initSvg();
+          customBlock.render();
+          // 设置指定块的位置，例如添加在已有块的旁边
+          customBlock.moveBy(250, 450);  // 可根据需要修改坐标
+      } 
+      }
+      })
+      
+      allBlocks = this.workspace.getAllBlocks();
+      if (allBlocks.length === 0) {
+        this.addInt_Main()
+        return;
+      }
+
+      // 保证每种类型只有一个入口块
+      this.entryBlockTypes.forEach(type => {
+        const entryBlocks = allBlocks.filter(block => block.type === type);
         if (entryBlocks.length > 1) {
           for (let i = 1; i < entryBlocks.length; i++) {
             entryBlocks[i].dispose();
           }
         }
-
-        const entryBlock = entryBlocks[0];
-        const connectedBlocks = this.getAllConnectedBlocks(entryBlock);
-
-        //代码区的块的禁用
-        allBlocks.forEach(block => {
-          if (block.type !== 'int_main' && !connectedBlocks.includes(block)) {
-            block.setEnabled(false);
-          } else {
-            block.setEnabled(true);
-          }
-        });
-      }
-
-    },
-    getAllConnectedBlocks(block) {
-      const connectedBlocks = [];
-      let currentBlock = block.getNextBlock();
-
-      while (currentBlock) {
-        connectedBlocks.push(currentBlock);
-        connectedBlocks.push(...this.getAllConnectedBlocks(currentBlock));
-        currentBlock = currentBlock.getNextBlock();
-      }
-
-      block.getChildren().forEach(childBlock => {
-        connectedBlocks.push(childBlock);
-        connectedBlocks.push(...this.getAllConnectedBlocks(childBlock));
       });
 
-      return connectedBlocks;
+      // 获取所有入口块
+      const remainingEntryBlocks = allBlocks.filter(block => this.entryBlockTypes.includes(block.type));
+
+      // 计算所有连接的块
+      const allConnectedBlocks = [];
+      remainingEntryBlocks.forEach(entryBlock => {
+        allConnectedBlocks.push(...this.getAllConnectedBlocks(entryBlock));
+      });
+
+      // 代码区的块的禁用
+      allBlocks.forEach(block => {
+        if (!remainingEntryBlocks.includes(block) && !allConnectedBlocks.includes(block)) {
+          block.setEnabled(false);
+          if(block.type === 'create_function_button') {
+            block.dispose();
+            EventBus.$emit('showFunctionEditor');   
+          }
+        } else {
+          block.setEnabled(true);
+        }
+      });
+      
     },
+
+    getAllConnectedBlocks(block, visited = new Set()) {
+    const connectedBlocks = [];
+    if (block.getChildren) {
+        block.getChildren().forEach(childBlock => {
+            if (!visited.has(childBlock)) {
+                visited.add(childBlock);
+                connectedBlocks.push(childBlock);
+                connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
+            }
+        });
+    }
+    return connectedBlocks;
+},
+
 
     //添加合并工作箱
     addToolbox() {
@@ -284,6 +390,7 @@ export default {
           // 主组件的工具箱内容
           // ...this.toolbox.contents,
           // 子组件的工具箱内容
+          ...this.dominateToolbox.contents,
           ...this.specialToolbox.contents,
           ...this.logicToolbox.contents,
           ...this.mathToolbox.contents,
@@ -336,6 +443,9 @@ export default {
     specialBox(specialBox) {
       this.specialToolbox = specialBox
     },
+    dominateBox(dominateBox) {
+      this.dominateToolbox = dominateBox
+    },
     logicBox(logicBox) {
       this.logicToolbox = logicBox
     },
@@ -348,8 +458,7 @@ export default {
     xfxCarBlock(xfxCarBlock) {
       this.xfxCarToolbox = xfxCarBlock
     }
-  },
-
+  }
 };
 </script>
 
@@ -386,7 +495,7 @@ body {
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
-  padding-top: 10%;
+  padding-top: 7%;
   background-color: rgb(218, 227, 234);
   background-image: url('../assets//SVG/积木.svg');
   background-size: 180px auto;
