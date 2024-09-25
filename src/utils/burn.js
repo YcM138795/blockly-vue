@@ -30,6 +30,7 @@ var baudrate = 2000000;
 
 var comport_opened = false;
 
+//端口请求
 async function serial_request(refs) {
     var stat = refs.stat;
     try {
@@ -37,8 +38,8 @@ async function serial_request(refs) {
         comport = await navigator.serial.requestPort();
         console.log(comport.getInfo());
 
-        if(comport){
-           serial_open(refs);
+        if (comport) {
+            serial_open(refs);
         }
 
     } catch (error) {
@@ -47,26 +48,7 @@ async function serial_request(refs) {
     }
 }
 
-
-
-
-
-async function serial_forget(refs) {
-    var stat = refs.stat;
-    if (comport == undefined) {
-        return;
-    }
-    try {
-        await comport.forget();
-        comport_opened = false;
-        comport = undefined;
-        stat.value = "已忘记这个端口";
-    } catch (e) {
-        stat.value = "忘记端口失败";
-        console.error(e);
-    }
-}
-
+//端口打开
 async function serial_open(refs) {
     var stat = refs.stat;
     if (comport == undefined) {
@@ -89,8 +71,7 @@ async function serial_open(refs) {
     }
 }
 
-var reader;
-
+//端口关闭
 async function serial_close(refs) {
     var stat = refs.stat;
     if ((comport != undefined) && comport_opened) {
@@ -108,6 +89,24 @@ async function serial_close(refs) {
         return;
     }
 }
+
+//端口忘记
+async function serial_forget(refs) {
+    var stat = refs.stat;
+    if (comport == undefined) {
+        return;
+    }
+    try {
+        await comport.forget();
+        comport_opened = false;
+        comport = undefined;
+        stat.value = "已忘记这个端口";
+    } catch (e) {
+        stat.value = "忘记端口失败";
+        console.error(e);
+    }
+}
+var reader;
 
 var krun = false;
 
@@ -261,8 +260,8 @@ async function kermit_transloop(pkt) {
 }
 
 
-async function kermit_start(refs,file,flashing) {
-    EventBus.$emit('flashing', {boolean:true,first:false}); 
+async function kermit_start(refs, file, flashing) {
+    EventBus.$emit('flashing', { boolean: true, first: false });
     const kermit_stat = refs.kermit_stat;
 
     if (comport == undefined) {
@@ -271,7 +270,7 @@ async function kermit_start(refs,file,flashing) {
     }
 
     var upload_file = file;
-    console.log('upload_file',upload_file);
+    console.log('upload_file', upload_file);
 
     if (upload_file == undefined) {
         kermit_stat.value = "请先选择烧录文件"
@@ -313,14 +312,14 @@ async function kermit_start(refs,file,flashing) {
     var sended = 0;
     var firmware_content = new Uint8Array(await upload_file.arrayBuffer());
     var total = firmware_content.length;
-    console.log('total',total);
-    
+    console.log('total', total);
+
 
     while (sended < total) {
-        if(!flashing.boolean){
+        if (!flashing.boolean) {
             kermit_stat.value = `已取消烧录`;
             sended = total;
-            EventBus.$emit('progress', { sended,total  }); // 触发进度事件
+            EventBus.$emit('progress', { sended, total }); // 触发进度事件
             return;
         }
         console.log('循环烧录');
@@ -376,14 +375,14 @@ async function kermit_start(refs,file,flashing) {
 }
 
 
-function kermit_stop(refs,flashing) {
+function kermit_stop(refs, flashing) {
     krun = false;
     const kermit_stat = refs.kermit_stat;
-    if(flashing.first){
-    kermit_stat.value = "请先进行烧录";
-    }else{
-    serial_forget(refs);
-    EventBus.$emit('flashing', {boolean:false,first:false}); 
+    if (flashing.first) {
+        kermit_stat.value = "请先进行烧录";
+    } else {
+        serial_forget(refs);
+        EventBus.$emit('flashing', { boolean: false, first: false });
     }
     console.log(flashing);
 

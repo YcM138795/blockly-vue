@@ -12,7 +12,7 @@
                 <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
                 <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
                 <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
-                    element-loading-text="文件下载中" element-loading-spinner="el-icon-loading"
+                    element-loading-text="代码编译中" element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(240,255,255, 0.7)"></button>
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
@@ -77,7 +77,7 @@
 
 <script>
 import { Compile } from '../utils'
-import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
+import { serial_request, kermit_start, kermit_stop } from '../utils/burn'
 
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
@@ -103,7 +103,7 @@ export default {
             //二进制文件数据
             file: null,
             //是否停止烧录
-            flashing: {boolean:true,first:true},
+            flashing: { boolean: true, first: true },
         }
     },
     mounted() {
@@ -123,12 +123,12 @@ export default {
         });
         //是否正在烧录的全局事件监听
         EventBus.$on('flashing', (data) => {
-        // 更新 flashing 对象的具体属性
+            // 更新 flashing 对象的具体属性
             this.flashing.boolean = data.boolean;
             this.flashing.first = data.first;
-        // 打印更新后的 flashing 对象到控制台
-        console.log('flashing:', this.flashing);
-});
+            // 打印更新后的 flashing 对象到控制台
+            console.log('flashing:', this.flashing);
+        });
     },
     props: {
         code: {
@@ -145,10 +145,10 @@ export default {
             serial_request(this.$refs);
         },
         kermit_start() {
-            kermit_start(this.$refs, this.file,this.flashing);
+            kermit_start(this.$refs, this.file, this.flashing);
         },
         kermit_stop() {
-            kermit_stop(this.$refs,this.flashing);
+            kermit_stop(this.$refs, this.flashing);
         },
         //返回
         returnAction() {
@@ -231,48 +231,72 @@ export default {
 
         //云下载
         async dowmloadAction() {
-            if(this.loading == true)
-            {
+            if (this.viewShow == 'dowmload') {
+                this.viewShow = 'code';
+                this.$emit('viewShowUpdate', this.viewShow);
                 return;
             }
+
+            if (this.loading == true)
+                return;
+
             this.loading = true; // 开始显示加载动画
 
-            this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'code';
             let state;
-            if (this.viewShow == 'dowmload') {
-                state = await Compile(this.code);
-                console.log(state);
+            state = await Compile(this.code);
+            if (state == '代码编译超时,请稍后再试') {
+                const h = this.$createElement;
+                this.$notify({
+                    title: '',
+                    message: h('i', { style: 'color: teal' }, `${state}`),
+                    duration: 1000,
+                    type: 'error',
+                    offset: 50
+                });
+            } else if (state == '代码编译出错,积木代码逻辑有误') {
+                const h = this.$createElement;
+                this.$notify({
+                    title: '',
+                    message: h('i', { style: 'color: teal' }, `${state}`),
+                    duration: 1000,
+                    type: 'error',
+                    offset: 50
+                });
+            } else if (state == '服务器繁忙，请稍后再试') {
+                const h = this.$createElement;
+                this.$notify({
+                    title: '',
+                    message: h('i', { style: 'color: teal' }, `${state}`),
+                    duration: 1000,
+                    type: 'error',
+                    offset: 50
+                });
+            } else if (state == '阿里云服务器出错，请稍后再试') {
+                const h = this.$createElement;
+                this.$notify({
+                    title: '',
+                    message: h('i', { style: 'color: teal' }, `${state}`),
+                    duration: 1000,
+                    type: 'error',
+                    offset: 50
+                });
+            } else if (state == '代码编译成功') {
+                this.viewShow = 'dowmload';
+                this.$emit('viewShowUpdate', this.viewShow);
 
-                if (state === '二进制文件获取成功') {
-                    const h = this.$createElement;
-                    this.$notify({
-                        title: '',
-                        message: h('i', { style: 'color: teal' }, '二进制文件获取成功'),
-                        duration: 700,
-                        type: 'success',
-                        offset: 50
-                    });
-                } else {
-                    const h = this.$createElement;
-                    this.$notify({
-                        title: '',
-                        message: h('i', { style: 'color: teal' }, '二进制文件获取失败'),
-                        duration: 700,
-                        type: 'error',
-                        offset: 50
-                    });
-                }
-
+                const h = this.$createElement;
+                this.$notify({
+                    title: '',
+                    message: h('i', { style: 'color: teal' }, `${state}`),
+                    duration: 1000,
+                    type: 'success',
+                    offset: 50
+                });
             }
-            this.$emit('viewShowUpdate', this.viewShow);
             state = '';
 
             // 模拟下载过程，例如调用API
             this.loading = false; // 完成后隐藏加载动画
-            // 其他下载完成后的操作
-
-
-
         },
 
         //清除
@@ -585,5 +609,4 @@ export default {
 .dowmload Button:active {
     transform: translateY(1px);
 }
-
 </style>
