@@ -526,7 +526,7 @@ dartGenerator.forBlock['compare'] = function(block) {
   javascriptGenerator.forBlock['and_or'] = function(block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
     var dropdown_operation = block.getFieldValue('operation');
-    var value_judge2 = generator.valueToCode(block, 'j  udge2', Order.ATOMIC)|| false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
     var code = value_judge1+dropdown_operation+value_judge2;
     // TODO: Change ORDER_NONE to the correct strength.
