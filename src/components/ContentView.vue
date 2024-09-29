@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 函数编辑对话框 -->
-    <el-dialog title="创建函数" :visible.sync="isVisible" @close="closeEditor" width="50%">
+    <el-dialog title="创建函数" :visible.sync="isVisible" @close="closeEditor" :close-on-click-modal="false" width="50%">
       <el-form>
         <el-form-item label="参数类型">
           <button @click="addParm('文本')">文本</button>
@@ -25,7 +25,6 @@
       <div id="blockly-container" style="height: 300px; width: 100%; border: 1px solid #ddd; margin-top: 20px;"></div>
 
       <div slot="footer" class="dialog-footer">
-        <button @click="closeEditor">取消</button>
         <button type="primary" @click="saveFunction">保存</button>
       </div>
     </el-dialog>
@@ -57,6 +56,7 @@ export default {
   methods: {
     // 显示函数编辑对话框
     showEditor() {
+
       this.isVisible = true;
       this.$nextTick(() => {
         this.initializeBlockly();
@@ -65,9 +65,23 @@ export default {
 
     // 关闭函数编辑对话框
     closeEditor() {
-      this.isVisible = false;
+      // 关闭对话框之前，确保取消订阅
+      // if (this.workspace) {
+      //   this.workspace.removeChangeListener(this.handleChange);
+      // }
 
-    },
+      // 清理工作区和状态
+      this.selectedParams = [];
+      if (this.workspace) {
+        this.workspace.dispose();
+        this.workspace = null; // 确保 workspace 被清理
+      }
+
+      // 现在可以安全地隐藏对话框
+      this.isVisible = false;
+    }
+    ,
+
 
     // 初始化 Blockly
     initializeBlockly() {
@@ -134,28 +148,28 @@ export default {
           // 为每种参数类型创建对应的输入字段
           if (valueAfterPrefix === '文本') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'text_' + index;
+            inputName = 'text--&--' + index;
           } else if (valueAfterPrefix === '布尔值') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'boolean_' + index;
+            inputName = 'boolean--&--' + index;
           } else if (valueAfterPrefix === '整形') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'number_int_' + index;
+            inputName = 'number_int--&--' + index;
           } else if (valueAfterPrefix === '浮点数') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'number_double_' + index;
+            inputName = 'number_double--&--' + index;2
           } else if (valueAfterPrefix === '长整形') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'number_long_' + index;
+            inputName = 'number_long--&--' + index;
           } else if (valueAfterPrefix === '数字数组') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'array_int_' + index;
+            inputName = 'array_int--&--' + index;
           } else if (valueAfterPrefix === '字符数组') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'array_string_' + index;
+            inputName = 'array_string--&--' + index;
           } else if (valueAfterPrefix === '浮点数数组') {
             inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'array_double_' + index;
+            inputName = 'array_double--&--' + index;
           }
 
           // 在横向容器中添加字段
@@ -267,21 +281,21 @@ export default {
       let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
 
       if (valueAfterPrefix === '文本') {
-        return 'text_' + index;
+        return 'text--&--' + index;
       } else if (valueAfterPrefix === '布尔值') {
-        return 'boolean_' + index;
+        return 'boolean--&--' + index;
       } else if (valueAfterPrefix === '整形') {
-        return 'number_int_' + index;
+        return 'number_int--&--' + index;
       } else if (valueAfterPrefix === '浮点数') {
-        return 'number_double_' + index;
+        return 'number_double--&--' + index;
       } else if (valueAfterPrefix === '长整形') {
-        return 'number_long_' + index;
+        return 'number_long--&--' + index;
       } else if (valueAfterPrefix === '数字数组') {
-        return 'array_int_' + index;
+        return 'array_int--&--' + index;
       } else if (valueAfterPrefix === '字符数组') {
-        return 'array_string_' + index;
+        return 'array_string--&--' + index;
       } else if (valueAfterPrefix === '浮点数数组') {
-        return 'array_double_' + index;
+        return 'array_double--&--' + index;
       }
       return '';
     },
@@ -322,7 +336,6 @@ export default {
     },
 
     saveFunction() {
-      this.isVisible = false
 
       if (this.selectedParams.length === 0) {
         this.$message({
@@ -333,13 +346,21 @@ export default {
       }
       console.log('保存函数');
       EventBus.$emit('addMyFunction', this.selectedParams, this.block);
+      console.log(this.selectedParams);
+
+
+      // 使用 $nextTick 确保 DOM 更新完成后再销毁组件
+      this.$nextTick(() => {
+        this.closeEditor();
+      });
 
     },
   },
 
   created() {
     EventBus.$on('showFunctionEditor', this.showEditor);
-  }
+  },
+
 };
 </script>
 
@@ -395,4 +416,9 @@ select {
   /* 使删除图标绝对定位 */
   margin: 5px;
 }
+
+.el-dialog__wrapper {
+  background-color: rgba(0, 0, 0, 0.5); /* 设置更深的黑色 */
+}
+
 </style>

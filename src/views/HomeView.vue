@@ -27,7 +27,7 @@
 import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from "blockly/javascript";
 //测试函数，输出工作区代码
-import { test } from '../utils/test'
+import { registerOutputOption } from '../utils/blocklyContextMenu'
 //引入其他组件
 import TopNav from '../components/TopNav.vue'
 import ContentView from '@/components/ContentView.vue';
@@ -67,7 +67,7 @@ export default {
       horizontalLayout: true, //工具箱水平
       toolboxPosition: "end", //工具箱在底部
       //特殊块
-      entryBlockTypes : ['int_main', 'light_task', 'ultrasonic_task', 'motors_task','servo_task', 'fmq_task','function_definition'],
+      entryBlockTypes: ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'function_definition'],
       toolbox: {
         contents: [
           {
@@ -138,6 +138,7 @@ export default {
     });
 
     //加载工作区
+    registerOutputOption()
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
 
       toolbox: this.toolbox,
@@ -206,7 +207,9 @@ export default {
       const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
       // 再生成其他积木的代码
       remainingEntryBlocks.forEach(block => {
-        JSCode += javascriptGenerator.blockToCode(block);
+        if (block.type !== 'function_definition') {
+          JSCode += javascriptGenerator.blockToCode(block);
+        }
       });
       // javascriptGenerator.finish(this.workspace);
       this.code = JSCode;
@@ -214,7 +217,6 @@ export default {
     });
 
 
-    console.log('test');
     // monaco.editor编译器自定义主题
     monaco.editor.defineTheme('my-custom-theme', {
       base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
@@ -258,15 +260,16 @@ export default {
     // Toolbox添加
     this.addToolbox();
 
-    
+
 
   },
   methods: {
+    
     //检测代码块有无重复添加
     hasCustomBlock(type) {
-    const allBlocks = this.workspace.getAllBlocks();
-    return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
-  },
+      const allBlocks = this.workspace.getAllBlocks();
+      return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
+    },
     addInt_Main() {
       // 添加int_main块加到工作区
       const entryBlock = this.workspace.newBlock('int_main');
@@ -279,55 +282,55 @@ export default {
 
     workspaceChangeListener() {
       var allBlocks = this.workspace.getAllBlocks();
-      allBlocks.forEach((block)=>{
-        if(block.type==='XTask_light_task'){
-        if (!this.hasCustomBlock('light_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('light_task'); 
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(250, 50);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_fmq_task'){
-        if (!this.hasCustomBlock('fmq_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('fmq_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(450, 50);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_servo_task'){
-        if (!this.hasCustomBlock('servo_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('servo_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(250, 250);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_motors_task'){
-        if (!this.hasCustomBlock('motors_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('motors_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(450, 250);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_ultrasonic_task'){
-        if (!this.hasCustomBlock('ultrasonic_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('ultrasonic_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(250, 450);  // 可根据需要修改坐标
-      } 
-      }
+      allBlocks.forEach((block) => {
+        if (block.type === 'XTask_light_task') {
+          if (!this.hasCustomBlock('light_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('light_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 50);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_fmq_task') {
+          if (!this.hasCustomBlock('fmq_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('fmq_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_servo_task') {
+          if (!this.hasCustomBlock('servo_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('servo_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 250);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_motors_task') {
+          if (!this.hasCustomBlock('motors_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('motors_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(450, 250);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_ultrasonic_task') {
+          if (!this.hasCustomBlock('ultrasonic_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('ultrasonic_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 450);  // 可根据需要修改坐标
+          }
+        }
       })
-      
+
       allBlocks = this.workspace.getAllBlocks();
       if (allBlocks.length === 0) {
         this.addInt_Main()
@@ -336,12 +339,15 @@ export default {
 
       // 保证每种类型只有一个入口块
       this.entryBlockTypes.forEach(type => {
-        const entryBlocks = allBlocks.filter(block => block.type === type);
-        if (entryBlocks.length > 1) {
-          for (let i = 1; i < entryBlocks.length; i++) {
-            entryBlocks[i].dispose();
+        if (type !== 'function_definition') {
+          const entryBlocks = allBlocks.filter(block => block.type === type);
+          if (entryBlocks.length > 1) {
+            for (let i = 1; i < entryBlocks.length; i++) {
+              entryBlocks[i].dispose();
+            }
           }
         }
+
       });
 
       // 获取所有入口块
@@ -357,30 +363,31 @@ export default {
       allBlocks.forEach(block => {
         if (!remainingEntryBlocks.includes(block) && !allConnectedBlocks.includes(block)) {
           block.setEnabled(false);
-          if(block.type === 'create_function_button') {
+          if (block.type === 'create_function_button') {
             block.dispose();
-            EventBus.$emit('showFunctionEditor');   
+            EventBus.$emit('showFunctionEditor');
           }
         } else {
           block.setEnabled(true);
         }
       });
-      
+
     },
 
+    // 获取所有连接的块
     getAllConnectedBlocks(block, visited = new Set()) {
-    const connectedBlocks = [];
-    if (block.getChildren) {
+      const connectedBlocks = [];
+      if (block.getChildren) {
         block.getChildren().forEach(childBlock => {
-            if (!visited.has(childBlock)) {
-                visited.add(childBlock);
-                connectedBlocks.push(childBlock);
-                connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
-            }
+          if (!visited.has(childBlock)) {
+            visited.add(childBlock);
+            connectedBlocks.push(childBlock);
+            connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
+          }
         });
-    }
-    return connectedBlocks;
-},
+      }
+      return connectedBlocks;
+    },
 
 
     //添加合并工作箱
@@ -423,23 +430,23 @@ export default {
     codeShowChange(viewShow) {
       this.codeShow = viewShow
       if (viewShow == 'run') {
-        this.arrAdd()
+        // this.arrAdd()
       }
 
     },
 
-    //收集亮灭的数组添加
-    arrAdd() {
-      const result = test(this.workspace)
+    // //收集亮灭的数组添加
+    // arrAdd() {
+    //   const result = test(this.workspace)
 
-      //每一次调用将ledArr数组清空
-      this.ledArr = [];
+    //   //每一次调用将ledArr数组清空
+    //   this.ledArr = [];
 
-      alert(result)
-      eval(result)
+    //   alert(result)
+    //   eval(result)
 
 
-    },
+    // },
 
     // 接收子组件传递的工具箱并存储
     specialBox(specialBox) {
@@ -481,7 +488,7 @@ export default {
           input.fieldRow.forEach((field, index) => {
             if (index > 0) {
               inputField = new Blockly.FieldTextInput(`${field.value_}`);
-              inputName = this.getFieldName(field.value_, index);
+              inputName = field.name;
               horizontalInput.appendField(inputField, inputName);
             }
           });
@@ -495,25 +502,6 @@ export default {
       clonedBlock.initSvg();
       clonedBlock.render();
 
-    },
-    getFieldName(param, index) {
-      if (param === '文本') {
-        return 'text_' + index;
-      } else if (param === '布尔值') {
-        return 'boolean_' + index;
-      } else if (param === '整形') {
-        return 'number_int_' + index;
-      } else if (param === '浮点数') {
-        return 'number_double_' + index;
-      } else if (param === '长整形') {
-        return 'number_long_' + index;
-      } else if (param === '数字数组') {
-        return 'array_int_' + index;
-      } else if (param === '字符数组') {
-        return 'array_string_' + index;
-      } else if (param === '浮点数数组') {
-        return 'array_double_' + index;
-      }
     },
 
 
@@ -605,5 +593,4 @@ body {
   border-radius: 30px;
   flex: 1;
 }
-
 </style>

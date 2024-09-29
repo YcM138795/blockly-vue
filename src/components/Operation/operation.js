@@ -21,8 +21,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "字符输出函数",
             "helpUrl": ""
@@ -57,8 +57,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "数字输出函数",
             "helpUrl": ""
@@ -113,11 +113,11 @@ import { dartGenerator } from 'blockly/dart';
               {
                 "type": "input_statement",
                 "name": "operation",
-                "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
               }
             ],
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230
           });
         }
@@ -191,8 +191,8 @@ import { dartGenerator } from 'blockly/dart';
             "type": "printf",
             "message0": "break",
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "函数跳出函数",
             "helpUrl": ""
@@ -218,8 +218,8 @@ import { dartGenerator } from 'blockly/dart';
             "type": "printf",
             "message0": "continue ",
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "函数继续函数",
             "helpUrl": ""
@@ -263,8 +263,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "数字常量定义",
             "helpUrl": ""
@@ -304,8 +304,8 @@ import { dartGenerator } from 'blockly/dart';
                 "name": "target"
               }
             ],
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230
           })
         }
@@ -335,6 +335,7 @@ Blockly.Blocks['function_definition'] = {
       "args0": [
       ],
       "style": "function_definition_style",
+      // "extensions": ["custom_function_extension"],
     });
   }
 };
@@ -345,22 +346,126 @@ Blockly.Themes.Classic.blockStyles["function_definition_style"] = {
   "hat": "cap"
 };
 javascriptGenerator.forBlock['function_definition'] = function (block, generator) {
-  console.log(block.inputList[1].fieldRow);
-  
-  block.inputList[1].fieldRow.forEach((field,index) => {
-    if(index>0){
-    console.log(field.name);
+  // console.log(block.inputList[1].fieldRow);
+  let parm = [];//参数类型
+  let fullParm = '';
+
+  block.inputList[1].fieldRow.forEach((field, index) => {
+    if (index > 0) {
+      fullParm = field.name + '--&&--' + field.value_;
+      parm.push(fullParm);
     }
   });
+
+
+  let code = '';
+
+  //拼接函数名
   const text_name = block.getFieldValue('NAME');
+  code = `void ${text_name}(`
 
-  const text_text_0 = block.getFieldValue('text_1');
-  const text_boolean_1 = block.getFieldValue('boolean_2');
+  //拼接参数
+  parm.forEach((item, index) => {
+    let parts = item.split('--&&--');   // 使用 '--&&--' 分隔字符串
 
+    let valueBeforePrefix = parts[0]; // 获取 '--&&--' 前面的部分
+    let valueAfterPrefix = parts[1]; // 获取 '--&&--' 后面的部分
+
+    let value = valueBeforePrefix.split('--&--'); //获取参数类型
+    let preFix = value[0]; //获取参数名
+    console.log(preFix);
+
+    preFix = getParmType(preFix); //获取参数类型
+    let parmName = getParmName(valueAfterPrefix, value); //获取参数名
+
+    code += `${preFix} ${parmName}`;
+
+    // 如果不是最后一个item，则添加逗号
+    if (index < parm.length - 1) {
+      code += ',';
+    }
+  })
+  //解决方法：先创建一个数组，然后根据field的name属性来判断是什么类型的，通过判断类型生成int、bool、string
+  //等类型的前缀，然后将这些前缀利用一个分隔符拼接起来，然后再将这个分隔符裁剪出来，逐个拼接到code里，最后返回code
+
+  //拼接函数体
   const statement_inner = generator.statementToCode(block, 'inner');
+  code += `){\n${statement_inner}}\n`
 
-  // TODO: Assemble javascript into the code variable.
-  const code = `void ${text_name}(${text_text_0},${text_boolean_1}){\n${statement_inner}}\n`;
+  //函数--获取参数类型
+  function getParmType(preFix) {
+    let parmType;
+
+    if (preFix === 'text') {
+      parmType = 'string';
+    } else if (preFix == 'boolean') {
+      parmType = 'bool';
+    } else if (preFix == 'number_int') {
+      parmType = 'int';
+    } else if (preFix == 'number_double') {
+      parmType = 'double';
+    } else if (preFix == 'number_long') {
+      parmType = 'long';
+    } else if (preFix == 'array_int') {
+      parmType = 'int*';
+    } else if (preFix == 'array_string') {
+      parmType = 'string*';
+    } else if (preFix == 'array_double') {
+      parmType = 'double*';
+    }
+    return parmType;
+  }
+  function getParmName(valueAfterPrefix, value) {
+    let parmName;
+    let full = '';
+    full += value[0] + value[1];
+    if (valueAfterPrefix == '文本') {
+      parmName = full;
+    } else if (valueAfterPrefix == '布尔值') {
+      parmName = full;
+    } else if (valueAfterPrefix == '整形') {
+      parmName = full;
+    } else if (valueAfterPrefix == '浮点数') {
+      parmName = full;
+    } else if (valueAfterPrefix == '长整型') {
+      parmName = full;
+    } else if (valueAfterPrefix == '数字数字') {
+      parmName = full;
+    } else if (valueAfterPrefix == '字符数组') {
+      parmName = full;
+    } else if (valueAfterPrefix == '浮点数数组') {
+      parmName = full;
+    } else {
+      parmName = valueAfterPrefix
+    }
+    return parmName;
+  }
+
+  
   return code;
 }
+Blockly.ContextMenuRegistry.registry.register({
+  displayText: '编辑函数',
+  preconditionFn: function (object) {
+    console.log('注册了');
+    
+    return object instanceof Blockly.Block && object.type === 'function_definition';
+  },
+  callback: function (object) {
+    var functionName = object.getFieldValue('NAME');
+    console.log(functionName);
+    
+    // 弹出编辑对话框
+    openEditDialog(object);
+  }
+});
+function openEditDialog(block) {
+  var currentName = block.getFieldValue('NAME');
+  var newName = prompt("编辑函数名", currentName);
+  if (newName) {
+    block.setFieldValue(newName, 'NAME');
+  }
+}
+
+
 
