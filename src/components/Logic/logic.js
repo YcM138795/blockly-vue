@@ -538,6 +538,7 @@ dartGenerator.forBlock['compare'] = function(block) {
     var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
     var code = value_judge1+dropdown_operation+value_judge2;
+    console.log(code);
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };

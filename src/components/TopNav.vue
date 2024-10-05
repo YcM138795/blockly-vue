@@ -2,26 +2,77 @@
     <div>
         <div class="TopNav">
             <div class="left">
-                <button class="returnButton" title="返回" @click="returnAction"></button>
+                <img src="../assets/img/logo.png" alt="logo" class="logo"> 
             </div>
             <div class="center">
-                <img src="../assets/SVG/积木代码编程.svg" alt="">
-                <span style="font-family: '阿里妈妈刀隶体 Regular', sans-serif;">积木代码编程</span>
+                <div class="custom-select-container">
+                    <div class="custom-select-box" @click="toggleDropdown">
+                        <img :src="selectedIcon" alt="Selected Icon" class="option-icon">
+                        <span style="font-size: 14px;">{{ selectedText }}</span>
+                        <i class="arrow-down"></i> <!-- 箭头图标 -->
+                    </div>
+                    <ul v-if="dropdownVisible" class="custom-options">
+                        <li v-if="selected==2" @click="selectOption('积木模式', 1)" class="custom-option">
+                        <img src="../assets/img/block.png" alt="Icon1" class="option-icon"> 
+                        <div style="font-size: 14px;margin-left: 24px;">积木模式</div>
+                        </li>
+                        <li v-else-if="selected==1" @click="selectOption('代码模式', 2)" class="custom-option">
+                        <img src="../assets/img/shape.png" alt="Icon2" class="option-icon"> 
+                        <div style="font-size: 14px;margin-left: 24px;">代码模式</div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="right">
+                    <div class="button" @click="tipAction">
+                <img src="../assets/img/prompt.png" alt="Prompt" style="padding-right: 5px;">提示
+                    </div>
+                    <div class="button" @click="clearAction">
+                <img src="../assets/img/reset.png" alt="Reset" style="padding-right: 5px; ">重置
+                    </div>
+                    <div class="button" @click="dowmloadAction">
+                <img src="../assets/img/download.png" alt="Download" style="padding-right: 5px; "> 云下载
+                    </div>
+                    <div class="button" @click="saveAction">
+                <img src="../assets/img/save.png" alt="Save" style="padding-right: 5px; ">保存
+                    </div>
+            <div class="avatar">
+                <el-dropdown trigger="click">
+        <div class="avatar-wrapper">
+            <el-avatar  :src="store.getters.avatar"></el-avatar>
+        </div>
+        <el-dropdown-menu slot="dropdown">
+          <!-- <el-dropdown-item @click.native="setting = true">
+            <span>布局设置</span>
+          </el-dropdown-item> -->
+          <el-dropdown-item divided @click.native="logout">
+            <span>退出登录</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+            </div>
                 <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
-                <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
+                <!-- <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
                 <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
                     element-loading-text="代码编译中" element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(240,255,255, 0.7)"></button>
                 <button class="saveButton" title="保存" @click="saveAction"></button>
                 <button class="tipButton" title="提示" @click="tipAction"></button>
-                <button class="clearButton" title="清空所有块" @click="clearAction"></button>
+                <button class="clearButton" title="清空所有块" @click="clearAction"></button> -->
             </div>
-
-
         </div>
         <div class="view">
+            <div :style="{ display: viewShow == 'workbench' ? 'block' : 'none' }" class="workbench"> 
+                <!-- <div class="workbench-image">
+                    <img :src="selectedFile" alt="Selected Image" v-if="selectedFile" />
+                </div>
+                <div class="history-files">
+                    <div class="history-file" v-for="(history_file, index) in history_files" :key="index" @click="selectFile(index)">
+                        <img :src="history_file.picture"/>
+                        {{ history_file.detail }}
+                    </div>
+                </div> -->
+            </div>
             <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
 
                 <h3>提示</h3>
@@ -78,10 +129,9 @@
 <script>
 import { Compile } from '../utils'
 import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
-
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
-
+import store from '@/store';
 export default {
     name: 'TopNav',
 
@@ -93,7 +143,7 @@ export default {
             //亮灭灯图片展示的数据
             imgShow: 'img1',
             //右侧视图的展示选择
-            viewShow: '',
+            viewShow: 'workbench',
             dowmloadShow: '',
             oneShow: false,
             twoShow: false,
@@ -104,6 +154,14 @@ export default {
             file: null,
             //是否停止烧录
             flashing: {boolean:true,first:true},
+            selected:1,
+            dropdownVisible: false,
+            selectedText: '积木模式', // 默认显示的文本  
+            selectedIcon: require("@/assets/img/block.png"), // 默认选中项图标
+            store:store,
+            selectedFile:"https://knowledge-emergency.oss-cn-hangzhou.aliyuncs.com/images/new1.jpg",
+            history_files:[{picture:"https://knowledge-emergency.oss-cn-hangzhou.aliyuncs.com/images/news2.jpg",title:"未命名工程",detail:"xxxxxxxxxxxxxxxxxxxxxxxxx",update_time:"2024/10/07 19:00"},
+            {picture:"https://knowledge-emergency.oss-cn-hangzhou.aliyuncs.com/images/new1.jpg",title:"未命名工程",detail:"xxxxxxxxxxxxxxxxxxxxxxxxx",update_time:"2024/10/07 19:00"}]
         }
     },
     mounted() {
@@ -214,8 +272,7 @@ export default {
 
         //提示
         tipAction() {
-            this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
-            this.$emit('viewShowUpdate', this.viewShow);
+            this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'workbench';
 
         },
 
@@ -243,6 +300,7 @@ export default {
 
             this.loading = true; // 开始显示加载动画
 
+            this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'workbench';
             let state;
             state = await Compile(this.code);
             if (state == '代码编译超时,请稍后再试') {
@@ -294,6 +352,7 @@ export default {
                     offset: 50
                 });
             }
+           
             state = '';
 
             // 模拟下载过程，例如调用API
@@ -336,13 +395,36 @@ export default {
         exampleFour() {
             this.fourShow = !this.fourShow
         },
-
-
-
-
-
-
+        toggleDropdown() {
+      this.dropdownVisible = !this.dropdownVisible;
+    },
+    selectOption(text, value) {
+      this.selectedText = text;
+      this.dropdownVisible = false;
+      this.selected=value;
+      if(value==1){
+        this.selectedIcon=require("@/assets/img/block.png")
+      }else if(value==2){
+        this.selectedIcon=require("@/assets/img/shape.png")
+      }
+      this.$emit('change',this.selected);
+    },
+   
+    async logout() {
+      this.$confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('LogOut').then(() => {
+          location.href = '/login';//返回登录界面
+        })
+      }).catch(() => { });
+    },
+    selectFile(index){
+        this.selectedFile=this.history_files[index].picture;
     }
+    },
 }
 </script>
 
@@ -370,6 +452,8 @@ export default {
 
 .right {
     text-align: right;
+    display:flex;
+    flex-direction: row;
 }
 
 .left,
@@ -384,12 +468,13 @@ export default {
     display: flex;
     justify-content: center;
     text-align: center;
+    flex-direction: row;
 }
 
-.center img {
+/* .center img {
     height: 60px;
     width: auto;
-}
+} */
 
 .center span {
     display: flex;
@@ -610,5 +695,118 @@ export default {
 .dowmload Button:active {
     transform: translateY(1px);
 }
+.custom-select-container {
+  position: relative;
+  width: 130px; /* 可根据需要调整宽度 */
+  margin: 10px 200px 0px 0px;
+  cursor: pointer;
+}
+.custom-select {
+  appearance: none; /* 移除默认样式 */
+  width: 100%;
+  padding: 10px;
+  padding-right: 40px; /* 为箭头留出空间 */
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: white;
+  position: relative;
+  cursor: pointer;
+  
+}
 
+/* 自定义箭头的样式 */
+.custom-select-container::after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  right: 18px; /* 自定义箭头的位置 */
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #333; /* 箭头的颜色 */
+  transform: translateY(-50%);
+  pointer-events: none; /* 保证箭头不影响点击 */
+}
+.custom-select-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #FFF6ED;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.custom-options {
+  list-style: none;
+  padding: 0;
+  margin: 5px 0px 0px 0px;
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 100;
+}
+
+.custom-option {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.custom-option:hover {
+  background-color: #f0f0f0;
+}
+
+.option-icon {
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: -15px;
+}
+.logo{
+    padding: 10px;
+    margin: 5px;
+}
+.button{
+    padding: 20px 15px 10px 16px;
+    cursor: pointer;
+}
+.avatar{
+    padding: 10px 0px 10px 16px;
+    cursor: pointer;
+}
+.workbench {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.workbench-image img {
+  width: 300px;
+  height: 300px;
+  border: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.history-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.history-file img {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.history-file img:hover {
+  transform: scale(1.1);
+}
 </style>

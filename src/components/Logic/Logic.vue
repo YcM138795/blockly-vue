@@ -92,7 +92,7 @@ export default {
 
 .logicIcon {
   /* 在这里定义类别图标的样式 */
-  content: url("../../assets/SVG/逻辑.svg");
+  content: url("../../assets/img/logic.png");
   height: 42px;
 }
 </style>

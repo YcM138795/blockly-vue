@@ -16,7 +16,7 @@ export default {
         contents: [
           {
             "kind": "category",
-            "name": "小飞象智能车",
+            "name": "控制",
             "categoryStyle": "xfxCar_category",
             "cssConfig": {
               "container": "xfxCar",
