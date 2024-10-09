@@ -90,7 +90,7 @@ export default {
 }
 
 .operationIcon {
-  content: url('../../assets/SVG/方法.svg');
+  content: url('../../assets/img/控制.png');
   height: 32px;
 }
 </style>

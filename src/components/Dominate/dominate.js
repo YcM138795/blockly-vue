@@ -4,17 +4,17 @@ import { javascriptGenerator } from 'blockly/javascript';
 // import { EventBus } from '../../utils/eventBus';
 
 
-//操作函数
+//函数
 {
-    // light_task:灯操作函数
+    // light_task:灯函数
     {
         Blockly.Blocks['light_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "light_task",
-                    "tooltip": "灯操作函数(仅一个)",
+                    "tooltip": "灯函数(仅一个)",
                     "helpUrl": "",
-                    "message0": "灯操作函数 %1 %2",
+                    "message0": "灯函数 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -38,15 +38,15 @@ import { javascriptGenerator } from 'blockly/javascript';
         };
     }
 
-    // fmq_task:蜂鸣器操作函数
+    // fmq_task:蜂鸣器函数
     {
         Blockly.Blocks['fmq_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "fmq_task",
-                    "tooltip": "蜂鸣器操作函数(仅一个)",
+                    "tooltip": "蜂鸣器函数(仅一个)",
                     "helpUrl": "",
-                    "message0": "蜂鸣器操作函数 %1 %2",
+                    "message0": "蜂鸣器函数 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -70,15 +70,15 @@ import { javascriptGenerator } from 'blockly/javascript';
         };
     }
 
-    // motors_task:电机操作函数
+    // motors_task:电机函数
     {
         Blockly.Blocks['motors_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "motors_task",
-                    "tooltip": "电机操作函数(仅一个)",
+                    "tooltip": "电机函数(仅一个)",
                     "helpUrl": "",
-                    "message0": "电机操作函数 %1 %2",
+                    "message0": "电机函数 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -102,15 +102,15 @@ import { javascriptGenerator } from 'blockly/javascript';
         };
     }
 
-    // servo_task:舵机操作函数
+    // servo_task:舵机函数
     {
         Blockly.Blocks['servo_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "servo_task",
-                    "tooltip": "舵机操作函数(仅一个)",
+                    "tooltip": "舵机函数(仅一个)",
                     "helpUrl": "",
-                    "message0": "舵机操作函数 %1 %2",
+                    "message0": "舵机函数 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -134,15 +134,15 @@ import { javascriptGenerator } from 'blockly/javascript';
         };
     }
 
-    // ultrasonic_task:超声波操作函数
+    // ultrasonic_task:超声波函数
     {
         Blockly.Blocks['ultrasonic_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "ultrasonic_task",
-                    "tooltip": "超声波操作函数(仅一个)",
+                    "tooltip": "超声波函数(仅一个)",
                     "helpUrl": "",
-                    "message0": "超声波操作函数 %1 %2",
+                    "message0": "超声波函数 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",

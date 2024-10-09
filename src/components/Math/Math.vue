@@ -80,7 +80,7 @@
     font-size: 60px;
 }
 .mathIcon{
-  content: url('../../assets//SVG//计算器.svg');
+  content: url('../../assets/img/数学.png');
   width: 32px;
 
 }

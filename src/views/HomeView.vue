@@ -1,8 +1,10 @@
 <template>
-  <div ref="container" style="width: 100%; height: 100%;">
+  <div class="loading-container" ref="container" style="width: 100%; height: 100%;" v-loading="loading" element-loading-text="代码编译中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">
     <ContentView></ContentView>
     <div style="width: 100%; height: 60px">
-      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" :ledArr="ledArr" @change="receiveChange">
+      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" :ledArr="ledArr" @change="receiveChange" @loading="receiveLoading">
       </TopNav>
     </div>
     <div id="blockly">
@@ -78,7 +80,8 @@ export default {
       },
       workspace: null,
       codeViewIns: null,
-      selected:1
+      selected:1,
+      loading:false
     };
   },
   //引用的组件
@@ -519,6 +522,9 @@ export default {
     },
     receiveChange(change) {
       this.selected = change;
+    },
+    receiveLoading(loading){
+      this.loading=loading;
     }
   }
 };
@@ -553,7 +559,9 @@ body {
   flex-direction: row;
 }
 
-
+.loading-container .el-loading-spinner{
+  font-size: 40px;
+}
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
@@ -575,6 +583,7 @@ body {
   border-radius: 13px;
   margin-bottom: 45px;
   padding: 5px;
+  border-left: none !important;
 }
 
 

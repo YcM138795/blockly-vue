@@ -24,14 +24,14 @@
                 </div>
             </div>
             <div class="right">
-                    <div class="button" @click="tipAction">
+                    <!-- <div class="button" @click="tipAction">
                 <img src="../assets/img/prompt.png" alt="Prompt" style="padding-right: 5px;">提示
-                    </div>
+                    </div> -->
                     <div class="button" @click="clearAction">
                 <img src="../assets/img/reset.png" alt="Reset" style="padding-right: 5px; ">重置
                     </div>
                     <div class="button" @click="dowmloadAction">
-                <img src="../assets/img/download.png" alt="Download" style="padding-right: 5px; "> 云下载
+                <img src="../assets/img/download.png" alt="Download" style="padding-right: 5px; "> 云编译
                     </div>
                     <div class="button" @click="saveAction">
                 <img src="../assets/img/save.png" alt="Save" style="padding-right: 5px; ">保存
@@ -63,17 +63,22 @@
         </div>
         <div class="view">
             <div :style="{ display: viewShow == 'workbench' ? 'block' : 'none' }" class="workbench"> 
-                <!-- <div class="workbench-image">
-                    <img :src="selectedFile" alt="Selected Image" v-if="selectedFile" />
+                <div class="workbench-image">
+                    任务点检测
                 </div>
-                <div class="history-files">
+                <!-- <div class="history-files">
                     <div class="history-file" v-for="(history_file, index) in history_files" :key="index" @click="selectFile(index)">
                         <img :src="history_file.picture"/>
+                        <div>
+                            <div>
+                                {{ history_file.title }}
+                            </div>
                         {{ history_file.detail }}
+                        </div>
                     </div>
                 </div> -->
             </div>
-            <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
+            <!-- <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
 
                 <h3>提示</h3>
                 <span>(再次点击提示收起)</span>
@@ -103,7 +108,7 @@
                 <img class="exampleFour" :style="{ display: fourShow ? 'block' : 'none' }"
                     src="../assets/img/exampleFour.png" alt="">
                 <br><br><br><br><br><br>
-            </div>
+            </div> -->
             <div id="animation" :style="{ display: viewShow == 'run' ? 'block' : 'none' }">
                 <img src="../assets/SVG/灯亮.svg" :style="{ display: imgShow == 'img1' ? 'block' : 'none' }">
                 <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
@@ -299,7 +304,7 @@ export default {
             }
 
             this.loading = true; // 开始显示加载动画
-
+            this.$emit('loading',this.loading);
             this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'workbench';
             let state;
             state = await Compile(this.code);
@@ -357,6 +362,7 @@ export default {
 
             // 模拟下载过程，例如调用API
             this.loading = false; // 完成后隐藏加载动画
+            this.$emit('loading',this.loading);
         },
 
         //清除
@@ -454,6 +460,7 @@ export default {
     text-align: right;
     display:flex;
     flex-direction: row;
+    padding-left: 10%;
 }
 
 .left,
@@ -777,15 +784,19 @@ export default {
     cursor: pointer;
 }
 .avatar{
-    padding: 10px 0px 10px 16px;
+    padding: 10px 0px 10px 30%;
     cursor: pointer;
 }
 .workbench {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
+}
+.workbench-image{
+    width: 100%;
+    height: 45%;
+}
 .workbench-image img {
   width: 300px;
   height: 300px;
@@ -793,9 +804,9 @@ export default {
   margin-bottom: 20px;
 }
 
-.history-files {
+.history-file {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: row;
   gap: 10px;
 }
 
