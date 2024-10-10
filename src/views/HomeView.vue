@@ -44,6 +44,8 @@ import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
 import '@blockly/block-plus-minus';
 import * as zh_hans from 'blockly/msg/zh-hans';
 import { EventBus } from '../utils/eventBus';
+import {createEntry} from "@/api/workbench";
+import store from '@/store';
 //设置语言
 Blockly.setLocale(zh_hans);
 // import {
@@ -81,7 +83,9 @@ export default {
       workspace: null,
       codeViewIns: null,
       selected:1,
-      loading:false
+      loading:false,
+      projectName:'xx',
+      store:store,
     };
   },
   //引用的组件
@@ -210,7 +214,6 @@ export default {
 
     //加载工作区
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
-
       toolbox: this.toolbox,
       zoom:
       {
@@ -469,6 +472,7 @@ export default {
     saveWorkspace() {
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
+      // this.createProject(this.store.getters.phoneNumber,JSON.stringify(state),this.projectName);
       // 将数据存储到本地浏览器中
       localStorage.setItem('workspaceData', JSON.stringify(state));
       console.log(state);
@@ -525,6 +529,13 @@ export default {
     },
     receiveLoading(loading){
       this.loading=loading;
+    },
+    createProject(userId,text,projectName){
+      const data={"userId":userId,"text":text,"projectName":projectName}
+      createEntry(data).then(res => {
+          console.log(res);
+        }
+      );
     }
   }
 };

@@ -8,7 +8,8 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    phoneNumber:''
   },
 
   mutations: {
@@ -29,6 +30,9 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_PhoneNumber:(state,phoneNumber)=>{
+      state.phoneNumber=phoneNumber
     }
   },
 
@@ -54,7 +58,8 @@ const user = {
     GetInfo({ commit}) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
-          const user = res.user
+          const user = res.user;
+          console.log(user)
           const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/img/profile.jpg") : 'https://edu.jnuiclab.com/api' + user.avatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
@@ -65,6 +70,7 @@ const user = {
           commit('SET_ID', user.userId)
           commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
+          commit('SET_PhoneNumber',user.phonenumber)
           resolve(res)
         }).catch(error => {
           reject(error)

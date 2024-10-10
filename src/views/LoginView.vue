@@ -33,7 +33,6 @@
 <div style="font-size: 12px;height: 30px;">你还可以，选择以下登录方式</div>
 <div><img src="../assets/img/phone.png"></div>
 <div style="font-size: 12px;height: 100px;">验证码登录</div>
-<div>还没有账号？点击此处<a style="color: #FF8D1A; cursor: pointer;">获取账号</a></div>
     </div>
   </template>
   

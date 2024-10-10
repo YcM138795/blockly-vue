@@ -1,17 +1,18 @@
 <template>
     <div>
-        <div class="TopNav">
+        <div class="first-floor">
+            <div class="TopNav">
             <div class="left">
                 <img src="../assets/img/logo.png" alt="logo" class="logo"> 
             </div>
             <div class="center">
                 <div class="custom-select-container">
-                    <div class="custom-select-box" @click="toggleDropdown">
+                    <div class="custom-select-box" @click.stop="toggleDropdown">
                         <img :src="selectedIcon" alt="Selected Icon" class="option-icon">
                         <span style="font-size: 14px;">{{ selectedText }}</span>
                         <i class="arrow-down"></i> <!-- 箭头图标 -->
                     </div>
-                    <ul v-if="dropdownVisible" class="custom-options">
+                    <ul v-if="dropdownVisible" class="custom-options" ref="dropdown">
                         <li v-if="selected==2" @click="selectOption('积木模式', 1)" class="custom-option">
                         <img src="../assets/img/block.png" alt="Icon1" class="option-icon"> 
                         <div style="font-size: 14px;margin-left: 24px;">积木模式</div>
@@ -27,30 +28,32 @@
                     <!-- <div class="button" @click="tipAction">
                 <img src="../assets/img/prompt.png" alt="Prompt" style="padding-right: 5px;">提示
                     </div> -->
+                <div style="display:flex; flex-direction: row;flex: 1;">
                     <div class="button" @click="clearAction">
-                <img src="../assets/img/reset.png" alt="Reset" style="padding-right: 5px; ">重置
+                        <img src="../assets/img/reset.png" alt="Reset" style="padding-right: 5px; ">清空
                     </div>
                     <div class="button" @click="dowmloadAction">
-                <img src="../assets/img/download.png" alt="Download" style="padding-right: 5px; "> 云编译
+                        <img src="../assets/img/download.png" alt="Download" style="padding-right: 5px; "> 云编译
                     </div>
                     <div class="button" @click="saveAction">
-                <img src="../assets/img/save.png" alt="Save" style="padding-right: 5px; ">保存
+                        <img src="../assets/img/save.png" alt="Save" style="padding-right: 5px; ">保存
                     </div>
-            <div class="avatar">
-                <el-dropdown trigger="click">
-        <div class="avatar-wrapper">
-            <el-avatar  :src="store.getters.avatar"></el-avatar>
-        </div>
-        <el-dropdown-menu slot="dropdown">
+                </div>
+                <div class="avatar">
+                    <el-dropdown trigger="click">
+                    <div class="avatar-wrapper">
+                        <el-avatar  :src="store.getters.avatar"></el-avatar>
+                    </div>
+                    <el-dropdown-menu slot="dropdown">
           <!-- <el-dropdown-item @click.native="setting = true">
             <span>布局设置</span>
           </el-dropdown-item> -->
-          <el-dropdown-item divided @click.native="logout">
-            <span>退出登录</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-            </div>
+                        <el-dropdown-item divided @click.native="logout">
+                            <span>退出登录</span>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
                 <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
                 <!-- <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
                 <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
@@ -60,8 +63,10 @@
                 <button class="tipButton" title="提示" @click="tipAction"></button>
                 <button class="clearButton" title="清空所有块" @click="clearAction"></button> -->
             </div>
+            </div>
         </div>
-        <div class="view">
+        <div class="second-floor">
+            <div class="view">
             <div :style="{ display: viewShow == 'workbench' ? 'block' : 'none' }" class="workbench"> 
                 <div class="workbench-image">
                     任务点检测
@@ -125,6 +130,7 @@
                 <br><br>
                 <div id="progressContainer" style="width: 200px; height: 16px; margin: 0 auto; border: 1px solid #000;">
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -192,7 +198,12 @@ export default {
         // 打印更新后的 flashing 对象到控制台
         console.log('flashing:', this.flashing);
 });
+    document.addEventListener('click', this.handleClickOutside);
     },
+    beforeDestroy() {
+    // 在组件销毁时移除全局点击事件监听
+    document.removeEventListener('click', this.handleClickOutside);
+  },
     props: {
         code: {
             type: String, // 声明code为字符串类型的prop
@@ -404,6 +415,7 @@ export default {
         toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
     },
+
     selectOption(text, value) {
       this.selectedText = text;
       this.dropdownVisible = false;
@@ -415,7 +427,12 @@ export default {
       }
       this.$emit('change',this.selected);
     },
-   
+    handleClickOutside(event) {
+      // 如果点击的元素不在下拉框内，收起下拉框
+      if (this.$refs.dropdown && !this.$refs.dropdown.contains(event.target)) {
+        this.dropdownVisible = false;
+      }
+    },
     async logout() {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '确定',
@@ -458,9 +475,8 @@ export default {
 
 .right {
     text-align: right;
-    display:flex;
+    display:flex; 
     flex-direction: row;
-    padding-left: 10%;
 }
 
 .left,
@@ -780,11 +796,12 @@ export default {
     margin: 5px;
 }
 .button{
-    padding: 20px 15px 10px 16px;
+    padding: 25px 15px 10px 16px;
     cursor: pointer;
 }
 .avatar{
-    padding: 10px 0px 10px 30%;
+    width: 100px;
+    padding: 10px 20px 10px 0px;
     cursor: pointer;
 }
 .workbench {
