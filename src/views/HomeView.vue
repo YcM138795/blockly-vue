@@ -1000,6 +1000,7 @@ html {
   /* Safari 和 Chrome 禁止用户调整文本大小 */
   zoom: 1;
   /* 禁止用户缩放 */
+  overflow-y:hidden;
 }
 
 

@@ -746,6 +746,7 @@ export default {
     margin: 5px;
 }
 .button{
+    font-size: 16px;
     padding: 25px 15px 10px 16px;
     cursor: pointer;
 }
@@ -761,10 +762,12 @@ export default {
 
 }
 .workbench-image{
+    font-size: 16px;
     width: 100%;
     height: 45%;
 }
 .workbench-image img {
+    font-size: 16px;
   width: 300px;
   height: 300px;
   border: 2px solid #ccc;
