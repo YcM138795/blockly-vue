@@ -101,7 +101,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         "type": "delay",
                         "tooltip": "",
                         "helpUrl": "",
-                        "message0": "延时-- %1 秒 %2",
+                        "message0": "延时-- %1 毫秒 %2",
                         "args0": [
                             {
                                 "type": "field_number",
@@ -122,7 +122,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
             }
             javascriptGenerator.forBlock['delay'] = function (block) {
                 const number_timer = block.getFieldValue('timer');
-                let time = number_timer * 1000;
+                let time = number_timer;
 
                 // TODO: Assemble javascript into the code variable.
                 const code = `vTaskDelay(${time});\n`;
@@ -132,7 +132,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                 const number_timer = block.getFieldValue('timer');
 
                 // TODO: Assemble dart into the code variable.
-                const code = `console.log('延时${number_timer}秒')\n`;
+                const code = `console.log('延时${number_timer}毫秒')\n`;
                 return code;
             }
         }
@@ -1102,7 +1102,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                 const dropdown_options2 = block.getFieldValue('options2');
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `motor_control_single(${dropdown_options1},${number_speed},${dropdown_options2});\n`;
+                const code = `motor_control(${dropdown_options1},${number_speed},${dropdown_options2});\n`;
                 return code;
             }
 

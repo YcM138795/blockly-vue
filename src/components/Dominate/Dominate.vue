@@ -19,7 +19,7 @@ export default {
         contents: [
           {
             "kind": "category",
-            "name": "操作函数",
+            "name": "函数",
             "categoryStyle": "dominate_category",
             "cssConfig": {
               "container": "dominate",
@@ -71,7 +71,7 @@ export default {
 
 .dominateIcon {
   /* 在这里定义类别图标的样式 */
-  content: url("../../assets/SVG/操作函数.svg");
+  content: url("../../assets/img/方法.png");
   height: 32px;
 }
 </style>

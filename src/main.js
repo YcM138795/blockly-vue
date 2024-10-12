@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import { MessageBox, Message , Notification,  Loading, Dialog, Form,FormItem,Input, Select,Option,Button,} from 'element-ui';``
+// import pinia from './store'
+import { MessageBox, Message , Notification,  Loading, Dialog, Form,FormItem,Input, Select,Option,Button,Avatar,Dropdown, DropdownMenu, DropdownItem} from 'element-ui';``
+import store from './store'
+import './permission' // permission control
 import 'element-ui/lib/theme-chalk/index.css';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 
@@ -15,6 +18,10 @@ Vue.use(Input);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(Button);
+Vue.use(Avatar);
+Vue.use(Dropdown);
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
 
 Vue.config.productionTip = false;
 Vue.prototype.$msgbox = MessageBox;
@@ -27,6 +34,7 @@ const pinia = createPinia();
 
 new Vue({
   router,
+  store,
   pinia,
   render: h => h(App)
 }).$mount('#app')

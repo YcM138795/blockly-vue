@@ -1,24 +1,27 @@
 <template>
-  <div ref="container" style="width: 100%; height: 100%;">
+  <div class="loading-container" ref="container" style="width: 100%; height: 100%;" v-loading="loading" element-loading-text="代码编译中"
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">
     <ContentView></ContentView>
     <div style="width: 100%; height: 60px">
-      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code">
+      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" @change="receiveChange" @loading="receiveLoading">
       </TopNav>
     </div>
     <div id="blockly">
       <!-- 工作区 -->
       <!-- <div class="code-wrap"> -->
       <div class="code-wrap">
-        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%"></div>
+        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" v-show="selected==1"></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <DominateBlock @dominateBox="dominateBox"></DominateBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <OperationBlock @operationBox="operationBox"></OperationBlock>
         <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
+        <div id="code" ref="codeView" style="width: 70%;height:calc(100vh - 60px);" v-show="selected==2"></div>
+        <div style="width: 30%;"></div>
         <AdvancedBlock @advancedBlock="advancedBlock"></AdvancedBlock>
 
-        <div id="code" ref="codeView" :style="{ display: codeShow == 'code' ? 'block' : 'none' }"></div>
       </div>
     </div>
   </div>
@@ -46,7 +49,10 @@ import AdvancedBlock from '@/components/Advanced/Advanced.vue';
 import '@blockly/block-plus-minus';//引入controls_if的插件包
 import * as zh_hans from 'blockly/msg/zh-hans';
 import { EventBus } from '../utils/eventBus';
-Blockly.setLocale(zh_hans);//设置语言
+import {createEntry} from "@/api/workbench";
+import store from '@/store';
+//设置语言
+Blockly.setLocale(zh_hans);
 
 import { useFunctionBlockStore } from '@/store/functionBlockStore';//引入自定义函数的store
 import { getFieldName } from '../utils/functionBlockUtils';//引入生成函数的代码
@@ -87,6 +93,10 @@ export default {
       },
       workspace: null,
       codeViewIns: null,
+      selected:1,
+      loading:false,
+      projectName:'xx',
+      store:store,
     };
   },
   //引用的组件
@@ -106,8 +116,74 @@ export default {
     EventBus.$on('saveEditBlock', this.saveEditBlock);
   },
   mounted() {
-
-    // 创建自定义主题
+    this.initBlocklyWorkspace();
+  },
+  watch:{
+    selected(newVal){
+      if (newVal===2) {
+        
+        this.$nextTick(() => {
+          if (!this.codeViewIns) {
+            monaco.editor.defineTheme('my-custom-theme', {
+            base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
+            inherit: true, // 继承基础主题的设置
+            rules: [],
+            colors: {
+                // 定义编辑器的颜色
+              'editor.foreground': '#000000', // 文字颜色
+              'editor.background': '#E9F1FC', // 背景颜色
+                // 还可以定义其他颜色
+            }
+          });
+          this.codeViewIns.setValue(this.code);
+          this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
+            theme: "my-custom-theme", // 主题
+            value: "c", // 默认显示的值
+            language: "c",
+            folding: true, // 是否折叠
+            foldingHighlight: true, // 折叠等高线
+            foldingStrategy: "indentation", // 折叠方式  auto | indentation
+            showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
+            disableLayerHinting: true, // 等宽优化
+            emptySelectionClipboard: false, // 空选择剪切板
+            selectionClipboard: false, // 选择剪切板
+            automaticLayout: false, // 自动布局
+            codeLens: true, // 代码镜头
+            scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
+            colorDecorators: true, // 颜色装饰器
+            accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
+            lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
+            lineNumbersMinChars: 1, // 行号最小字符   number
+            enableSplitViewResizing: false,
+            readOnly: true, //是否只读  取值 true | false
+            minimap: {
+              enabled: true // 启用迷你地图
+            }
+        });
+        } else {
+            this.codeViewIns.setValue(this.code);
+            // 如果编辑器已经初始化，则重新布局
+            this.codeViewIns.layout();
+          }
+        });
+      }
+    }
+  },
+  methods: {
+    //检测代码块有无重复添加
+    hasCustomBlock(type) {
+    const allBlocks = this.workspace.getAllBlocks();
+    return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
+  },
+    initBlocklyWorkspace() {
+    // 如果已有工作区，销毁当前工作区
+    if (this.workspace&& this.workspaceChangeListener) {
+     
+      this.workspace.removeChangeListener(this.workspaceChangeListener);
+      this.workspaceChangeListener = null;  // 清空监听器
+      this.workspace.dispose();  // 销毁当前工作区
+      this.workspace = null;     // 清空引用
+    }
     const customTheme = Blockly.Theme.defineTheme('customTheme', {
       base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
       categoryStyles: {
@@ -164,11 +240,10 @@ export default {
 
     //加载工作区
     this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
-
       toolbox: this.toolbox,
       zoom:
       {
-        controls: true,
+        controls: false,
         wheel: true,
         startScale: 1.0,
         maxScale: 3,
@@ -183,7 +258,7 @@ export default {
         colour: '#e1e1e1',
         snap: true
       },
-      trashcan: true,
+      trashcan: false,
       theme: customTheme,
       //渲染方式
       renderer: 'Zelos',
@@ -233,12 +308,12 @@ export default {
     });
 
 
+
     // monaco.editor编译器自定义主题
     monaco.editor.defineTheme('my-custom-theme', {
       base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
       inherit: true, // 继承基础主题的设置
-      rules: [
-      ],
+      rules: [],
       colors: {
         // 定义编辑器的颜色
         'editor.foreground': '#000000', // 文字颜色
@@ -323,6 +398,7 @@ export default {
 
     // 工作区变化监听:当添加任务调用块时，添加对应的任务定义块
     workspaceChangeListener() {
+     
       var allBlocks = this.workspace.getAllBlocks();
       allBlocks.forEach((block) => {
         if (block.type === 'XTask_light_task') {
@@ -455,6 +531,7 @@ export default {
     saveWorkspace() {
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
+      // this.createProject(this.store.getters.phoneNumber,JSON.stringify(state),this.projectName);
       console.log('保存工作区数据:', state);
 
       // 读取自定义函数的数据
@@ -554,7 +631,21 @@ export default {
     advancedBlock(advancedBlock) {
       this.advancedToolbox = advancedBlock
     },
-
+    receiveChange(change) {
+      this.selected = change;
+    },
+    receiveLoading(loading){
+      this.loading=loading;
+    },
+    createProject(userId,text,projectName){
+      const data={"userId":userId,"text":text,"projectName":projectName}
+      createEntry(data).then(res => {
+          console.log(res);
+        }
+      );
+    }
+  }
+    
     // 保存编辑的函数块
     saveEditBlock(stateWithPosition) {
       this.functionBlockStore.editFunctionBlock = stateWithPosition; // 将块状态保存到 store
@@ -931,13 +1022,14 @@ body {
   flex-direction: row;
 }
 
-
+.loading-container .el-loading-spinner{
+  font-size: 40px;
+}
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
   padding-top: 7%;
   background-color: rgb(218, 227, 234);
-  /* background-image: url('../assets//SVG/积木.svg'); */
   background-size: 180px auto;
   background-repeat: no-repeat;
   background-position: 10px 670px;
@@ -953,6 +1045,7 @@ body {
   border-radius: 13px;
   margin-bottom: 45px;
   padding: 5px;
+  border-left: none !important;
   padding-left: 0 !important;
 }
 

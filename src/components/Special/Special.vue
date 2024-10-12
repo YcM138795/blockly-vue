@@ -74,7 +74,7 @@
 }
 
 .specialIcon {
-  content: url(../../assets/SVG/加号.svg);
+  content: url('../../assets/img/特殊.png');
   height: 32px;
 }
   </style>
