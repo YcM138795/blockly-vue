@@ -168,28 +168,4 @@ import { javascriptGenerator } from 'blockly/javascript';
 
 }
 
-Blockly.Blocks['create_function_button'] = {
-    init: function () {
-        this.appendDummyInput()
-            .appendField("创建函数");
-        this.setColour(160);
-        this.setTooltip("点击创建函数");
-        this.setHelpUrl("");
-        this.setOutput(false);
-
-        // 设置事件处理器
-        // this.setOnChange(this.onChange.bind(this)); 
-    },
-
-    // 当积木已经在工作区并被点击时触发
-    // onChange: function(event) {
-    //     console.log(event.type);    
-
-    //     if (event.type === 'selected' ) {
-    //         console.log('创建函数块被点击');
-    //             // 触发显示函数编辑器的事件
-    //             EventBus.$emit('showFunctionEditor');   
-    //     }
-    // },
-};
 

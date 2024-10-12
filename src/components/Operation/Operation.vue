@@ -78,7 +78,7 @@ export default {
     };
   },
   mounted() {
-    this.$emit('methodBox', this.toolbox);
+    this.$emit('operationBox', this.toolbox);
   },
 };
 </script>
@@ -87,6 +87,7 @@ export default {
 .operation {
   color: #5B67A5;
   font-size: 60px;
+  
 }
 
 .operationIcon {

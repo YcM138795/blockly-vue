@@ -26,11 +26,6 @@ export default {
               "icon": "dominateIcon"
             },
             "contents": [
-              // {
-              //   kind: "block",
-
-              //   type: "create_function_button"
-              // },
               {
                 kind: "block",
 

@@ -21,8 +21,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "字符输出函数",
             "helpUrl": ""
@@ -57,8 +57,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "数字输出函数",
             "helpUrl": ""
@@ -113,11 +113,11 @@ import { dartGenerator } from 'blockly/dart';
               {
                 "type": "input_statement",
                 "name": "operation",
-                "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
               }
             ],
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230
           });
         }
@@ -191,8 +191,8 @@ import { dartGenerator } from 'blockly/dart';
             "type": "printf",
             "message0": "break",
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "函数跳出函数",
             "helpUrl": ""
@@ -218,8 +218,8 @@ import { dartGenerator } from 'blockly/dart';
             "type": "printf",
             "message0": "continue ",
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "函数继续函数",
             "helpUrl": ""
@@ -263,8 +263,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230,
             "tooltip": "数字常量定义",
             "helpUrl": ""
@@ -304,8 +304,8 @@ import { dartGenerator } from 'blockly/dart';
                 "name": "target"
               }
             ],
-            "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
             "colour": 230
           })
         }
@@ -325,42 +325,5 @@ import { dartGenerator } from 'blockly/dart';
 
 }
 
-Blockly.Blocks['function_definition'] = {
-  init: function () {
-    this.jsonInit({
-      "type": "function_definition",
-      "tooltip": "",
-      "helpUrl": "",
-      "message0": "",
-      "args0": [
-      ],
-      "style": "function_definition_style",
-    });
-  }
-};
-Blockly.Themes.Classic.blockStyles["function_definition_style"] = {
-  "colourPrimary": "#5b67a5",
-  "colourSecondary": "#4a56a3",
-  "colourTertiary": "#3a46a1",
-  "hat": "cap"
-};
-javascriptGenerator.forBlock['function_definition'] = function (block, generator) {
-  console.log(block.inputList[1].fieldRow);
-  
-  block.inputList[1].fieldRow.forEach((field,index) => {
-    if(index>0){
-    console.log(field.name);
-    }
-  });
-  const text_name = block.getFieldValue('NAME');
 
-  const text_text_0 = block.getFieldValue('text_1');
-  const text_boolean_1 = block.getFieldValue('boolean_2');
-
-  const statement_inner = generator.statementToCode(block, 'inner');
-
-  // TODO: Assemble javascript into the code variable.
-  const code = `void ${text_name}(${text_text_0},${text_boolean_1}){\n${statement_inner}}\n`;
-  return code;
-}
 

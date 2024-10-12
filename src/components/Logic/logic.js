@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly/core';
-import {javascriptGenerator,Order} from 'blockly/javascript';
-import {dartGenerator} from 'blockly/dart';
+import { javascriptGenerator, Order } from 'blockly/javascript';
+import { dartGenerator } from 'blockly/dart';
 import '@blockly/block-plus-minus';
 
 // 检查语言包是否已加载
@@ -30,7 +30,7 @@ import '@blockly/block-plus-minus';
       })
     }
   }
-  javascriptGenerator.forBlock['false'] = function() {
+  javascriptGenerator.forBlock['false'] = function () {
 
     // TODO: Assemble javascript into the code variable.
     const code = 'false';
@@ -59,7 +59,7 @@ import '@blockly/block-plus-minus';
       })
     }
   }
-  javascriptGenerator.forBlock['true'] = function() {
+  javascriptGenerator.forBlock['true'] = function () {
 
     // TODO: Assemble javascript into the code variable.
     const code = 'true';
@@ -87,29 +87,29 @@ import '@blockly/block-plus-minus';
           {
             "type": "input_statement",
             "name": "do",
-            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
           },
           {
             "type": "input_statement",
             "name": "else",
-            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
           }
         ],
-        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+        "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+        "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "colour": 210,
         "inputsInline": true
       })
     }
   }
-  javascriptGenerator.forBlock['if_else'] = function(block, generator) {
+  javascriptGenerator.forBlock['if_else'] = function (block, generator) {
     // TODO: change Order.ATOMIC to the correct operator precedence strength
     const value_if = generator.valueToCode(block, 'if', Order.ATOMIC);
-  
+
     const statement_do = generator.statementToCode(block, 'do');
-  
+
     const statement_else = generator.statementToCode(block, 'else');
-  
+
     // TODO: Assemble javascript into the code variable.
     const code = `if (${value_if}) {\n${statement_do}} else {\n${statement_else}}`;
     return code;
@@ -136,11 +136,11 @@ import '@blockly/block-plus-minus';
           {
             "type": "input_statement",
             "name": "operate",
-            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
           }
         ],
-        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+        "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+        "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "colour": 210,
         "tooltip": "循环",
         "helpUrl": ""
@@ -154,7 +154,7 @@ import '@blockly/block-plus-minus';
     var code = `int i;\nfor( i=0;i<${value_times};i++){\n${statements_operate}}`;
     return code;
   };
-  dartGenerator.forBlock['cycle'] = function(block, generator) {
+  dartGenerator.forBlock['cycle'] = function (block, generator) {
     var value_times = generator.valueToCode(block, 'times', Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
 
@@ -223,31 +223,31 @@ import '@blockly/block-plus-minus';
       })
     }
   }
-  javascriptGenerator.forBlock['compare'] = function(block) {
-  var number_digit1 = block.getFieldValue('digit1');
-  var dropdown_maths = block.getFieldValue('maths');
-  var number_digit2 = block.getFieldValue('digit2');
-  // TODO: Assemble javascript into code variable.
-  var code = number_digit1+dropdown_maths+number_digit2;
-  // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Order.MEMBER];
-};
-dartGenerator.forBlock['compare'] = function(block) {
-  var number_digit1 = block.getFieldValue('digit1');
-  var dropdown_maths = block.getFieldValue('maths');
-  var number_digit2 = block.getFieldValue('digit2');
-  // TODO: Assemble dart into code variable.
-  var code = number_digit1+dropdown_maths+number_digit2;
+  javascriptGenerator.forBlock['compare'] = function (block) {
+    var number_digit1 = block.getFieldValue('digit1');
+    var dropdown_maths = block.getFieldValue('maths');
+    var number_digit2 = block.getFieldValue('digit2');
+    // TODO: Assemble javascript into code variable.
+    var code = number_digit1 + dropdown_maths + number_digit2;
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
+  dartGenerator.forBlock['compare'] = function (block) {
+    var number_digit1 = block.getFieldValue('digit1');
+    var dropdown_maths = block.getFieldValue('maths');
+    var number_digit2 = block.getFieldValue('digit2');
+    // TODO: Assemble dart into code variable.
+    var code = number_digit1 + dropdown_maths + number_digit2;
 
-  // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Order.MEMBER];
-};
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
 }
 
 //single_compare:单比较
 {
   Blockly.Blocks['single_compare'] = {
-    init:function(){
+    init: function () {
       this.jsonInit({
         "type": "single_compare",
         "message0": "%1 %2 %3 %4",
@@ -300,21 +300,21 @@ dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascriptGenerator.forBlock['single_compare'] = function(block, generator) {
+  javascriptGenerator.forBlock['single_compare'] = function (block, generator) {
     var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || 0;
     var dropdown_operation = block.getFieldValue('operation');
     var number_digit2 = block.getFieldValue('digit2');
     // TODO: Assemble javascript into code variable.
-    var code = value_digit1+dropdown_operation+number_digit2;
+    var code = value_digit1 + dropdown_operation + number_digit2;
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
-  dartGenerator.forBlock['single_compare'] = function(block, generator) {
+  dartGenerator.forBlock['single_compare'] = function (block, generator) {
     var value_digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || 0;
     var dropdown_operation = block.getFieldValue('operation');
     var number_digit2 = block.getFieldValue('digit2');
     // TODO: Assemble dart into code variable.
-    var code = value_digit1+dropdown_operation+number_digit2;
+    var code = value_digit1 + dropdown_operation + number_digit2;
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
@@ -323,7 +323,7 @@ dartGenerator.forBlock['compare'] = function(block) {
 //if_judge:if单判断
 {
   Blockly.Blocks['if_judge'] = {
-    init :function(){
+    init: function () {
       this.jsonInit({
         "type": "if_judge",
         "message0": "如果 %1 则执行 %2 %3",
@@ -342,11 +342,11 @@ dartGenerator.forBlock['compare'] = function(block) {
           {
             "type": "input_statement",
             "name": "operation",
-            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
           }
         ],
-        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+        "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+        "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "inputsInline": true,
         "colour": 210,
         "tooltip": "if单判断",
@@ -354,15 +354,15 @@ dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascriptGenerator.forBlock['if_judge'] = function(block, generator) {
-    var value_judge  = generator.valueToCode(block, 'judge', Order.ATOMIC);
+  javascriptGenerator.forBlock['if_judge'] = function (block, generator) {
+    var value_judge = generator.valueToCode(block, 'judge', Order.ATOMIC);
     var statements_operation = generator.statementToCode(block, 'operation');
     // TODO: Assemble javascript into code variable.
     var code = `if(${value_judge}){\n${statements_operation}}`;
     return code;
   };
-  dartGenerator.forBlock['if_judge'] = function(block, generator) {
-    var value_judge  = generator.valueToCode(block, 'judge', Order.ATOMIC);
+  dartGenerator.forBlock['if_judge'] = function (block, generator) {
+    var value_judge = generator.valueToCode(block, 'judge', Order.ATOMIC);
     var statements_operation = generator.statementToCode(block, 'operation');
     // TODO: Assemble javascript into code variable.
     var code = `if(${value_judge}){\n${statements_operation}}`;
@@ -373,7 +373,7 @@ dartGenerator.forBlock['compare'] = function(block) {
 //and_judge:与判断
 {
   Blockly.Blocks['and_judge'] = {
-    init:function(){
+    init: function () {
       this.jsonInit({
         "type": "and_judge",
         "message0": "当 %1 与 %2 %3 都正确",
@@ -396,7 +396,7 @@ dartGenerator.forBlock['compare'] = function(block) {
               "Boolean",
               "Number"
             ]
-          }     
+          }
         ],
         "output": "Boolean",
         "colour": 210,
@@ -405,26 +405,26 @@ dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascriptGenerator.forBlock['and_judge'] = function(block, generator) {
-    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
-    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
+  javascriptGenerator.forBlock['and_judge'] = function (block, generator) {
+    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC) || false;
     // TODO: Assemble javascript into code variable.
     var code = `${value_judge1}&&${value_judge2}`;
-    return  [code,Order.MEMBER];
+    return [code, Order.MEMBER];
   };
-  dartGenerator.forBlock['and_judge'] = function(block, generator) {
-    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
-    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
+  dartGenerator.forBlock['and_judge'] = function (block, generator) {
+    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC) || false;
     // TODO: Assemble javascript into code variable.
     var code = `${value_judge1}&&${value_judge2}`;
-    return  [code,Order.MEMBER];
+    return [code, Order.MEMBER];
   };
 }
 
 //or_judge:或判断
 {
   Blockly.Blocks['or_judge'] = {
-    init:function(){
+    init: function () {
       this.jsonInit({
         "type": "or_judge",
         "message0": "当 %1 或 %2 %3 有正确",
@@ -456,17 +456,17 @@ dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascriptGenerator.forBlock['or_judge'] = function(block, generator) {
+  javascriptGenerator.forBlock['or_judge'] = function (block, generator) {
     var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
-    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC) || false;
     // TODO: Assemble javascript into code variable.
     var code = `${value_judge1} || ${value_judge2}`;
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
-  dartGenerator.forBlock['or_judge'] = function(block, generator) {
-    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
-    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
+  dartGenerator.forBlock['or_judge'] = function (block, generator) {
+    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC) || false;
     // TODO: Assemble javascript into code variable.
     var code = `${value_judge1} || ${value_judge2}`;
     // TODO: Change ORDER_NONE to the correct strength.
@@ -477,7 +477,7 @@ dartGenerator.forBlock['compare'] = function(block) {
 //and_or:与判断和或判断
 {
   Blockly.Blocks['and_or'] = {
-    init:function(){
+    init: function () {
       this.jsonInit({
         "type": "and_or",
         "message0": "%1 %2 %3 %4",
@@ -523,22 +523,21 @@ dartGenerator.forBlock['compare'] = function(block) {
       })
     }
   }
-  javascriptGenerator.forBlock['and_or'] = function(block, generator) {
-    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
+  javascriptGenerator.forBlock['and_or'] = function (block, generator) {
+    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
     var dropdown_operation = block.getFieldValue('operation');
     var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
     // TODO: Assemble javascript into code variable.
-    var code = value_judge1+dropdown_operation+value_judge2;
+    var code = value_judge1 + dropdown_operation + value_judge2;
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
-  dartGenerator.forBlock['and_or'] = function(block, generator) {
-    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC)|| false;
+  dartGenerator.forBlock['and_or'] = function (block, generator) {
+    var value_judge1 = generator.valueToCode(block, 'judge1', Order.ATOMIC) || false;
     var dropdown_operation = block.getFieldValue('operation');
-    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC)|| false;
+    var value_judge2 = generator.valueToCode(block, 'judge2', Order.ATOMIC) || false;
     // TODO: Assemble javascript into code variable.
-    var code = value_judge1+dropdown_operation+value_judge2;
-    console.log(code);
+    var code = value_judge1 + dropdown_operation + value_judge2;
     // TODO: Change ORDER_NONE to the correct strength.
     return [code, Order.MEMBER];
   };
