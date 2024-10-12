@@ -20,9 +20,6 @@ Blockly.Blocks['function_definition'] = {
 
         // 添加执行部分（语句输入区）
         this.appendStatementInput('inner').appendField('执行');
-
-
-
     },
     customContextMenu: function (options) {
 

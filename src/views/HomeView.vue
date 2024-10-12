@@ -1,24 +1,25 @@
 <template>
-  <div class="loading-container" ref="container" style="width: 100%; height: 100%;" v-loading="loading" element-loading-text="代码编译中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)">
+  <div class="loading-container" ref="container" style="width: 100%; height: 100%;" v-loading="loading"
+    element-loading-text="代码编译中" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <ContentView></ContentView>
     <div style="width: 100%; height: 60px">
-      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code" @change="receiveChange" @loading="receiveLoading">
+      <TopNav @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange" :code="code"
+        @change="receiveChange" @loading="receiveLoading">
       </TopNav>
     </div>
     <div id="blockly">
       <!-- 工作区 -->
       <!-- <div class="code-wrap"> -->
       <div class="code-wrap">
-        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" v-show="selected==1"></div>
+        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" v-show="selected == 1"></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <DominateBlock @dominateBox="dominateBox"></DominateBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <OperationBlock @operationBox="operationBox"></OperationBlock>
         <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
-        <div id="code" ref="codeView" style="width: 70%;height:calc(100vh - 60px);" v-show="selected==2"></div>
+        <div id="code" ref="codeView" style="width: 70%;height:calc(100vh - 60px);" v-show="selected == 2"></div>
         <div style="width: 30%;"></div>
         <AdvancedBlock @advancedBlock="advancedBlock"></AdvancedBlock>
 
@@ -49,7 +50,7 @@ import AdvancedBlock from '@/components/Advanced/Advanced.vue';
 import '@blockly/block-plus-minus';//引入controls_if的插件包
 import * as zh_hans from 'blockly/msg/zh-hans';
 import { EventBus } from '../utils/eventBus';
-import {createEntry} from "@/api/workbench";
+import { createEntry } from "@/api/workbench";
 import store from '@/store';
 //设置语言
 Blockly.setLocale(zh_hans);
@@ -93,10 +94,10 @@ export default {
       },
       workspace: null,
       codeViewIns: null,
-      selected:1,
-      loading:false,
-      projectName:'xx',
-      store:store,
+      selected: 1,
+      loading: false,
+      projectName: 'xx',
+      store: store,
     };
   },
   //引用的组件
@@ -118,49 +119,49 @@ export default {
   mounted() {
     this.initBlocklyWorkspace();
   },
-  watch:{
-    selected(newVal){
-      if (newVal===2) {
-        
+  watch: {
+    selected(newVal) {
+      if (newVal === 2) {
+
         this.$nextTick(() => {
           if (!this.codeViewIns) {
             monaco.editor.defineTheme('my-custom-theme', {
-            base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
-            inherit: true, // 继承基础主题的设置
-            rules: [],
-            colors: {
+              base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
+              inherit: true, // 继承基础主题的设置
+              rules: [],
+              colors: {
                 // 定义编辑器的颜色
-              'editor.foreground': '#000000', // 文字颜色
-              'editor.background': '#E9F1FC', // 背景颜色
+                'editor.foreground': '#000000', // 文字颜色
+                'editor.background': '#E9F1FC', // 背景颜色
                 // 还可以定义其他颜色
-            }
-          });
-          this.codeViewIns.setValue(this.code);
-          this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
-            theme: "my-custom-theme", // 主题
-            value: "c", // 默认显示的值
-            language: "c",
-            folding: true, // 是否折叠
-            foldingHighlight: true, // 折叠等高线
-            foldingStrategy: "indentation", // 折叠方式  auto | indentation
-            showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
-            disableLayerHinting: true, // 等宽优化
-            emptySelectionClipboard: false, // 空选择剪切板
-            selectionClipboard: false, // 选择剪切板
-            automaticLayout: false, // 自动布局
-            codeLens: true, // 代码镜头
-            scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
-            colorDecorators: true, // 颜色装饰器
-            accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
-            lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
-            lineNumbersMinChars: 1, // 行号最小字符   number
-            enableSplitViewResizing: false,
-            readOnly: true, //是否只读  取值 true | false
-            minimap: {
-              enabled: true // 启用迷你地图
-            }
-        });
-        } else {
+              }
+            });
+            this.codeViewIns.setValue(this.code);
+            this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
+              theme: "my-custom-theme", // 主题
+              value: "c", // 默认显示的值
+              language: "c",
+              folding: true, // 是否折叠
+              foldingHighlight: true, // 折叠等高线
+              foldingStrategy: "indentation", // 折叠方式  auto | indentation
+              showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
+              disableLayerHinting: true, // 等宽优化
+              emptySelectionClipboard: false, // 空选择剪切板
+              selectionClipboard: false, // 选择剪切板
+              automaticLayout: false, // 自动布局
+              codeLens: true, // 代码镜头
+              scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
+              colorDecorators: true, // 颜色装饰器
+              accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
+              lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
+              lineNumbersMinChars: 1, // 行号最小字符   number
+              enableSplitViewResizing: false,
+              readOnly: true, //是否只读  取值 true | false
+              minimap: {
+                enabled: true // 启用迷你地图
+              }
+            });
+          } else {
             this.codeViewIns.setValue(this.code);
             // 如果编辑器已经初始化，则重新布局
             this.codeViewIns.layout();
@@ -172,218 +173,212 @@ export default {
   methods: {
     //检测代码块有无重复添加
     hasCustomBlock(type) {
-    const allBlocks = this.workspace.getAllBlocks();
-    return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
-  },
-    initBlocklyWorkspace() {
-    // 如果已有工作区，销毁当前工作区
-    if (this.workspace&& this.workspaceChangeListener) {
-     
-      this.workspace.removeChangeListener(this.workspaceChangeListener);
-      this.workspaceChangeListener = null;  // 清空监听器
-      this.workspace.dispose();  // 销毁当前工作区
-      this.workspace = null;     // 清空引用
-    }
-    const customTheme = Blockly.Theme.defineTheme('customTheme', {
-      base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
-      categoryStyles: {
-        // 定义自定义类别样式
-        dominate_category: {
-          colour: '#4e72b8', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        logic_category: {
-          colour: '#5B80A5', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        math_category: {
-          colour: '#5BA580', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        operation_category: {
-          colour: '#5B67A5', // 背景颜色（十六进制表示）
-          colourSecondary: '#5B67A5', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        special_category: {
-          colour: '#5BA5A5', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        xfxCar_category: {
-          colour: '#E6CEAC', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        advanced_category: {
-          colour: '	#778899', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
-        },
-        function_category: {
-          colour: '#a5d599', // 背景颜色（十六进制表示）
-          colourSecondary: '#a5d599', // 二次背景颜色
-          colourTertiary: '#a5d599', // 三次背景颜色
-        },
-      },
-      'componentStyles': {
-        // 工作区背景颜色设置
-        'workspaceBackgroundColour': 'rgb(236,240,241)'
-      }
-    });
-
-    //注册创建函数的右键菜单
-    registerFunctionBlockContextMenuOptions()
-
-    //加载工作区
-    this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
-      toolbox: this.toolbox,
-      zoom:
-      {
-        controls: false,
-        wheel: true,
-        startScale: 1.0,
-        maxScale: 3,
-        minScale: 0.3,
-        scaleSpeed: 1.2
-      },
-      //  trashcan: true,
-      grid:
-      {
-        spacing: 40,
-        length: 5,
-        colour: '#e1e1e1',
-        snap: true
-      },
-      trashcan: false,
-      theme: customTheme,
-      //渲染方式
-      renderer: 'Zelos',
-      media: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/blockly-media/' // 更新媒体文件路径
-    });
-
-    //注册创建函数的button按钮
-    this.workspace.registerButtonCallback('createFunctionCallback', () => {
-      EventBus.$emit('showFunctionEditor');
-      // 关闭选中工具箱中的函数类别
-      Blockly.getMainWorkspace().toolbox_.setSelectedItem(null);
-    });
-
-    // 添加int_main块
-    this.addInt_Main();
-
-
-    // 监听工作区变化事件
-    this.workspace.addChangeListener(this.workspaceChangeListener);
-    this.workspace.addChangeListener(() => {
-
-      javascriptGenerator.init(this.workspace);
-      let functionBlocks = [];
-      this.workspace.getAllBlocks().forEach(block => {
-        if (block.type === 'function_definition') {
-          functionBlocks.push(block);
-        }
-      });
-      let JSCode = '';
-      // 先生成所有函数定义的代码
-      if (functionBlocks.length > 0) {
-        functionBlocks.forEach(block => {
-          JSCode += javascriptGenerator.blockToCode(block);
-        });
-      }
-
-      const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
-      // 再生成其他积木的代码
-      remainingEntryBlocks.forEach(block => {
-        if (block.type !== 'function_definition') {
-          JSCode += javascriptGenerator.blockToCode(block);
-        }
-      });
-      // javascriptGenerator.finish(this.workspace);
-      this.code = JSCode;
-      this.codeViewIns.setValue(this.code);
-    });
-
-
-
-    // monaco.editor编译器自定义主题
-    monaco.editor.defineTheme('my-custom-theme', {
-      base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
-      inherit: true, // 继承基础主题的设置
-      rules: [],
-      colors: {
-        // 定义编辑器的颜色
-        'editor.foreground': '#000000', // 文字颜色
-        'editor.background': '#E9F1FC', // 背景颜色
-        // 还可以定义其他颜色
-      }
-    });
-
-    // monaco.editor编译器
-    this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
-      theme: "my-custom-theme", // 主题
-      value: "c", // 默认显示的值
-      language: "c",
-      folding: true, // 是否折叠
-      foldingHighlight: true, // 折叠等高线
-      foldingStrategy: "indentation", // 折叠方式  auto | indentation
-      showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
-      disableLayerHinting: true, // 等宽优化
-      emptySelectionClipboard: false, // 空选择剪切板
-      selectionClipboard: false, // 选择剪切板
-      automaticLayout: false, // 自动布局
-      codeLens: true, // 代码镜头
-      scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
-      colorDecorators: true, // 颜色装饰器
-      accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
-      lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
-      lineNumbersMinChars: 1, // 行号最小字符   number
-      enableSplitViewResizing: false,
-      readOnly: true, //是否只读  取值 true | false
-      minimap: {
-        enabled: true // 启用迷你地图
-      }
-    });
-
-
-    //注册函数类别的工作箱回调
-    this.workspace.registerToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY', () => {
-      console.log('函数类别的工具箱回调');
-
-      // 如果没有函数，返回创建新函数的按钮
-      if (this.functionBlockStore.functionBlock.length === 0) {
-        return [
-          { kind: "label", text: "函数" },
-          { kind: "button", text: "点击创建新函数", callbackKey: "createFunctionCallback" }
-        ];
-      }
-
-      let dynamicBlocks = this.initCallFuncion();
-
-
-      return [
-        { kind: "label", text: "函数" },
-        { kind: "button", text: "点击创建新函数", callbackKey: "createFunctionCallback" },
-        { kind: "label", text: "我的函数" },
-        ...dynamicBlocks
-      ]; // 返回动态生成的块列表;
-    });
-
-    // Toolbox添加
-    this.addToolbox();
-
-    // 恢复工作区
-    this.restoreWorkspace();
-  },
-  methods: {
-
-    //检测代码块有无重复添加
-    hasCustomBlock(type) {
       const allBlocks = this.workspace.getAllBlocks();
       return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
+    },
+    initBlocklyWorkspace() {
+      console.log('初始化工作区');
+
+      // 如果已有工作区，销毁当前工作区
+      if (this.workspace && this.workspaceChangeListener) {
+        this.workspace.removeChangeListener(this.workspaceChangeListener);
+        this.workspaceChangeListener = null;  // 清空监听器
+        this.workspace.dispose();  // 销毁当前工作区
+        this.workspace = null;     // 清空引用
+      }
+      const customTheme = Blockly.Theme.defineTheme('customTheme', {
+        base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
+        categoryStyles: {
+          // 定义自定义类别样式
+          dominate_category: {
+            colour: '#4e72b8', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF8C61', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          logic_category: {
+            colour: '#5B80A5', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF8C61', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          math_category: {
+            colour: '#5BA580', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF8C61', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          operation_category: {
+            colour: '#5B67A5', // 背景颜色（十六进制表示）
+            colourSecondary: '#5B67A5', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          special_category: {
+            colour: '#5BA5A5', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF8C61', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          xfxCar_category: {
+            colour: '#E6CEAC', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF8C61', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          advanced_category: {
+            colour: '	#778899', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF8C61', // 二次背景颜色
+            colourTertiary: '#C73F1E', // 三次背景颜色
+          },
+          function_category: {
+            colour: '#a5d599', // 背景颜色（十六进制表示）
+            colourSecondary: '#a5d599', // 二次背景颜色
+            colourTertiary: '#a5d599', // 三次背景颜色
+          },
+        },
+        'componentStyles': {
+          // 工作区背景颜色设置
+          'workspaceBackgroundColour': 'rgb(236,240,241)'
+        }
+      });
+
+      //注册创建函数的右键菜单
+      registerFunctionBlockContextMenuOptions()
+
+      //加载工作区
+      this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
+        toolbox: this.toolbox,
+        zoom:
+        {
+          controls: false,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2
+        },
+        //  trashcan: true,
+        grid:
+        {
+          spacing: 40,
+          length: 5,
+          colour: '#e1e1e1',
+          snap: true
+        },
+        trashcan: false,
+        theme: customTheme,
+        //渲染方式
+        renderer: 'Zelos',
+        media: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/blockly-media/' // 更新媒体文件路径
+      });
+
+      //注册创建函数的button按钮
+      this.workspace.registerButtonCallback('createFunctionCallback', () => {
+        EventBus.$emit('showFunctionEditor');
+        // 关闭选中工具箱中的函数类别
+        Blockly.getMainWorkspace().toolbox_.setSelectedItem(null);
+      });
+
+      // 添加int_main块
+      this.addInt_Main();
+
+
+      // 监听工作区变化事件
+      this.workspace.addChangeListener(this.workspaceChangeListener);
+      this.workspace.addChangeListener(() => {
+
+        javascriptGenerator.init(this.workspace);
+        let functionBlocks = [];
+        this.workspace.getAllBlocks().forEach(block => {
+          if (block.type === 'function_definition') {
+            functionBlocks.push(block);
+          }
+        });
+        let JSCode = '';
+        // 先生成所有函数定义的代码
+        if (functionBlocks.length > 0) {
+          functionBlocks.forEach(block => {
+            JSCode += javascriptGenerator.blockToCode(block);
+          });
+        }
+
+        const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
+        // 再生成其他积木的代码
+        remainingEntryBlocks.forEach(block => {
+          if (block.type !== 'function_definition') {
+            JSCode += javascriptGenerator.blockToCode(block);
+          }
+        });
+        // javascriptGenerator.finish(this.workspace);
+        this.code = JSCode;
+        this.codeViewIns.setValue(this.code);
+      });
+
+
+
+      // monaco.editor编译器自定义主题
+      monaco.editor.defineTheme('my-custom-theme', {
+        base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
+        inherit: true, // 继承基础主题的设置
+        rules: [],
+        colors: {
+          // 定义编辑器的颜色
+          'editor.foreground': '#000000', // 文字颜色
+          'editor.background': '#E9F1FC', // 背景颜色
+          // 还可以定义其他颜色
+        }
+      });
+
+      // monaco.editor编译器
+      this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
+        theme: "my-custom-theme", // 主题
+        value: "c", // 默认显示的值
+        language: "c",
+        folding: true, // 是否折叠
+        foldingHighlight: true, // 折叠等高线
+        foldingStrategy: "indentation", // 折叠方式  auto | indentation
+        showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
+        disableLayerHinting: true, // 等宽优化
+        emptySelectionClipboard: false, // 空选择剪切板
+        selectionClipboard: false, // 选择剪切板
+        automaticLayout: false, // 自动布局
+        codeLens: true, // 代码镜头
+        scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
+        colorDecorators: true, // 颜色装饰器
+        accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
+        lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
+        lineNumbersMinChars: 1, // 行号最小字符   number
+        enableSplitViewResizing: false,
+        readOnly: true, //是否只读  取值 true | false
+        minimap: {
+          enabled: true // 启用迷你地图
+        }
+      });
+
+
+      //注册函数类别的工作箱回调
+      this.workspace.registerToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY', () => {
+        console.log('函数类别的工具箱回调');
+
+        // 如果没有函数，返回创建新函数的按钮
+        if (this.functionBlockStore.functionBlock.length === 0) {
+          return [
+            { kind: "label", text: "函数" },
+            { kind: "button", text: "点击创建新函数", callbackKey: "createFunctionCallback" }
+          ];
+        }
+
+        let dynamicBlocks = this.initCallFuncion();
+
+
+        return [
+          { kind: "label", text: "函数" },
+          { kind: "button", text: "点击创建新函数", callbackKey: "createFunctionCallback" },
+          { kind: "label", text: "我的函数" },
+          ...dynamicBlocks
+        ]; // 返回动态生成的块列表;
+      });
+
+      // Toolbox添加
+      this.addToolbox();
+
+      // 恢复工作区
+      this.restoreWorkspace();
     },
 
     // 添加int_main块加到工作区
@@ -398,7 +393,7 @@ export default {
 
     // 工作区变化监听:当添加任务调用块时，添加对应的任务定义块
     workspaceChangeListener() {
-     
+
       var allBlocks = this.workspace.getAllBlocks();
       allBlocks.forEach((block) => {
         if (block.type === 'XTask_light_task') {
@@ -583,7 +578,6 @@ export default {
               localStorage.removeItem('workspaceData');
               location.reload();  // 刷新页面
             }
-            this.refreshFunctionBlock(functionBlockArray);
           });
         }
       } catch (error) {
@@ -617,6 +611,8 @@ export default {
       this.dominateToolbox = dominateBox
     },
     logicBox(logicBox) {
+      console.log('AA');
+
       this.logicToolbox = logicBox
     },
     mathBox(mathBox) {
@@ -634,18 +630,17 @@ export default {
     receiveChange(change) {
       this.selected = change;
     },
-    receiveLoading(loading){
-      this.loading=loading;
+    receiveLoading(loading) {
+      this.loading = loading;
     },
-    createProject(userId,text,projectName){
-      const data={"userId":userId,"text":text,"projectName":projectName}
+    createProject(userId, text, projectName) {
+      const data = { "userId": userId, "text": text, "projectName": projectName }
       createEntry(data).then(res => {
-          console.log(res);
-        }
+        console.log(res);
+      }
       );
-    }
-  }
-    
+    },
+
     // 保存编辑的函数块
     saveEditBlock(stateWithPosition) {
       this.functionBlockStore.editFunctionBlock = stateWithPosition; // 将块状态保存到 store
@@ -803,7 +798,7 @@ export default {
     // 恢复编辑的函数块
     restoreEditBlock(selectedParams, oddBlock) {
       console.log('恢复编辑的函数块');
-      console.log('编辑前的块',oddBlock);
+      console.log('编辑前的块', oddBlock);
 
       const Block = JSON.parse(this.functionBlockStore.editFunctionBlock.blockState);//解析数据
       const newBlock = Blockly.serialization.blocks.append(Block, this.workspace);
@@ -1022,9 +1017,10 @@ body {
   flex-direction: row;
 }
 
-.loading-container .el-loading-spinner{
+.loading-container .el-loading-spinner {
   font-size: 40px;
 }
+
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
