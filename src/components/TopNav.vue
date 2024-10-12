@@ -77,7 +77,7 @@
 
 <script>
 import { Compile } from '../utils'
-import { serial_request, kermit_start,kermit_stop } from '../utils/burn'
+import { serial_request, kermit_start, kermit_stop } from '../utils/burn'
 
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
@@ -103,7 +103,7 @@ export default {
             //二进制文件数据
             file: null,
             //是否停止烧录
-            flashing: {boolean:true,first:true},
+            flashing: { boolean: true, first: true },
         }
     },
     mounted() {
@@ -123,20 +123,16 @@ export default {
         });
         //是否正在烧录的全局事件监听
         EventBus.$on('flashing', (data) => {
-        // 更新 flashing 对象的具体属性
+            // 更新 flashing 对象的具体属性
             this.flashing.boolean = data.boolean;
             this.flashing.first = data.first;
-        // 打印更新后的 flashing 对象到控制台
-        console.log('flashing:', this.flashing);
-});
+            // 打印更新后的 flashing 对象到控制台
+            console.log('flashing:', this.flashing);
+        });
     },
     props: {
         code: {
             type: String, // 声明code为字符串类型的prop
-            required: true // 如果必须传递code，将required设置为true
-        },
-        ledArr: {
-            type: Array, // 声明code为字符串类型的prop
             required: true // 如果必须传递code，将required设置为true
         },
     },
@@ -145,10 +141,10 @@ export default {
             serial_request(this.$refs);
         },
         kermit_start() {
-            kermit_start(this.$refs, this.file,this.flashing);
+            kermit_start(this.$refs, this.file, this.flashing);
         },
         kermit_stop() {
-            kermit_stop(this.$refs,this.flashing);
+            kermit_stop(this.$refs, this.flashing);
         },
         //返回
         returnAction() {
@@ -167,52 +163,6 @@ export default {
                 offset: 50
             });
         },
-
-        //运行
-        // runAction() {
-        //     this.viewShow = this.viewShow !== 'run' ? 'run' : 'code';
-        //     this.$emit('viewShowUpdate', this.viewShow);
-        //     //确保this.ledShow();是在主组件ledArr数据修改后调用
-        //     this.$nextTick(() => {
-        //         this.ledShow();
-        //     });
-        // },
-
-        //灯亮灭的展示
-        // ledShow() {
-        //     //判断上一次定时器是否关闭，确保按钮点击过快的多重定时器问题
-        //     if (this.timerId) {
-        //         clearTimeout(this.timerId);
-        //     }
-        //     if (this.viewShow == 'run')
-        //         console.log('开始亮灭灯操作');
-        //     console.log(this.ledArr);
-        //     //提前保存this,确保executeAction函数内部this的报错
-        //     const that = this
-        //     //递归调用函数
-        //     const executeAction = (index) => {
-        //         if (this.viewShow !== 'run') return
-        //         if (index >= that.ledArr.length) return;
-        //         const led = that.ledArr[index];
-        //         const time = that.ledArr[index + 1];
-        //         if (led === 'open_led') {
-        //             that.imgShow = 'img1'
-        //             console.log('open_led时间:', time);
-        //         } else if (led === 'close_led') {
-        //             that.imgShow = 'img2'
-        //             console.log('close_led时间:', time);
-        //         }
-        //         if (time == -1) return
-        //         that.timerId = setTimeout(() => {
-        //             //每次加2读取数组open_led或者close_led
-        //             executeAction(index + 2);
-        //         }, time * 1000);
-        //     };
-        //     // 初始调用
-        //     executeAction(0);
-        // },
-
-        //提示
         tipAction() {
             this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'code';
             this.$emit('viewShowUpdate', this.viewShow);
@@ -231,8 +181,7 @@ export default {
 
         //云下载
         async dowmloadAction() {
-            if(this.loading == true)
-            {
+            if (this.loading == true) {
                 return;
             }
             if (this.viewShow == 'dowmload') {
@@ -610,5 +559,4 @@ export default {
 .dowmload Button:active {
     transform: translateY(1px);
 }
-
 </style>

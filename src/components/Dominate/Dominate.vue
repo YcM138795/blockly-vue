@@ -29,11 +29,6 @@ export default {
               {
                 kind: "block",
 
-                type: "create_function_button"
-              },
-              {
-                kind: "block",
-
                 type: "light_task"
               },
               {
@@ -76,7 +71,7 @@ export default {
 
 .dominateIcon {
   /* 在这里定义类别图标的样式 */
-  content: url("../../assets/SVG/函数.svg");
+  content: url("../../assets/SVG/操作函数.svg");
   height: 32px;
 }
 </style>

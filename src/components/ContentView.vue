@@ -36,7 +36,9 @@ import { EventBus } from '../utils/eventBus';
 import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import 'blockly/javascript';
-import './Operation/operation'
+import './Advanced/functionDefined/function'
+import { getFieldName } from '../utils/functionBlockUtils'
+import { useFunctionBlockStore } from '@/store/functionBlockStore';//引入自定义函数的store
 
 
 
@@ -46,11 +48,13 @@ export default {
     return {
       isVisible: false,//编辑对话框是否可见
       workspace: null,
-      selectedParams: [], // 存储选中的参数类型
+      selectedParams: ['myFunction'], // 存储选中的参数类型
       currentDeleteButton: null,//当前删除按钮的存储
       newBlock: null,//新块的存储
       newBlockPosition: { x: 50, y: 50 },//新块的位置
       block: 0,//已经添加的存储块
+      oddBlock: null,//存储奇数块
+      functionBlockStore: useFunctionBlockStore(),//自定义函数的store
     };
   },
   methods: {
@@ -65,18 +69,13 @@ export default {
 
     // 关闭函数编辑对话框
     closeEditor() {
-      // 关闭对话框之前，确保取消订阅
-      // if (this.workspace) {
-      //   this.workspace.removeChangeListener(this.handleChange);
-      // }
-
       // 清理工作区和状态
-      this.selectedParams = [];
+      this.oddBlock = null;
+      this.selectedParams = ['myFunction'];
       if (this.workspace) {
         this.workspace.dispose();
         this.workspace = null; // 确保 workspace 被清理
       }
-
       // 现在可以安全地隐藏对话框
       this.isVisible = false;
     }
@@ -102,6 +101,18 @@ export default {
 
       // 创建新的块并添加到工作区
       this.newBlock = this.workspace.newBlock('function_definition');
+      // 删除原有的输入项
+      if (this.newBlock.getInput('funName')) {
+        this.newBlock.removeInput('funName');
+      }
+      if (this.newBlock.getInput('Param')) {
+        this.newBlock.removeInput('Param');
+      }
+      if (this.newBlock.getInput('inner')) {
+        this.newBlock.removeInput('inner');  // 删除执行部分（语句输入区）
+      }
+
+      this.newBlock.contextMenu = false;
       this.newBlock.initSvg();
       this.newBlock.render();
 
@@ -109,6 +120,28 @@ export default {
       const x = this.newBlockPosition.x; // x坐标，可以根据需要设置
       const y = this.newBlockPosition.y; // y坐标，可以根据需要设置
       this.newBlock.moveBy(x, y);
+
+      //记录当前的this指向
+      let that = this;
+      this.workspace.configureContextMenu = function (options) {
+
+        options.forEach(option => {
+          if (option.text === '重做') {
+            // 启用重做选项
+            option.enabled = true;
+            // 重写重做的 callback
+            option.callback = function () {
+              console.log('重做操作被执行');
+              // 这里是你想要执行的自定义操作
+              that.selectedParams = ['myFunction'];
+              that.updateBlock();
+            };
+          } else {
+            // 其他选项可以禁用或保留原样
+            option.enabled = false;
+          }
+        });
+      };
 
       // 注册全局事件监听器
       this.workspace.addChangeListener((event) => {
@@ -122,73 +155,82 @@ export default {
         }
       });
 
-      this.newBlock.appendDummyInput('funName').appendField('函数').appendField(new Blockly.FieldTextInput('myFunction'), 'NAME');
-
+      //记录当前的this指向
+      this.newBlock.appendDummyInput('funName')
+        .appendField('函数')
+        .appendField(new Blockly.FieldTextInput(this.selectedParams[0], function (newValue) {
+          // 当函数名字被修改时，更新 selectedParams[0]
+          that.selectedParams[0] = newValue;
+          return newValue; // 返回新的值
+        }), 'NAME');
 
       // 创建一个横向排列的容器
-      const horizontalInput = this.newBlock.appendDummyInput('Param').appendField('参数');
+      const horizontalInput = this.newBlock.appendDummyInput('Param').appendField('参数:');
 
-      if (this.selectedParams.length !== 0) {
+      if (this.selectedParams.length !== 1) {
         // 根据 selectedParams 更新块的输入
         this.selectedParams.forEach((param, index) => {
-          let name = ''
-          let parts = param.split('--&&--');   // 使用 "--" 分隔字符串
+          if (index > 0) {
+            let name = ''
+            let parts = param.split('--&&--');   // 使用 "--" 分隔字符串
 
-          let valueBeforePrefix = parts[0]; // 获取 "--" 前面的部分
-          let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
-          if (valueBeforePrefix === '') {
-            name = valueAfterPrefix;
-          } else {
-            name = valueBeforePrefix;
-          }
-
-          let inputField;
-          let inputName;
-
-          // 为每种参数类型创建对应的输入字段
-          if (valueAfterPrefix === '文本') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'text--&--' + index;
-          } else if (valueAfterPrefix === '布尔值') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'boolean--&--' + index;
-          } else if (valueAfterPrefix === '整形') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'number_int--&--' + index;
-          } else if (valueAfterPrefix === '浮点数') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'number_double--&--' + index;2
-          } else if (valueAfterPrefix === '长整形') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'number_long--&--' + index;
-          } else if (valueAfterPrefix === '数字数组') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'array_int--&--' + index;
-          } else if (valueAfterPrefix === '字符数组') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'array_string--&--' + index;
-          } else if (valueAfterPrefix === '浮点数数组') {
-            inputField = new Blockly.FieldTextInput(`${name}`);
-            inputName = 'array_double--&--' + index;
-          }
-
-          // 在横向容器中添加字段
-          horizontalInput.appendField(inputField, inputName);
-
-          // 监听参数字段的点击事件
-          inputField.getSvgRoot().addEventListener('click', (event) => {
-            this.showDeleteIcon(event, inputField, index);
-          });
-
-          // 设置一个回调函数来监听输入字段的变化
-          inputField.onFinishEditing_ = (newValue) => {
-            // 确保 selectedParams 被正确初始化
-            if (this.selectedParams && index >= 0 && index < this.selectedParams.length) {
-              this.selectedParams[index] = newValue + '--&&--' + valueAfterPrefix;
+            let valueBeforePrefix = parts[0]; // 获取 "--" 前面的部分
+            let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
+            if (valueBeforePrefix === '') {
+              name = valueAfterPrefix;
             } else {
-              console.error('selectedParams is not defined or index is out of bounds');
+              name = valueBeforePrefix;
             }
-          };
+
+            let inputField;
+            let inputName;
+
+            // 为每种参数类型创建对应的输入字段
+            if (valueAfterPrefix === '文本') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'text--&--' + index;
+            } else if (valueAfterPrefix === '布尔值') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'boolean--&--' + index;
+            } else if (valueAfterPrefix === '整形') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'number_int--&--' + index;
+            } else if (valueAfterPrefix === '浮点数') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'number_double--&--' + index; 2
+            } else if (valueAfterPrefix === '长整形') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'number_long--&--' + index;
+            } else if (valueAfterPrefix === '数字数组') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'array_int--&--' + index;
+            } else if (valueAfterPrefix === '字符数组') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'array_string--&--' + index;
+            } else if (valueAfterPrefix === '浮点数数组') {
+              inputField = new Blockly.FieldTextInput(`${name}`);
+              inputName = 'array_double--&--' + index;
+            }
+
+            // 在横向容器中添加字段
+            horizontalInput.appendField(inputField, inputName);
+
+            // 监听参数字段的点击事件
+            inputField.getSvgRoot().addEventListener('click', (event) => {
+              this.showDeleteIcon(event, inputField, index);
+            });
+
+            // 设置一个回调函数来监听输入字段的变化
+            inputField.onFinishEditing_ = (newValue) => {
+              // 确保 selectedParams 被正确初始化
+              if (this.selectedParams && index >= 0 && index < this.selectedParams.length) {
+                this.selectedParams[index] = newValue + '--&&--' + valueAfterPrefix;
+              } else {
+                console.error('selectedParams is not defined or index is out of bounds');
+              }
+            };
+          }
+
 
         });
       }
@@ -244,7 +286,7 @@ export default {
       const hideDeleteButton = (event) => {
         // 检查点击位置是否在当前字段或垃圾桶上
         const clickedInsideField = this.selectedParams.some((param, idx) => {
-          const fieldName = this.getFieldName(param, idx);
+          const fieldName = getFieldName(param, idx);
 
           const fieldElement = this.newBlock.getField(fieldName)?.getSvgRoot();
           return fieldElement && fieldElement.contains(event.target);
@@ -262,7 +304,7 @@ export default {
         // 如果点击的位置在其他字段内，显示对应的垃圾桶
         if (clickedInsideField) {
           this.selectedParams.forEach((param, idx) => {
-            const fieldName = this.getFieldName(param, idx);
+            const fieldName = getFieldName(param, idx);
             const fieldElement = this.newBlock.getField(fieldName)?.getSvgRoot();
             if (fieldElement && fieldElement.contains(event.target)) {
               // 显示该字段对应的删除按钮
@@ -275,29 +317,25 @@ export default {
       document.addEventListener('click', hideDeleteButton);
     },
 
-    // 获取字段名称
-    getFieldName(param, index) {
-      let parts = param.split('--&&--');   // 使用 "--" 分隔字符串
-      let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
-
-      if (valueAfterPrefix === '文本') {
-        return 'text--&--' + index;
-      } else if (valueAfterPrefix === '布尔值') {
-        return 'boolean--&--' + index;
-      } else if (valueAfterPrefix === '整形') {
-        return 'number_int--&--' + index;
-      } else if (valueAfterPrefix === '浮点数') {
-        return 'number_double--&--' + index;
-      } else if (valueAfterPrefix === '长整形') {
-        return 'number_long--&--' + index;
-      } else if (valueAfterPrefix === '数字数组') {
-        return 'array_int--&--' + index;
-      } else if (valueAfterPrefix === '字符数组') {
-        return 'array_string--&--' + index;
-      } else if (valueAfterPrefix === '浮点数数组') {
-        return 'array_double--&--' + index;
+    // 获取字段类型
+    getParamType(param) {
+      if (param === 'text') {
+        return '文本';
+      } else if (param === 'boolean') {
+        return '布尔值';
+      } else if (param === 'number_int') {
+        return '整形';
+      } else if (param === 'number_double') {
+        return '浮点数';
+      } else if (param === 'number_long') {
+        return '长整形';
+      } else if (param === 'array_int') {
+        return '数字数组';
+      } else if (param === 'array_string') {
+        return '字符数组';
+      } else if (param === 'array_double') {
+        return '浮点数数组';
       }
-      return '';
     },
 
     // 删除指定索引的参数
@@ -335,30 +373,68 @@ export default {
       }
     },
 
+    // 保存函数
     saveFunction() {
+      let funName = this.selectedParams[0];
+      let boolean
+      if (this.oddBlock) {
+        if (funName != 'myFunction' && funName != this.oddBlock.getInput('funName').fieldRow[1].value_)
+          boolean = this.functionBlockStore.ifFunNameExist(funName, this.oddBlock.id);
+      } else {
+        boolean = this.functionBlockStore.ifFunNameExist(funName);
+      }
 
-      if (this.selectedParams.length === 0) {
+      if (boolean) {
         this.$message({
-          message: '参数个数不能为0',
-          type: 'warning'
+          message: '函数名已存在，请重新输入',
+          type: 'warning' 
         });
         return;
       }
-      console.log('保存函数');
-      EventBus.$emit('addMyFunction', this.selectedParams, this.block);
-      console.log(this.selectedParams);
 
+
+
+      // 触发自定义事件，添加函数块
+      EventBus.$emit('addMyFunction', this.selectedParams, this.block, this.oddBlock != null, this.oddBlock);
 
       // 使用 $nextTick 确保 DOM 更新完成后再销毁组件
       this.$nextTick(() => {
         this.closeEditor();
       });
-
     },
+
+    //编辑函数
+    edit_function(block) {
+      this.oddBlock = block;
+      console.log('编辑函数');
+      let value;
+      block.inputList.forEach((filed, index) => {
+        if (index == 0) {
+          value = filed.fieldRow[1].value_;
+          this.selectedParams[0] = value;
+        }
+        if (index == 1) {
+          filed.fieldRow.forEach((filed, index) => {
+            if (index > 0) {
+              value = filed.value_;
+              let type = filed.name;
+              let parts = type.split('--&--');
+              let valueBeforePrefix = parts[0]; // 获取 "--" 前面的部分
+              let parm = this.getParamType(valueBeforePrefix);
+              value = (value == parm) ? '' : value;
+              this.selectedParams.push(value + '--&&--' + parm);
+            }
+          })
+        }
+      });
+
+      this.showEditor();
+    }
   },
 
   created() {
     EventBus.$on('showFunctionEditor', this.showEditor);
+    EventBus.$on('edit_function', this.edit_function);
   },
 
 };
@@ -418,7 +494,7 @@ select {
 }
 
 .el-dialog__wrapper {
-  background-color: rgba(0, 0, 0, 0.5); /* 设置更深的黑色 */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 设置更深的黑色 */
 }
-
 </style>

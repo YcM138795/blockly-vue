@@ -156,8 +156,11 @@ import '@blockly/field-bitmap';
             "hat": "cap"              // 使用帽子块的外观，这样这个块看起来像程序的开始
           }
         }
-      )
-      }
+        ),
+          // 设置块不可删除
+          this.setDeletable(false);
+      },
+      // 设置块不可删除
     };
     javascriptGenerator.forBlock['int_main'] = function (block) {
       var statements_operate = javascriptGenerator.statementToCode(block, 'operate');
@@ -198,8 +201,8 @@ ${statements_operate}
           colours: { filled: '#4d8c8c', empty: '#fff' }
         },
       ],
-      "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-      "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+      "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+      "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
       "colour": 180
     },
   ]);

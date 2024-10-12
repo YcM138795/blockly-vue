@@ -168,14 +168,4 @@ import { javascriptGenerator } from 'blockly/javascript';
 
 }
 
-Blockly.Blocks['create_function_button'] = {
-    init: function () {
-        this.appendDummyInput()
-            .appendField("创建函数");
-        this.setColour(160);
-        this.setTooltip("点击创建函数");
-        this.setHelpUrl("");
-        this.setOutput(false);
-    },
-};
 
