@@ -35,7 +35,7 @@
                     <div class="button" @click="dowmloadAction">
                         <img src="../assets/img/download.png" alt="Download" style="padding-right: 5px; "> 云编译
                     </div>
-                    <div class="button" @click="saveAction">
+                    <div class="button" @click="changeDialogVisable">
                         <img src="../assets/img/save.png" alt="Save" style="padding-right: 5px; ">保存
                     </div>
                 </div>
@@ -65,23 +65,29 @@
             </div>
             </div>
         </div>
+
         <div class="second-floor">
             <div class="view">
             <div :style="{ display: viewShow == 'workbench' ? 'block' : 'none' }" class="workbench"> 
                 <div class="workbench-image">
                     任务点检测
                 </div>
-                <!-- <div class="history-files">
-                    <div class="history-file" v-for="(history_file, index) in history_files" :key="index" @click="selectFile(index)">
-                        <img :src="history_file.picture"/>
-                        <div>
-                            <div>
-                                {{ history_file.title }}
+                <div style="text-align:left;padding:10px 0px 0px 20px; display: flex;flex-direction: row;">
+                <img src="../assets/img/menu.png">
+                    <div style="font-size: 13px;">历史文件</div>
+                </div>
+                    <div class="history-files">
+                    <div v-if="history_files.length===0">暂无工程项目</div>
+                    <div class="history-file" v-for="(history_file, index) in history_files" :key="index" @click="selectFile(index)"  :class="{ 'selected-file': selectedIndex === index }">
+                        <img src="../assets/img/workbance.png"/>
+                        <div style="text-align: left;">
+                            <div style="font-size: 17px;margin: 10px 0px 5px 0px;">
+                                {{ history_file.projectName }}
                             </div>
-                        {{ history_file.detail }}
+                        最后修改日期：{{ history_file.updatedAt }}
                         </div>
                     </div>
-                </div> -->
+                </div>
             </div>
             <!-- <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
 
@@ -133,6 +139,17 @@
             </div>
             </div>
         </div>
+        <el-dialog title="新建项目" :visible.sync="dialogFormVisible">
+            <el-form :model="form" :rules="rules" ref="form" >
+                <el-form-item label="项目名称" :label-width="formLabelWidth" prop="projectName">
+                    <el-input v-model="form.projectName" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="changeDialogVisable">取 消</el-button>
+                <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 
 </template>
@@ -171,11 +188,21 @@ export default {
             selectedText: '积木模式', // 默认显示的文本  
             selectedIcon: require("@/assets/img/block.png"), // 默认选中项图标
             store:store,
-            selectedFile:"https://knowledge-emergency.oss-cn-hangzhou.aliyuncs.com/images/new1.jpg",
-            history_files:[{picture:"https://knowledge-emergency.oss-cn-hangzhou.aliyuncs.com/images/news2.jpg",title:"未命名工程",detail:"xxxxxxxxxxxxxxxxxxxxxxxxx",update_time:"2024/10/07 19:00"},
-            {picture:"https://knowledge-emergency.oss-cn-hangzhou.aliyuncs.com/images/new1.jpg",title:"未命名工程",detail:"xxxxxxxxxxxxxxxxxxxxxxxxx",update_time:"2024/10/07 19:00"}]
+            dialogFormVisible:false,
+            form:{
+                projectName:''
+            },
+            formLabelWidth:'120px',
+            rules:{
+                projectName:[
+                { required: true, message: '项目名称不能为空', trigger: 'blur' },
+                { validator: this.checkDuplicate, trigger: 'blur' }
+                ]
+            },
+            selectedIndex: null, // 存储被选中的文件索引
         }
     },
+   
     mounted() {
         this.progressBar = new ProgressBar.Line('#progressContainer', {
             strokeWidth: 8,
@@ -210,6 +237,14 @@ export default {
             type: String, // 声明code为字符串类型的prop
             required: true // 如果必须传递code，将required设置为true
         },
+        ledArr: {
+            type: Array, // 声明code为字符串类型的prop
+            required: true // 如果必须传递code，将required设置为true
+        },
+        history_files:{
+            type:Array,
+            require:true
+        }
     },
     methods: {
         serial_request() {
@@ -227,8 +262,11 @@ export default {
         },
 
         //保存
-        saveAction() {
-            this.$emit('save');
+        async saveAction() {
+            this.changeDialogVisable();
+            this.$emit('save', this.form.projectName);
+            this.form.projectName='';
+            // 生成成功通知
             const h = this.$createElement;
             this.$notify({
                 title: '',
@@ -383,6 +421,9 @@ export default {
         this.dropdownVisible = false;
       }
     },
+    changeDialogVisable(){
+        this.dialogFormVisible=!this.dialogFormVisible;
+    },
     async logout() {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '确定',
@@ -394,8 +435,27 @@ export default {
         })
       }).catch(() => { });
     },
+    checkDuplicate(rule, value, callback) {
+      const isDuplicate = this.history_files.some(project => project.projectName === value);
+      if (isDuplicate) {
+        callback(new Error('项目名称已存在'));
+      } else {
+        callback();
+      }
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.saveAction(); // Call your save method here
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
     selectFile(index){
-        this.selectedFile=this.history_files[index].picture;
+        this.selectedIndex = index;
+        this.$emit('blockCode',this.history_files[index].text);
     }
     },
 }
@@ -563,7 +623,7 @@ export default {
 
 /* 提示 */
 .view {
-    overflow: scroll;
+    overflow: hidden;
     position: absolute;
     right: 0px;
     height: calc(100vh - 60px);
@@ -756,15 +816,13 @@ export default {
     cursor: pointer;
 }
 .workbench {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  height: 100%; /* 设为父容器的高度 */
 }
 .workbench-image{
     font-size: 16px;
     width: 100%;
-    height: 45%;
+    height:200px;
+    overflow: hidden; /* 禁止滚动条 */
 }
 .workbench-image img {
     font-size: 16px;
@@ -773,21 +831,27 @@ export default {
   border: 2px solid #ccc;
   margin-bottom: 20px;
 }
-
+.history-files{
+    max-height: calc(100vh - 290px);
+    overflow-y: auto; /* 允许垂直滚动 */
+    padding: 0px 10px 10px 10px;
+}
 .history-file {
   display: flex;
-  flex-wrap: row;
   gap: 10px;
-}
-
-.history-file img {
-  width: 100px;
+  border: 1px solid #FF8D1A;
+  margin: 10px;
   height: 100px;
   cursor: pointer;
-  transition: transform 0.2s;
+}
+.selected-file {
+    border-color: #FF8D1A; /* 选中后变为高亮绿色 */
+    border-width: 3px;     /* 选中后加粗边框 */
+}
+.history-file img {
+  width: 80px;
+  height: 80px;
+  margin: 10px;
 }
 
-.history-file img:hover {
-  transform: scale(1.1);
-}
 </style>

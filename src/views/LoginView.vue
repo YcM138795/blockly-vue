@@ -71,7 +71,6 @@
     }
   },
     created() {
-    console.log(this.$store)  // 检查 store 是否存在
     this.getCode();
     this.getCookie();
   },
