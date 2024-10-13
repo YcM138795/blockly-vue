@@ -237,10 +237,6 @@ export default {
             type: String, // 声明code为字符串类型的prop
             required: true // 如果必须传递code，将required设置为true
         },
-        ledArr: {
-            type: Array, // 声明code为字符串类型的prop
-            required: true // 如果必须传递code，将required设置为true
-        },
         history_files:{
             type:Array,
             require:true
