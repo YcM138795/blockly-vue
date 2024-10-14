@@ -24,7 +24,7 @@ import '@blockly/field-bitmap';
             ],
             "inputsInline": true,
             "output": "String",
-            "colour": 180,
+            "colour": '#4FD284',
             "tooltip": "字符串",
             "helpUrl": ""
           })
@@ -59,7 +59,7 @@ import '@blockly/field-bitmap';
               }
             ],
             "output": "Number",
-            "colour": 180,
+            "colour": '#4FD284',
             "tooltip": "求长度",
           });
         }
@@ -107,7 +107,7 @@ import '@blockly/field-bitmap';
             ],
             "inputsInline": false,
             "output": null,
-            "colour": 180,
+            "colour": '#4FD284',
             "icon": 'my_icon',
             "tooltip": "括号",
             "helpUrl": ""
@@ -148,7 +148,7 @@ import '@blockly/field-bitmap';
               "check": ['']
             }
           ],
-          "colour": 180,
+          "colour": '#4FD284',
           "tooltip": "开始(唯一且不可删除)",
           "helpUrl": "",
           "deletable": false,
@@ -203,7 +203,7 @@ ${statements_operate}
       ],
       "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
       "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-      "colour": 180
+      "colour": '#4FD284'
     },
   ]);
   javascriptGenerator.forBlock['test_field_bitmap'] = function () {

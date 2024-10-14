@@ -85,7 +85,7 @@ export default {
 
 <style>
 .operation {
-  color: #5B67A5;
+  color: #FFBF00;
   font-size: 60px;
   
 }

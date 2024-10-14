@@ -76,7 +76,7 @@
   .math {
    
 
-    color: #5BA580;
+    color: #3BB0FF;
     font-size: 60px;
 }
 .mathIcon{

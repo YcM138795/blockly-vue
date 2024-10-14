@@ -38,6 +38,9 @@
                     <div class="button" @click="changeDialogVisable">
                         <img src="../assets/img/save.png" alt="Save" style="padding-right: 5px; ">保存
                     </div>
+                    <div class="button" @click="historyFilesVisable">
+                        <img src="../assets/img/menu.png" alt="historyFiles" style="padding-right: 5px; ">记录
+                    </div>
                 </div>
                 <div class="avatar">
                     <el-dropdown trigger="click">
@@ -70,16 +73,16 @@
             <div class="view">
             <div :style="{ display: viewShow == 'workbench' ? 'block' : 'none' }" class="workbench"> 
                 <!-- <div class="workbench-image">
-                    任务点检测
+                    <img src="../assets/img/historyFile_logo.png"/>
                 </div> -->
-                <div style="text-align:left;padding:10px 0px 0px 20px; display: flex;flex-direction: row;">
+                <div style="text-align:left;padding:10px 0px 5px 20px; display: flex;flex-direction: row;">
                 <img src="../assets/img/menu.png">
                     <div style="font-size: 13px;">历史文件</div>
                 </div>
                     <div class="history-files">
                     <div v-if="history_files.length===0">暂无工程项目</div>
                     <div class="history-file" v-for="(history_file, index) in history_files" :key="index" @click="selectFile(index)"  :class="{ 'selected-file': selectedIndex === index }">
-                        <img src="../assets/img/workbance.png"/>
+                        <img src="../assets/img/historyFile_logo.png"/>
                         <div style="text-align: left;">
                             <div style="font-size: 17px;margin: 10px 0px 5px 0px;">
                                 {{ history_file.projectName }}
@@ -289,15 +292,14 @@ export default {
 
         //云下载
         async dowmloadAction() {
-            if (this.loading == true) {
+            this.$confirm('是否需要编译?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then( async() => {
+                if (this.loading == true) {
                 return;
             }
-            if (this.viewShow == 'dowmload') {
-                this.viewShow = 'code';
-                this.$emit('viewShowUpdate', this.viewShow);
-                return;
-            }
-
             this.loading = true; // 开始显示加载动画
             this.$emit('loading',this.loading);
             this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'workbench';
@@ -352,12 +354,16 @@ export default {
                     offset: 50
                 });
             }
-           
             state = '';
-
             // 模拟下载过程，例如调用API
             this.loading = false; // 完成后隐藏加载动画
             this.$emit('loading',this.loading);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消编译'
+                });
+            });
         },
 
         //清除
@@ -452,6 +458,9 @@ export default {
     selectFile(index){
         this.selectedIndex = index;
         this.$emit('blockCode',this.history_files[index].text);
+    },
+    historyFilesVisable(){
+        this.viewShow= 'workbench';
     }
     },
 }

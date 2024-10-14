@@ -86,7 +86,7 @@ export default {
 
 <style>
 .logic {
-  color: #5B80A5;
+  color: #FF962E;
   font-size: 75px;
 }
 

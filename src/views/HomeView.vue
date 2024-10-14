@@ -201,29 +201,29 @@ export default {
       categoryStyles: {
         // 定义自定义类别样式
         dominate_category: {
-          colour: '#4e72b8', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
+          colour: '#B463FF', // 背景颜色（十六进制表示）
+          colourSecondary: '#B463FF', // 二次背景颜色
+          colourTertiary: '#B463FF', // 三次背景颜色
         },
         logic_category: {
-          colour: '#5B80A5', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
+          colour: '#FF962E', // 背景颜色（十六进制表示）
+          colourSecondary: '#FF962E', // 二次背景颜色
+          colourTertiary: '#FF962E', // 三次背景颜色
         },
         math_category: {
-          colour: '#5BA580', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
+          colour: '#3BB0FF', // 背景颜色（十六进制表示）
+          colourSecondary: '#3BB0FF', // 二次背景颜色
+          colourTertiary: '#3BB0FF', // 三次背景颜色
         },
         operation_category: {
-          colour: '#5B67A5', // 背景颜色（十六进制表示）
-          colourSecondary: '#5B67A5', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
+          colour: '#FFBF00', // 背景颜色（十六进制表示）
+          colourSecondary: '#FFBF00', // 二次背景颜色
+          colourTertiary: '#FFBF00', // 三次背景颜色
         },
         special_category: {
-          colour: '#5BA5A5', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
+          colour: '#4FD284', // 背景颜色（十六进制表示）
+          colourSecondary: '#4FD284', // 二次背景颜色
+          colourTertiary: '#4FD284', // 三次背景颜色
         },
         xfxCar_category: {
           colour: '#E6CEAC', // 背景颜色（十六进制表示）

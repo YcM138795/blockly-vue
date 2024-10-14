@@ -26,7 +26,7 @@ import '@blockly/block-plus-minus';
           }
         ],
         "output": "Boolean",
-        "colour": 210
+        "colour": '#FF962E'
       })
     }
   }
@@ -55,7 +55,7 @@ import '@blockly/block-plus-minus';
           }
         ],
         "output": "Boolean",
-        "colour": 210
+        "colour": '#FF962E'
       })
     }
   }
@@ -97,7 +97,7 @@ import '@blockly/block-plus-minus';
         ],
         "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-        "colour": 210,
+        "colour": '#FF962E',
         "inputsInline": true
       })
     }
@@ -141,7 +141,7 @@ import '@blockly/block-plus-minus';
         ],
         "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "循环",
         "helpUrl": ""
       })
@@ -217,7 +217,7 @@ import '@blockly/block-plus-minus';
           }
         ],
         "output": "Boolean",
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "做比较",
         "helpUrl": ""
       })
@@ -294,7 +294,7 @@ import '@blockly/block-plus-minus';
         ],
         "inputsInline": true,
         "output": "Boolean",
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "单判断",
         "helpUrl": ""
       })
@@ -348,7 +348,7 @@ import '@blockly/block-plus-minus';
         "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
         "inputsInline": true,
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "if单判断",
         "helpUrl": ""
       })
@@ -399,7 +399,7 @@ import '@blockly/block-plus-minus';
           }
         ],
         "output": "Boolean",
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "与判断",
         "helpUrl": ""
       })
@@ -450,7 +450,7 @@ import '@blockly/block-plus-minus';
           }
         ],
         "output": "Boolean",
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "或判断",
         "helpUrl": ""
       })
@@ -517,7 +517,7 @@ import '@blockly/block-plus-minus';
           }
         ],
         "output": "Boolean",
-        "colour": 210,
+        "colour": '#FF962E',
         "tooltip": "与或判断",
         "helpUrl": ""
       })

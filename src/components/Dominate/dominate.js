@@ -26,7 +26,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
-                    "colour": '#4e72b8'
+                    "colour": '#B463FF'
                 })
             }
         };
@@ -58,7 +58,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
-                    "colour": '#4e72b8'
+                    "colour": '#B463FF'
                 })
             }
         };
@@ -90,7 +90,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
-                    "colour": '#4e72b8'
+                    "colour": '#B463FF'
                 })
             }
         };
@@ -122,7 +122,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
-                    "colour": '#4e72b8'
+                    "colour": '#B463FF'
                 })
             }
         };
@@ -154,7 +154,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                             "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
                         }
                     ],
-                    "colour": '#4e72b8'
+                    "colour": '#B463FF'
                 })
             }
         };

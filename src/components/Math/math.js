@@ -28,7 +28,7 @@ import {dartGenerator} from 'blockly/dart';
               }
             ],
             "output": "Number",
-            "colour": 150,
+            "colour": '#3BB0FF',
             "tooltip": "整数输入-单向",
             "helpUrl": ""
           })
@@ -73,7 +73,7 @@ import {dartGenerator} from 'blockly/dart';
                 }
               ],
               "output": "Number",
-              "colour": 150,
+              "colour": '#3BB0FF',
             }
           )
         }
@@ -139,7 +139,7 @@ import {dartGenerator} from 'blockly/dart';
                 }
               ],
               "output": null,
-              "colour": 150,
+              "colour": '#3BB0FF',
               "tooltip": "单运算",
               "helpUrl": ""
             }
@@ -239,7 +239,7 @@ import {dartGenerator} from 'blockly/dart';
               // }
             ],
             "output": "Number",
-            "colour": 150,
+            "colour": '#3BB0FF',
             "tooltip": "运算",
             "helpUrl": ""
           })
@@ -320,7 +320,7 @@ import {dartGenerator} from 'blockly/dart';
             ],
             "inputsInline": true,
             "output": "Number",
-            "colour": 150,
+            "colour": '#3BB0FF',
             "tooltip": "余数",
             "helpUrl": ""
           })
@@ -392,7 +392,7 @@ import {dartGenerator} from 'blockly/dart';
               ],
               "inputsInline": true,
               "output": "Number",
-              "colour": 150,
+              "colour": '#3BB0FF',
               "tooltip": "",
               "helpUrl": ""
             }
@@ -461,7 +461,7 @@ import {dartGenerator} from 'blockly/dart';
             ],
             "inputsInline": true,
             "output": "Number",
-            "colour": 150,
+            "colour": '#3BB0FF',
             "tooltip": "数学方法",
             "helpUrl": ""
           });
@@ -608,7 +608,7 @@ import {dartGenerator} from 'blockly/dart';
             "inputsInline": true,
             "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
             "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-            "colour": 150,
+            "colour": '#3BB0FF',
             "tooltip": "定义一个随机数",
             "helpUrl": ""
           })

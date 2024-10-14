@@ -65,7 +65,7 @@ export default {
 
 <style>
 .dominate {
-  color: #4e72b8;
+  color: #B463FF;
   font-size: 75px;
 }
 

@@ -68,7 +68,7 @@
   
   <style>
 .special {
-  color: #5BA5A5;
+  color: #4FD284;
   font-size: 60px;
 
 }
