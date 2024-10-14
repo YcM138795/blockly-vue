@@ -69,9 +69,9 @@
         <div class="second-floor">
             <div class="view">
             <div :style="{ display: viewShow == 'workbench' ? 'block' : 'none' }" class="workbench"> 
-                <div class="workbench-image">
+                <!-- <div class="workbench-image">
                     任务点检测
-                </div>
+                </div> -->
                 <div style="text-align:left;padding:10px 0px 0px 20px; display: flex;flex-direction: row;">
                 <img src="../assets/img/menu.png">
                     <div style="font-size: 13px;">历史文件</div>
