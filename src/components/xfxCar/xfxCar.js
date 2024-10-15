@@ -31,7 +31,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -70,7 +70,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -116,7 +116,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -161,7 +161,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":[''],
                         "nextStatement": [''],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -189,7 +189,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -237,7 +237,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -289,7 +289,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -332,7 +332,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":[''],
                         "nextStatement": [''],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -361,7 +361,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -409,7 +409,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 },
             }
@@ -449,7 +449,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": [''],
                         "nextStatement": [''],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -477,7 +477,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -553,7 +553,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -654,7 +654,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -705,7 +705,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement":[''],
                         "nextStatement": [''],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -734,7 +734,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -789,7 +789,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -853,7 +853,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
         //                 ],
         //                 "previousStatement": null,
         //                 "nextStatement": null,
-        //                 "colour": '#E6CEAC'
+        //                 "colour": '#ff7272'
         //             })
         //         }
         //     }
@@ -910,7 +910,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
         //                 ],
         //                 "previousStatement": null,
         //                 "nextStatement": null,
-        //                 "colour": '#E6CEAC'
+        //                 "colour": '#ff7272'
         //             })
         //         }
         //     }
@@ -963,7 +963,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -1013,7 +1013,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                     ],
                     "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                     "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                    "colour": '#E6CEAC'
+                    "colour": '#ff7272'
                 }
             ]);
             javascriptGenerator.forBlock['Motors_left_right'] = function (block) {
@@ -1092,7 +1092,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -1126,7 +1126,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     }
                     )
                 }
@@ -1166,7 +1166,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": [''],
                         "nextStatement": [''],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -1195,7 +1195,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                         ],
                         "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
                         "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -1224,7 +1224,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                             }
                         ],
                         "output": "Number",
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }
@@ -1251,7 +1251,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                             }
                         ],
                         "output": null,
-                        "colour": '#E6CEAC'
+                        "colour": '#ff7272'
                     })
                 }
             }

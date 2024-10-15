@@ -226,14 +226,14 @@ export default {
           colourTertiary: '#4FD284', // 三次背景颜色
         },
         xfxCar_category: {
-          colour: '#E6CEAC', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF8C61', // 二次背景颜色
-          colourTertiary: '#C73F1E', // 三次背景颜色
+          colour: '#ff7272', // 背景颜色（十六进制表示）
+          colourSecondary: '##ff7272', // 二次背景颜色
+          colourTertiary: '#ff7272', // 三次背景颜色
         },
         advanced_category: {
-            colour: '	#778899', // 背景颜色（十六进制表示）
-            colourSecondary: '#FF8C61', // 二次背景颜色
-            colourTertiary: '#C73F1E', // 三次背景颜色
+            colour: '#ff7272', // 背景颜色（十六进制表示）
+            colourSecondary: '#ff7272', // 二次背景颜色
+            colourTertiary: '#ff7272', // 三次背景颜色
           },
         function_category: {
             colour: '#a5d599', // 背景颜色（十六进制表示）

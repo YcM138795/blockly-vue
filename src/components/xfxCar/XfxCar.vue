@@ -162,12 +162,12 @@ export default {
 
 <style>
 .xfxCar {
-  color: #e0ba84;
+  color: #ff7272;
   font-size: 60px;
 }
 
 .xfxCarIcon {
-  content: url('../../assets/SVG/小车.svg');
+  content: url('../../assets/img/小飞象.png');
   height: 32px;
 }
 </style>
