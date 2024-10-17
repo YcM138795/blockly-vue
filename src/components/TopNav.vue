@@ -25,9 +25,6 @@
                 </div>
             </div>
             <div class="right">
-                    <!-- <div class="button" @click="tipAction">
-                <img src="../assets/img/prompt.png" alt="Prompt" style="padding-right: 5px;">提示
-                    </div> -->
                 <div style="display:flex; flex-direction: row;flex: 1;">
                     <div class="button" @click="clearAction">
                         <img src="../assets/img/reset.png" alt="Reset" style="padding-right: 5px; ">清空
@@ -57,14 +54,6 @@
                     </el-dropdown-menu>
                     </el-dropdown>
                 </div>
-                <!-- <button class="runButton" title="运行" @click="runAction"></button> -->
-                <!-- <button class="recompileButton" @click="recompileAction" title="点击重新编译"></button>
-                <button class="dowmloadButton" title="云下载" @click="dowmloadAction" v-loading="loading"
-                    element-loading-text="代码编译中" element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(240,255,255, 0.7)"></button>
-                <button class="saveButton" title="保存" @click="saveAction"></button>
-                <button class="tipButton" title="提示" @click="tipAction"></button>
-                <button class="clearButton" title="清空所有块" @click="clearAction"></button> -->
             </div>
             </div>
         </div>
@@ -91,41 +80,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- <div class="tip" :style="{ display: viewShow == 'tip' ? 'block' : 'none' }">
-
-                <h3>提示</h3>
-                <span>(再次点击提示收起)</span>
-                <br>
-                <span>通过拖动积木并拼装可以实现在线的代码生成,<br>得到符合你逻辑的代码:</span>
-                <br><br><br>
-                <span>例1:通过三重判断验证3与2的关系,输出较大的数<br></span>
-                <button @click="exampleOne">例1</button>
-                <img class="exampleOne" :style="{ display: oneShow ? 'block' : 'none' }"
-                    src="../assets/img/exampleOne.png" alt="">
-                <br><br><br><br><br><br>
-
-                <span>例2:筛选出长度大于4的字符串,并将其输出同等的次数<br></span>
-                <button @click="exampleTwo">例2</button>
-                <img class="exampleTwo" :style="{ display: twoShow ? 'block' : 'none' }"
-                    src="../assets/img/exampleTwo.png" alt="">
-                <br><br><br><br><br><br>
-
-                <span>例3:指定循环次数与灯亮灭时间,循环灯亮与灯灭并最终灭灯<br></span>
-                <button @click="exampleThree">例3</button>
-                <img class="exampleThree" :style="{ display: threeShow ? 'block' : 'none' }"
-                    src="../assets/img/exampleThree.png" alt="">
-                <br><br><br><br><br><br>
-
-                <span>例4:烧录--循环操作小车灯的亮灭,每次亮灭持续两秒<br></span>
-                <button @click="exampleFour">例4</button>
-                <img class="exampleFour" :style="{ display: fourShow ? 'block' : 'none' }"
-                    src="../assets/img/exampleFour.png" alt="">
-                <br><br><br><br><br><br>
-            </div> -->
-            <div id="animation" :style="{ display: viewShow == 'run' ? 'block' : 'none' }">
-                <img src="../assets/SVG/灯亮.svg" :style="{ display: imgShow == 'img1' ? 'block' : 'none' }">
-                <img src="../assets/SVG/灯灭.svg" :style="{ display: imgShow == 'img2' ? 'block' : 'none' }">
             </div>
             <div class="dowmload" :style="{ display: viewShow == 'dowmload' ? 'block' : 'none' }">
                 <br><br>
@@ -166,21 +120,14 @@ import ProgressBar from 'progressbar.js';
 import store from '@/store';
 export default {
     name: 'TopNav',
-
     data() {
 
         return {
             //定时器id记录
             timerId: null,
-            //亮灭灯图片展示的数据
-            imgShow: 'img1',
             //右侧视图的展示选择
             viewShow: 'workbench',
             dowmloadShow: '',
-            oneShow: false,
-            twoShow: false,
-            threeShow: false,
-            fourShow: false,
             loading: false, // 控制加载状态
             //二进制文件数据
             file: null,
@@ -255,10 +202,6 @@ export default {
         kermit_stop() {
             kermit_stop(this.$refs, this.flashing);
         },
-        //返回
-        returnAction() {
-            alert('返回')
-        },
 
         //保存
         async saveAction() {
@@ -274,20 +217,6 @@ export default {
                 type: 'success',
                 offset: 50
             });
-        },
-        tipAction() {
-            this.viewShow = this.viewShow !== 'tip' ? 'tip' : 'workbench';
-
-        },
-
-        //重新编译
-        recompileAction() {
-            if (this.viewShow != 'dowmload') {
-                this.dowmloadAction();
-            } else {
-                this.dowmloadAction();
-                this.dowmloadAction();
-            }
         },
 
         //云下载
@@ -389,19 +318,6 @@ export default {
             });
         },
 
-        //提示案例
-        exampleOne() {
-            this.oneShow = !this.oneShow
-        },
-        exampleTwo() {
-            this.twoShow = !this.twoShow
-        },
-        exampleThree() {
-            this.threeShow = !this.threeShow
-        },
-        exampleFour() {
-            this.fourShow = !this.fourShow
-        },
         toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
     },
@@ -457,7 +373,7 @@ export default {
     },
     selectFile(index){
         this.selectedIndex = index;
-        this.$emit('blockCode',this.history_files[index].text);
+        this.$emit('blockCode',this.history_files[index]);
     },
     historyFilesVisable(){
         this.viewShow= 'workbench';
@@ -467,21 +383,11 @@ export default {
 </script>
 
 <style>
-/* 在组件样式中引入字体样式 */
-@font-face {
-    font-family: "阿里妈妈刀隶体 Regular";
-    font-weight: 400;
-    src: url("//at.alicdn.com/wf/webfont/GqAELnvwJVzD/m2qiLjm75WAB.woff2") format("woff2"),
-        url("//at.alicdn.com/wf/webfont/GqAELnvwJVzD/ZegfFY54CT2D.woff") format("woff");
-    font-display: swap;
-}
-
 .TopNav {
     display: flex;
     justify-content: space-between;
     /* 让子元素平均分布在父容器内 */
     background-color: azure;
-    /* background-color: rgb(185, 240, 222); */
 }
 
 .left {
@@ -509,11 +415,6 @@ export default {
     flex-direction: row;
 }
 
-/* .center img {
-    height: 60px;
-    width: auto;
-} */
-
 .center span {
     display: flex;
     align-items: center;
@@ -523,109 +424,6 @@ export default {
 }
 
 
-
-/* 左侧返回按钮样式 */
-.left .returnButton {
-    background-color: rgb(237, 246, 246);
-    height: 60px;
-    width: 60px;
-    border: none;
-    border-radius: 10px;
-    background-image: url('../assets/SVG/返回列表.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    /* 图片大小适应按钮 */
-    background-position: center;
-    /* 图片居中 */
-    cursor: pointer;
-    transition: background-color 0.5s;
-    /* 添加过渡效果 */
-}
-
-.left .returnButton:hover {
-    background-color: #4cb5ea;
-    /* 鼠标悬停时改变背景色 */
-}
-
-.left .returnButton:active {
-    transform: translateY(2px);
-    /* 按下按钮时向下移动 1px */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    /* 添加阴影效果 */
-}
-
-
-/* 右侧按钮样式 */
-.right Button {
-    height: 60px;
-    width: 65px;
-    border: none;
-    border-radius: 50%;
-    background-repeat: no-repeat;
-    background-size: contain;
-    /* 图片大小适应按钮 */
-    background-position: center;
-    /* 图片居中 */
-    cursor: pointer;
-    transition: background-color 0.5s;
-}
-
-/* 右侧运行按钮 */
-/* 
-.right .runButton {
-    /* margin: 0; */
-/*   background-image: url('../assets/SVG/运行.svg')*/
-/* } */
-
-/* 右侧重新编译按钮 */
-.right .recompileButton {
-    margin-right: 50px;
-    background-image: url('../assets/SVG/重新编译.svg');
-}
-
-/* 右侧保存按钮 */
-.right .saveButton {
-    margin-right: 50px;
-    background-image: url('../assets/SVG/save.svg');
-}
-
-
-/* 右侧提示按钮 */
-.right .tipButton {
-    margin-right: 50px;
-    background-color: rgb(185, 240, 222);
-    background-image: url('../assets/SVG/提示.svg');
-}
-
-/* 右侧提示按钮 */
-.right .dowmloadButton {
-    margin-right: 50px;
-    background-color: rgb(185, 240, 222);
-    background-image: url('../assets/SVG/云下载.svg');
-}
-
-/* 右侧清空按钮 */
-.right .clearButton {
-    margin-right: 5px;
-    background-image: url('../assets/SVG/delete.svg');
-}
-
-/* 右侧按钮悬浮样式 */
-.right Button:hover {
-    /* 微微放大 */
-    transform: scale(1.05);
-    /* 背景颜色稍稍变深 */
-    filter: brightness(110%);
-}
-
-/* 右侧按钮激活样式 */
-.right Button:active {
-    transform: translateY(1px);
-    /* 按下按钮时向下移动 1px */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    /* 添加阴影效果 */
-}
-
 /* 提示 */
 .view {
     overflow: hidden;
@@ -633,79 +431,10 @@ export default {
     right: 0px;
     height: calc(100vh - 60px);
     width: 30%;
+    height: 100vh;
     border-radius: 30px;
     background-color: rgb(233, 241, 252);
     /* transition:all 1s; */
-}
-
-.tip Button {
-    position: absolute;
-    left: 27%;
-    background-color: rgb(233, 241, 252);
-    height: 60px;
-    width: 100px;
-    border: none;
-    border-radius: 50%;
-    background-image: url('../assets/SVG/按钮.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    /* 图片大小适应按钮 */
-    background-position: center;
-    /* 图片居中 */
-    cursor: pointer;
-    transition: background-color 0.5s;
-}
-
-.tip Button:hover {
-    transform: scale(1.05);
-    /* filter: brightness(110%); */
-}
-
-.tip Button:active {
-    transform: translateY(1px);
-}
-
-
-.tip img {
-    margin-top: 60px;
-}
-
-.exampleOne {
-    margin-left: 100px;
-    height: 316px;
-    width: 264.72px;
-
-}
-
-.exampleTwo {
-    /* margin-left: 50px; */
-    margin-left: 85px;
-    width: 347px;
-    height: 266px;
-}
-
-.exampleThree {
-    /* margin-left: 50px; */
-    margin-left: 80px;
-    width: 347px;
-    height: 266px;
-}
-
-.exampleFour {
-    /* margin-left: 50px; */
-    margin-left: 80px;
-    width: 331px;
-    height: 418px;
-}
-
-#animation {
-    margin-top: 50px;
-    margin-left: 50px;
-}
-
-#animation img {
-    width: 160px;
-    height: auto
 }
 
 .dowmload button {
@@ -727,7 +456,6 @@ export default {
 
 .dowmload Button:hover {
     transform: scale(1.05);
-    /* filter: brightness(110%); */
 }
 
 .dowmload Button:active {
@@ -838,6 +566,7 @@ export default {
 }
 .history-files{
     max-height: calc(100vh - 290px);
+    /* max-height: 90vh ; */
     overflow-y: auto; /* 允许垂直滚动 */
     padding: 0px 10px 10px 10px;
 }
@@ -858,5 +587,4 @@ export default {
   height: 80px;
   margin: 10px;
 }
-
 </style>

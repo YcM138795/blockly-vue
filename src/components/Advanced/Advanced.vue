@@ -1,55 +1,53 @@
 <template>
-    <div ref="advanced">
-        <FunctionBlock @functionBox="functionBox"></FunctionBlock>
-    </div>
+    <div></div>
 </template>
 
-
 <script>
-import FunctionBlock from '../Advanced/functionDefined/Function.vue';
-
-
 export default {
     name: "AdvancedBlock",
     data() {
         return {
-            functionToolbox: null,
-            mergedToolbox: null,
+            toolbox: {
+                contents: [
+                    {
+                        "kind": "category",
+                        "name": "高级",
+                        "custom": "DYNAMIC_FUNCTION_CATEGORY", // 动态类别
+                        "categoryStyle": "advanced_category",
+                        "cssConfig": {
+                            "container": "advanced",
+                            "icon": "advancedIcon"
+                        },
+                        "contents": [
+                            {
+                                kind: "label",
+                                text: "函数"
+                            },
+                            {
+                                kind: "button",
+                                text: "点击创建新函数",
+                                callbackKey: "createFunctionCallback"  // 关键：添加callbackKey
+                            },
+                            {
+                                kind: "label",
+                                text: "常量"
+                            },
+                            {
+                                kind: "label",
+                                text: "文本"
+                            },
+                            {
+                                kind: "label",
+                                text: "常量"
+                            },
+                        ]
+                    },
+                ],
+            },
         };
     },
-    //引用的组件
-    components: {
-        FunctionBlock,
-    },
-    methods: {
-        addToolbox() {
-            // 合并子组件的工具箱与主组件的工具箱
-            this.mergedToolbox = {
-                contents: [{
-                    kind: "category",
-                    name: "高级",
-                    "categoryStyle": "advanced_category",
-                    "cssConfig": {
-                        "container": "advanced",
-                    },
-                    contents: [
-                        // 子组件的工具箱内容
-                        ...this.functionToolbox.contents,
-                    ]
-                }]
-
-            };
-        },
-        // 接收子组件传递的工具箱并存储
-        functionBox(functionBox) {
-            this.functionToolbox = functionBox
-        },
-    },
     mounted() {
-        this.addToolbox();
-        this.$emit('advancedBlock', this.mergedToolbox);
-
-
+        this.$emit('advancedBlock', this.toolbox);
     },
 
 };
@@ -58,10 +56,19 @@ export default {
 
 <style>
 .advanced {
-    /* color: rgb(228, 228, 228); */
-    font-size: 60px;
-    border-radius: 13px;
-    /* width: 5vw !important; */
-    /* width: 1px; */
+  color: #B4D599;
+  font-size: 75px;
+}
+
+.advancedIcon {
+  content: url('../../assets/SVG/编辑函数.svg');
+  height: 32px;
+}
+
+/* 为 Blockly 按钮定义样式 */
+.blocklyFlyoutButton {
+  fill: #a5d599;
+  cursor: pointer;
+  /* 鼠标悬停时变为手型 */
 }
 </style>

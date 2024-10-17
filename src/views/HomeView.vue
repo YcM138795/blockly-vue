@@ -1,28 +1,28 @@
 <template>
-  <div class="loading-container" ref="container" style="width: 100%; height: 100%;" v-loading="loading" element-loading-text="代码编译中"
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)">
+  <div class="loading-container" ref="container" style="width: 100%; height: 100%;" v-loading="loading"
+    element-loading-text="代码编译中" element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <ContentView></ContentView>
     <div style="width: 100%; height: 60px">
-      <TopNav :history_files="history_files" @save="saveWorkspace" @clear="clearScreen" 
-      @viewShowUpdate="codeShowChange" :code="code" @change="receiveChange" 
-      @loading="receiveLoading" @blockCode="receiveBlock">
+      <TopNav :history_files="history_files" @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange"
+        :code="code" @change="receiveChange" @loading="receiveLoading" @blockCode="receiveBlock">
       </TopNav>
     </div>
     <div id="blockly">
       <!-- 工作区 -->
       <!-- <div class="code-wrap"> -->
       <div class="code-wrap">
-        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" v-show="selected==1"></div>
+        <div id="blocklyDiv" ref="blocklyDiv" style="height:calc(100vh - 60px);width:70%" v-show="selected == 1"></div>
         <LogicBlock @logicBox="logicBox"></LogicBlock>
         <DominateBlock @dominateBox="dominateBox"></DominateBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <OperationBlock @operationBox="operationBox"></OperationBlock>
         <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
-        <div id="code" ref="codeView" style="width: 70%;height:calc(100vh - 60px);" v-show="selected==2"></div>
-        <div style="width: 30%;"></div>
         <AdvancedBlock @advancedBlock="advancedBlock"></AdvancedBlock>
+        <div id="code" ref="codeView" style="width: 70%;height:calc(100vh - 60px);" v-show="selected == 2"></div>
+        <div style="width: 30%;"></div>
+
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@ import { registerFunctionBlockContextMenuOptions } from '../utils/blocklyContext
 import { generateCallFunctionCode } from '../utils/functionBlockGenerate';//引入生成函数的代码
 //引入其他组件
 import TopNav from '../components/TopNav.vue'
-import {formatDate} from '@/utils/formatDate'
+import { formatDate } from '@/utils/formatDate'
 import ContentView from '@/components/ContentView.vue';
 import DominateBlock from '../components/Dominate/Dominate.vue';
 import LogicBlock from '../components/Logic/Logic.vue';
@@ -48,16 +48,10 @@ import AdvancedBlock from '@/components/Advanced/Advanced.vue';
 import '@blockly/block-plus-minus';
 import * as zh_hans from 'blockly/msg/zh-hans';
 import { EventBus } from '../utils/eventBus';
-import { createCodeBlock,find} from '@/api/codeblock';
+import { createCodeBlock, find } from '@/api/codeblock';
 import store from '@/store';
 //设置语言
 Blockly.setLocale(zh_hans);
-// import {
-//   ContinuousToolbox,
-//   ContinuousFlyout,
-//   ContinuousMetrics,
-// } from '@blockly/continuous-toolbox';
-
 import { useFunctionBlockStore } from '@/store/functionBlockStore';//引入自定义函数的store
 import { getFieldName } from '../utils/functionBlockUtils';//引入生成函数的代码
 import * as monaco from 'monaco-editor';
@@ -73,7 +67,7 @@ export default {
   data() {
     return {
       codeShow: 'code',
-       //工具箱
+      //工具箱
       operationToolbox: null,
       logicToolbox: null,
       dominateToolbox: null,
@@ -87,7 +81,7 @@ export default {
       toolboxPosition: "end", //工具箱在底部
       functionBlockStore: useFunctionBlockStore(),//自定义函数的store
       //特殊块
-      entryBlockTypes : ['int_main', 'light_task', 'ultrasonic_task', 'motors_task','servo_task', 'fmq_task','function_definition'],
+      entryBlockTypes: ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'function_definition'],
       toolbox: {
         contents: [
           {
@@ -97,11 +91,11 @@ export default {
       },
       workspace: null,
       codeViewIns: null,
-      selected:1,
-      loading:false,
-      projectName:'',
-      store:store,
-      history_files:[]
+      selected: 1,
+      loading: false,
+      projectName: '',
+      store: store,
+      history_files: []
     };
   },
   //引用的组件
@@ -117,62 +111,61 @@ export default {
     AdvancedBlock
   },
   created() {
-    find({"userId":this.store.getters.phoneNumber}).then(res => {
+    find({ "userId": this.store.getters.phoneNumber }).then(res => {
       this.history_files = res.map(file => ({
         ...file,
         updatedAt: formatDate(file.updatedAt)
-        })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); 
-        }
+      })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    }
     );
-    EventBus.$on('addMyFunction', this.handleAddMyFunction);
-    EventBus.$on('saveEditBlock', this.saveEditBlock);
+    console.log(this.history_files);
   },
   mounted() {
     this.initBlocklyWorkspace();
   },
-  watch:{
-    selected(newVal){
-      if (newVal===2) {
-        
+  watch: {
+    selected(newVal) {
+      if (newVal === 2) {
+
         this.$nextTick(() => {
           if (!this.codeViewIns) {
             monaco.editor.defineTheme('my-custom-theme', {
-            base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
-            inherit: true, // 继承基础主题的设置
-            rules: [],
-            colors: {
+              base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
+              inherit: true, // 继承基础主题的设置
+              rules: [],
+              colors: {
                 // 定义编辑器的颜色
-              'editor.foreground': '#000000', // 文字颜色
-              'editor.background': '#E9F1FC', // 背景颜色
+                'editor.foreground': '#000000', // 文字颜色
+                'editor.background': '#E9F1FC', // 背景颜色
                 // 还可以定义其他颜色
-            }
-          });
-          this.codeViewIns.setValue(this.code);
-          this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
-            theme: "my-custom-theme", // 主题
-            value: "c", // 默认显示的值
-            language: "c",
-            folding: true, // 是否折叠
-            foldingHighlight: true, // 折叠等高线
-            foldingStrategy: "indentation", // 折叠方式  auto | indentation
-            showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
-            disableLayerHinting: true, // 等宽优化
-            emptySelectionClipboard: false, // 空选择剪切板
-            selectionClipboard: false, // 选择剪切板
-            automaticLayout: false, // 自动布局
-            codeLens: true, // 代码镜头
-            scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
-            colorDecorators: true, // 颜色装饰器
-            accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
-            lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
-            lineNumbersMinChars: 1, // 行号最小字符   number
-            enableSplitViewResizing: false,
-            readOnly: true, //是否只读  取值 true | false
-            minimap: {
-              enabled: true // 启用迷你地图
-            }
-        });
-        } else {
+              }
+            });
+            this.codeViewIns.setValue(this.code);
+            this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
+              theme: "my-custom-theme", // 主题
+              value: "c", // 默认显示的值
+              language: "c",
+              folding: true, // 是否折叠
+              foldingHighlight: true, // 折叠等高线
+              foldingStrategy: "indentation", // 折叠方式  auto | indentation
+              showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
+              disableLayerHinting: true, // 等宽优化
+              emptySelectionClipboard: false, // 空选择剪切板
+              selectionClipboard: false, // 选择剪切板
+              automaticLayout: false, // 自动布局
+              codeLens: true, // 代码镜头
+              scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
+              colorDecorators: true, // 颜色装饰器
+              accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
+              lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
+              lineNumbersMinChars: 1, // 行号最小字符   number
+              enableSplitViewResizing: false,
+              readOnly: true, //是否只读  取值 true | false
+              minimap: {
+                enabled: true // 启用迷你地图
+              }
+            });
+          } else {
             this.codeViewIns.setValue(this.code);
             // 如果编辑器已经初始化，则重新布局
             this.codeViewIns.layout();
@@ -184,176 +177,180 @@ export default {
   methods: {
     //检测代码块有无重复添加
     hasCustomBlock(type) {
-    const allBlocks = this.workspace.getAllBlocks();
-    return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
-  },
+      const allBlocks = this.workspace.getAllBlocks();
+      return allBlocks.some(block => block.type == type); // 指定你要检测的块类型
+    },
     initBlocklyWorkspace() {
-    // 如果已有工作区，销毁当前工作区
-    if (this.workspace&& this.workspaceChangeListener) {
-     
-      this.workspace.removeChangeListener(this.workspaceChangeListener);
-      this.workspaceChangeListener = null;  // 清空监听器
-      this.workspace.dispose();  // 销毁当前工作区
-      this.workspace = null;     // 清空引用
-    }
-    const customTheme = Blockly.Theme.defineTheme('customTheme', {
-      base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
-      categoryStyles: {
-        // 定义自定义类别样式
-        dominate_category: {
-          colour: '#B463FF', // 背景颜色（十六进制表示）
-          colourSecondary: '#B463FF', // 二次背景颜色
-          colourTertiary: '#B463FF', // 三次背景颜色
-        },
-        logic_category: {
-          colour: '#FF962E', // 背景颜色（十六进制表示）
-          colourSecondary: '#FF962E', // 二次背景颜色
-          colourTertiary: '#FF962E', // 三次背景颜色
-        },
-        math_category: {
-          colour: '#3BB0FF', // 背景颜色（十六进制表示）
-          colourSecondary: '#3BB0FF', // 二次背景颜色
-          colourTertiary: '#3BB0FF', // 三次背景颜色
-        },
-        operation_category: {
-          colour: '#FFBF00', // 背景颜色（十六进制表示）
-          colourSecondary: '#FFBF00', // 二次背景颜色
-          colourTertiary: '#FFBF00', // 三次背景颜色
-        },
-        special_category: {
-          colour: '#4FD284', // 背景颜色（十六进制表示）
-          colourSecondary: '#4FD284', // 二次背景颜色
-          colourTertiary: '#4FD284', // 三次背景颜色
-        },
-        xfxCar_category: {
-          colour: '#ff7272', // 背景颜色（十六进制表示）
-          colourSecondary: '##ff7272', // 二次背景颜色
-          colourTertiary: '#ff7272', // 三次背景颜色
-        },
-        advanced_category: {
+      // 监听全局事件
+      EventBus.$on('addMyFunction', this.handleAddMyFunction);
+      EventBus.$on('saveEditBlock', this.saveEditBlock);
+
+      // 如果已有工作区，销毁当前工作区
+      if (this.workspace && this.workspaceChangeListener) {
+
+        this.workspace.removeChangeListener(this.workspaceChangeListener);
+        this.workspaceChangeListener = null;  // 清空监听器
+        this.workspace.dispose();  // 销毁当前工作区
+        this.workspace = null;     // 清空引用
+      }
+
+      const customTheme = Blockly.Theme.defineTheme('customTheme', {
+        base: Blockly.Themes.Classic, // 基础主题（也可以是其他主题，如 'Dark' 或自定义主题）
+        categoryStyles: {
+          // 定义自定义类别样式
+          dominate_category: {
+            colour: '#B463FF', // 背景颜色（十六进制表示）
+            colourSecondary: '#B463FF', // 二次背景颜色
+            colourTertiary: '#B463FF', // 三次背景颜色
+          },
+          logic_category: {
+            colour: '#FF962E', // 背景颜色（十六进制表示）
+            colourSecondary: '#FF962E', // 二次背景颜色
+            colourTertiary: '#FF962E', // 三次背景颜色
+          },
+          math_category: {
+            colour: '#3BB0FF', // 背景颜色（十六进制表示）
+            colourSecondary: '#3BB0FF', // 二次背景颜色
+            colourTertiary: '#3BB0FF', // 三次背景颜色
+          },
+          operation_category: {
+            colour: '#FFBF00', // 背景颜色（十六进制表示）
+            colourSecondary: '#FFBF00', // 二次背景颜色
+            colourTertiary: '#FFBF00', // 三次背景颜色
+          },
+          special_category: {
+            colour: '#4FD284', // 背景颜色（十六进制表示）
+            colourSecondary: '#4FD284', // 二次背景颜色
+            colourTertiary: '#4FD284', // 三次背景颜色
+          },
+          xfxCar_category: {
             colour: '#ff7272', // 背景颜色（十六进制表示）
-            colourSecondary: '#ff7272', // 二次背景颜色
+            colourSecondary: '##ff7272', // 二次背景颜色
             colourTertiary: '#ff7272', // 三次背景颜色
           },
-        function_category: {
+          advanced_category: {
             colour: '#a5d599', // 背景颜色（十六进制表示）
             colourSecondary: '#a5d599', // 二次背景颜色
             colourTertiary: '#a5d599', // 三次背景颜色
           },
-      },
-      'componentStyles': {
-        // 工作区背景颜色设置
-        'workspaceBackgroundColour': 'rgb(236,240,241)'
-      }
-    });
-    //注册创建函数的右键菜单
-    registerFunctionBlockContextMenuOptions()
-    //加载工作区
-    this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
-      toolbox: this.toolbox,
-      zoom:
-      {
-        controls: false,
-        wheel: true,
-        startScale: 1.0,
-        maxScale: 3,
-        minScale: 0.3,
-        scaleSpeed: 1.2
-      },
-      //  trashcan: true,
-      grid:
-      {
-        spacing: 40,
-        length: 5,
-        colour: '#e1e1e1',
-        snap: true
-      },
-      trashcan: false,
-      theme: customTheme,
-      //渲染方式
-      renderer: 'Zelos',
-      media: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/blockly-media/' // 更新媒体文件路径
-    });
-    //注册创建函数的button按钮
-    this.workspace.registerButtonCallback('createFunctionCallback', () => {
+        },
+        'componentStyles': {
+          // 工作区背景颜色设置
+          'workspaceBackgroundColour': 'rgb(236,240,241)'
+        }
+      });
+
+      //注册创建函数的右键菜单
+      registerFunctionBlockContextMenuOptions()
+      //加载工作区
+
+      this.workspace = Blockly.inject(this.$refs.blocklyDiv, {
+        toolbox: this.toolbox,
+        zoom:
+        {
+          controls: false,
+          wheel: true,
+          startScale: 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2
+        },
+        //  trashcan: true,
+        grid:
+        {
+          spacing: 40,
+          length: 5,
+          colour: '#e1e1e1',
+          snap: true
+        },
+        trashcan: false,
+        theme: customTheme,
+        //渲染方式
+        renderer: 'Zelos',
+        media: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/blockly-media/' // 更新媒体文件路径
+      });
+
+      //注册创建函数的button按钮
+      this.workspace.registerButtonCallback('createFunctionCallback', () => {
         EventBus.$emit('showFunctionEditor');
         // 关闭选中工具箱中的函数类别
         Blockly.getMainWorkspace().toolbox_.setSelectedItem(null);
       });
-    this.addInt_Main();
-    // 监听工作区变化事件
-    this.workspace.addChangeListener(this.workspaceChangeListener);
-    this.workspace.addChangeListener(() => {
 
-      javascriptGenerator.init(this.workspace);
-      let functionBlocks = [];
-      this.workspace.getAllBlocks().forEach(block => {
-        if (block.type === 'function_definition') {
-          functionBlocks.push(block);
-        }
-      });
-      let JSCode = '';
-      // 先生成所有函数定义的代码
-      if (functionBlocks.length > 0) {
-        functionBlocks.forEach(block => {
-          JSCode += javascriptGenerator.blockToCode(block);
+      // 添加int_main块加到工作区
+      this.addInt_Main();
+
+      // 监听工作区变化事件
+      this.workspace.addChangeListener(this.workspaceChangeListener);
+      this.workspace.addChangeListener(() => {
+        javascriptGenerator.init(this.workspace);
+        let functionBlocks = [];
+        this.workspace.getAllBlocks().forEach(block => {
+          if (block.type === 'function_definition') {
+            functionBlocks.push(block);
+          }
         });
-      }
+        let JSCode = '';
+        // 先生成所有函数定义的代码
+        if (functionBlocks.length > 0) {
+          functionBlocks.forEach(block => {
+            JSCode += javascriptGenerator.blockToCode(block);
+          });
+        }
 
-      const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
-      // 再生成其他积木的代码
-      remainingEntryBlocks.forEach(block => {
-        if (block.type !== 'function_definition') {
+        const remainingEntryBlocks = this.workspace.getAllBlocks().filter(block => this.entryBlockTypes.includes(block.type));
+        // 再生成其他积木的代码
+        remainingEntryBlocks.forEach(block => {
+          if (block.type !== 'function_definition') {
             JSCode += javascriptGenerator.blockToCode(block);
           }
+        });
+        // javascriptGenerator.finish(this.workspace);
+        this.code = JSCode;
+        this.codeViewIns.setValue(this.code);
       });
-      // javascriptGenerator.finish(this.workspace);
-      this.code = JSCode;
-      this.codeViewIns.setValue(this.code);
-    });
 
+      // monaco.editor编译器自定义主题
+      monaco.editor.defineTheme('my-custom-theme', {
+        base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
+        inherit: true, // 继承基础主题的设置
+        rules: [],
+        colors: {
+          // 定义编辑器的颜色
+          'editor.foreground': '#000000', // 文字颜色
+          'editor.background': '#E9F1FC', // 背景颜色
+          // 还可以定义其他颜色
+        }
+      });
 
-    //console.log('test');
-    // monaco.editor编译器自定义主题
-    monaco.editor.defineTheme('my-custom-theme', {
-      base: 'vs', // 基础主题，可以是 'vs' | 'vs-dark' | 'hc-black'
-      inherit: true, // 继承基础主题的设置
-      rules: [],
-      colors: {
-        // 定义编辑器的颜色
-        'editor.foreground': '#000000', // 文字颜色
-        'editor.background': '#E9F1FC', // 背景颜色
-        // 还可以定义其他颜色
-      }
-    });
+      // monaco.editor编译器
+      this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
+        theme: "my-custom-theme", // 主题
+        value: "c", // 默认显示的值
+        language: "c",
+        folding: true, // 是否折叠
+        foldingHighlight: true, // 折叠等高线
+        foldingStrategy: "indentation", // 折叠方式  auto | indentation
+        showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
+        disableLayerHinting: true, // 等宽优化
+        emptySelectionClipboard: false, // 空选择剪切板
+        selectionClipboard: false, // 选择剪切板
+        automaticLayout: false, // 自动布局
+        codeLens: true, // 代码镜头
+        scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
+        colorDecorators: true, // 颜色装饰器
+        accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
+        lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
+        lineNumbersMinChars: 1, // 行号最小字符   number
+        enableSplitViewResizing: false,
+        readOnly: true, //是否只读  取值 true | false
+        minimap: {
+          enabled: true // 启用迷你地图
+        }
+      });
 
-    // monaco.editor编译器
-    this.codeViewIns = monaco.editor.create(this.$refs.codeView, {
-      theme: "my-custom-theme", // 主题
-      value: "c", // 默认显示的值
-      language: "c",
-      folding: true, // 是否折叠
-      foldingHighlight: true, // 折叠等高线
-      foldingStrategy: "indentation", // 折叠方式  auto | indentation
-      showFoldingControls: "always", // 是否一直显示折叠 always | mouseover
-      disableLayerHinting: true, // 等宽优化
-      emptySelectionClipboard: false, // 空选择剪切板
-      selectionClipboard: false, // 选择剪切板
-      automaticLayout: false, // 自动布局
-      codeLens: true, // 代码镜头
-      scrollBeyondLastLine: false, // 滚动完最后一行后再滚动一屏幕
-      colorDecorators: true, // 颜色装饰器
-      accessibilitySupport: "off", // 辅助功能支持  "auto" | "off" | "on"
-      lineNumbers: "on", // 行号 取值： "on" | "off" | "relative" | "interval" | function
-      lineNumbersMinChars: 1, // 行号最小字符   number
-      enableSplitViewResizing: false,
-      readOnly: true, //是否只读  取值 true | false
-      minimap: {
-        enabled: true // 启用迷你地图
-      }
-    });
- //注册函数类别的工作箱回调
- this.workspace.registerToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY', () => {
+      //注册函数类别的工作箱回调
+      this.workspace.registerToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY', () => {
         console.log('函数类别的工具箱回调');
 
         // 如果没有函数，返回创建新函数的按钮
@@ -374,11 +371,13 @@ export default {
           ...dynamicBlocks
         ]; // 返回动态生成的块列表;
       });
-    // Toolbox添加
-    this.addToolbox();
-    // 恢复工作区
-    this.restoreWorkspace();
-  },
+
+      // Toolbox添加
+      this.addToolbox();
+
+      // 恢复工作区
+      this.restoreWorkspace();
+    },
     addInt_Main() {
       // 添加int_main块加到工作区
       const entryBlock = this.workspace.newBlock('int_main');
@@ -389,57 +388,57 @@ export default {
       entryBlock.moveBy(50, 50);
     },
     workspaceChangeListener() {
-     
+
       var allBlocks = this.workspace.getAllBlocks();
-      allBlocks.forEach((block)=>{
-        if(block.type==='XTask_light_task'){
-        if (!this.hasCustomBlock('light_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('light_task'); 
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(250, 50);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_fmq_task'){
-        if (!this.hasCustomBlock('fmq_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('fmq_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(450, 50);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_servo_task'){
-        if (!this.hasCustomBlock('servo_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('servo_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(250, 250);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_motors_task'){
-        if (!this.hasCustomBlock('motors_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('motors_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(450, 250);  // 可根据需要修改坐标
-      } 
-      }else if(block.type==='XTask_ultrasonic_task'){
-        if (!this.hasCustomBlock('ultrasonic_task')) {
-        // 仅当工作区没有指定块时，才添加块，防止重复添加
-          const customBlock = this.workspace.newBlock('ultrasonic_task');
-          customBlock.initSvg();
-          customBlock.render();
-          // 设置指定块的位置，例如添加在已有块的旁边
-          customBlock.moveBy(250, 450);  // 可根据需要修改坐标
-      } 
-      }
+      allBlocks.forEach((block) => {
+        if (block.type === 'XTask_light_task') {
+          if (!this.hasCustomBlock('light_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('light_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 50);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_fmq_task') {
+          if (!this.hasCustomBlock('fmq_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('fmq_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_servo_task') {
+          if (!this.hasCustomBlock('servo_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('servo_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 250);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_motors_task') {
+          if (!this.hasCustomBlock('motors_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('motors_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(450, 250);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_ultrasonic_task') {
+          if (!this.hasCustomBlock('ultrasonic_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('ultrasonic_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 450);  // 可根据需要修改坐标
+          }
+        }
       })
-      
+
       allBlocks = this.workspace.getAllBlocks();
       if (allBlocks.length === 0) {
         this.addInt_Main()
@@ -449,13 +448,13 @@ export default {
       // 保证每种类型只有一个入口块
       this.entryBlockTypes.forEach(type => {
         if (type !== 'function_definition') {
-        const entryBlocks = allBlocks.filter(block => block.type === type);
-        if (entryBlocks.length > 1) {
-          for (let i = 1; i < entryBlocks.length; i++) {
-            entryBlocks[i].dispose();
+          const entryBlocks = allBlocks.filter(block => block.type === type);
+          if (entryBlocks.length > 1) {
+            for (let i = 1; i < entryBlocks.length; i++) {
+              entryBlocks[i].dispose();
+            }
           }
         }
-      }
       });
 
       // 获取所有入口块
@@ -475,22 +474,22 @@ export default {
           block.setEnabled(true);
         }
       });
-      
+
     },
 
     getAllConnectedBlocks(block, visited = new Set()) {
-    const connectedBlocks = [];
-    if (block.getChildren) {
+      const connectedBlocks = [];
+      if (block.getChildren) {
         block.getChildren().forEach(childBlock => {
-            if (!visited.has(childBlock)) {
-                visited.add(childBlock);
-                connectedBlocks.push(childBlock);
-                connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
-            }
+          if (!visited.has(childBlock)) {
+            visited.add(childBlock);
+            connectedBlocks.push(childBlock);
+            connectedBlocks.push(...this.getAllConnectedBlocks(childBlock, visited));
+          }
         });
-    }
-    return connectedBlocks;
-},
+      }
+      return connectedBlocks;
+    },
 
 
     //添加合并工作箱
@@ -518,10 +517,10 @@ export default {
 
     // 保存工作区
     saveWorkspace(projectName) {
-      this.projectName=projectName;
+      this.projectName = projectName;
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
-      this.createProject(this.store.getters.phoneNumber,JSON.stringify(state),this.projectName);
+      this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.functionBlockStore.functionBlock);
       console.log(state);
       // 读取自定义函数的数据
       const functionBlockData = this.functionBlockStore.functionBlock;
@@ -531,11 +530,11 @@ export default {
         blocksState: state,//工作区的块
         functionBlocks: functionBlockData//自定义函数的数据
       };
-
       localStorage.setItem('workspaceData', JSON.stringify(workspaceData));
     },
- // 恢复工作区
- restoreWorkspace() {
+
+    // 恢复工作区
+    restoreWorkspace() {
       try {
         // 尝试从本地存储中读取数据
         const savedData = localStorage.getItem('workspaceData');
@@ -555,7 +554,6 @@ export default {
             if (blockData.type === 'function_definition') {
               functionBlockArray.push(blockData);
               newBlock = this.workspace.newBlock(blockData.type);
-
               // 设置位置
               newBlock.moveBy(blockData.x, blockData.y);
             }
@@ -618,32 +616,63 @@ export default {
     advancedBlock(advancedBlock) {
       this.advancedToolbox = advancedBlock
     },
+
     receiveChange(change) {
       this.selected = change;
     },
-    receiveLoading(loading){
-      this.loading=loading;
+    receiveLoading(loading) {
+      this.loading = loading;
     },
-    createProject(userId,text,projectName){
-      const data={"userId":userId,"text":text,"projectName":projectName}
-      createCodeBlock(data).then(() => {
-        find({"userId":this.store.getters.phoneNumber}).then(res => {
-            this.history_files = res.map(file => ({
-                ...file,
-                updatedAt: formatDate(file.updatedAt)
-            })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); 
+    createProject(userId, text, projectName, functionBlock) {
+      const str = functionBlock.map(subArray => subArray.join(', ')).join(' |&&| ');
+      const data = { "userId": userId, "text": text, "projectName": projectName, "founctionBlock": str };
+
+      const res = createCodeBlock(data).then(() => {
+        find({ "userId": this.store.getters.phoneNumber }).then(res => {
+          this.history_files = res.map(file => ({
+            ...file,
+            updatedAt: formatDate(file.updatedAt)
+          })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
         }
-      );
-        }
-      );
-    },
-    receiveBlock(block){
-      const savedData = block;
-      if (savedData) {
-        const state = JSON.parse(savedData);
-        // 尝试加载数据到工作区
-        Blockly.serialization.workspaces.load(state, this.workspace);
+        );
       }
+      );
+      console.log(res);
+
+    },
+    receiveBlock(block) {
+      if (block) {
+        const state = JSON.parse(block.text);
+        this.functionBlockStore.functionBlock = block.founctionBlock.split(' |&&| ').map(subStr => subStr.split(', '));
+
+        let newBlock;
+        let functionBlockArray = [];//存储函数块
+
+        state.blocks.blocks.forEach(blockData => {
+          // 检查块的类型是否为 function_definition
+          if (blockData.type === 'function_definition') {
+            functionBlockArray.push(blockData);
+            newBlock = this.workspace.newBlock(blockData.type);
+            // 设置位置
+            newBlock.moveBy(blockData.x, blockData.y);
+          }
+        });
+
+        this.$nextTick(() => {
+          this.initCallFuncion()
+          // 尝试加载数据到工作区 
+          try {
+            Blockly.serialization.workspaces.load(state, this.workspace);
+            this.refreshFunctionBlock(functionBlockArray);
+          } catch (error) {
+            console.error('加载工作区时出错:', error);
+            location.reload();  // 刷新页面
+          }
+        });
+      }
+
+
+
     },
     // 保存编辑的函数块
     saveEditBlock(stateWithPosition) {
@@ -737,8 +766,6 @@ export default {
 
           // 检查是否删除了指定的克隆块
           if (deletedBlockIds.includes(clonedBlock.id)) {
-            console.log('删除调用块', clonedBlock);
-
             // 在这里处理块删除的逻辑
             this.functionBlockStore.functionBlock = this.functionBlockStore.functionBlock.filter(
               params => params[0] !== clonedBlock.id
@@ -1003,6 +1030,7 @@ html {
   /* Safari 和 Chrome 禁止用户调整文本大小 */
   zoom: 1;
   /* 禁止用户缩放 */
+  overflow: hidden !important;
 }
 
 
@@ -1020,9 +1048,10 @@ body {
   flex-direction: row;
 }
 
-.loading-container .el-loading-spinner{
+.loading-container .el-loading-spinner {
   font-size: 40px;
 }
+
 /* 左侧toolbox */
 .blocklyToolboxDiv {
   /* padding-top: 170px; */
@@ -1076,5 +1105,4 @@ body {
   border-radius: 30px;
   flex: 1;
 }
-
 </style>

@@ -48,23 +48,5 @@ export default {
 </script>
 
 <style>
-.function {
-  color: #B4D599;
-  font-size: 60px;
-  /* border-radius: 13px; */
-  /* width: 5vw !important; */
-  /* width: 1px; */
-}
 
-.functionIcon {
-  content: url('../../../assets/SVG/编辑函数.svg');
-  height: 32px;
-}
-
-/* 为 Blockly 按钮定义样式 */
-.blocklyFlyoutButton {
-  fill: #a5d599;
-  cursor: pointer;
-  /* 鼠标悬停时变为手型 */
-}
 </style>
