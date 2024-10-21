@@ -1231,7 +1231,7 @@ body {
   /* padding-top: 170px; */
   padding-top: 7%;
   background-color: rgb(218, 227, 234);
-
+  max-height: calc(-50px + 90vh);
   background-size: 180px auto;
   background-repeat: no-repeat;
   background-position: 10px 600px;
