@@ -17,7 +17,6 @@
         <DominateBlock @dominateBox="dominateBox"></DominateBlock>
         <MathBlock @mathBox="mathBox"></MathBlock>
         <OperationBlock @operationBox="operationBox"></OperationBlock>
-        <SpecialBlock @specialBox="specialBox"></SpecialBlock>
         <XfxCarBlock @xfxCarBlock="xfxCarBlock"></XfxCarBlock>
         <AdvancedBlock @advancedBlock="advancedBlock"></AdvancedBlock>
         <div id="code" ref="codeView" style="width: 70%;height:calc(100vh - 60px);" v-show="selected == 2"></div>
@@ -41,7 +40,6 @@ import DominateBlock from '../components/Dominate/Dominate.vue';
 import LogicBlock from '../components/Logic/Logic.vue';
 import MathBlock from "../components/Math/Math.vue";
 import OperationBlock from '../components/Operation/Operation.vue'
-import SpecialBlock from '../components/Special/Special.vue'
 import XfxCarBlock from '../components/xfxCar/XfxCar.vue'
 import AdvancedBlock from '@/components/Advanced/Advanced.vue';
 //引入controls_if的插件包
@@ -52,7 +50,7 @@ import { createCodeBlock, find } from '@/api/codeblock';
 import store from '@/store';
 //设置语言
 Blockly.setLocale(zh_hans);
-import { useFunctionBlockStore } from '@/store/functionBlockStore';//引入自定义函数的store
+import { useAdvancedBlockStore } from '@/store/advancedBlockStore';//引入自定义函数的store
 import { getFieldName } from '../utils/functionBlockUtils';//引入生成函数的代码
 import * as monaco from 'monaco-editor';
 
@@ -61,7 +59,7 @@ export default {
   name: "CarGame",
   provide() {
     return {
-      workspace: this.workspace, // 提供 workspace 给所有子组件
+      Homeworkspace: this.workspace, // 提供 workspace 给所有子组件
     };
   },
   data() {
@@ -71,7 +69,6 @@ export default {
       operationToolbox: null,
       logicToolbox: null,
       dominateToolbox: null,
-      specialToolbox: null,
       xfxCarToolbox: null,
       advancedToolbox: null,
       //合并后的工具箱
@@ -79,7 +76,7 @@ export default {
       code: '',//代码
       horizontalLayout: true, //工具箱水平
       toolboxPosition: "end", //工具箱在底部
-      functionBlockStore: useFunctionBlockStore(),//自定义函数的store
+      advancedBlockStore: useAdvancedBlockStore(),//自定义函数的store
       //特殊块
       entryBlockTypes: ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'function_definition'],
       toolbox: {
@@ -106,7 +103,6 @@ export default {
     OperationBlock,
     TopNav,
     ContentView,
-    SpecialBlock,
     XfxCarBlock,
     AdvancedBlock
   },
@@ -184,6 +180,7 @@ export default {
       // 监听全局事件
       EventBus.$on('addMyFunction', this.handleAddMyFunction);
       EventBus.$on('saveEditBlock', this.saveEditBlock);
+      EventBus.$on('refreshConstant', this.refreshConstant);
 
       // 如果已有工作区，销毁当前工作区
       if (this.workspace && this.workspaceChangeListener) {
@@ -218,20 +215,15 @@ export default {
             colourSecondary: '#FFBF00', // 二次背景颜色
             colourTertiary: '#FFBF00', // 三次背景颜色
           },
-          special_category: {
-            colour: '#4FD284', // 背景颜色（十六进制表示）
-            colourSecondary: '#4FD284', // 二次背景颜色
-            colourTertiary: '#4FD284', // 三次背景颜色
-          },
           xfxCar_category: {
             colour: '#ff7272', // 背景颜色（十六进制表示）
             colourSecondary: '##ff7272', // 二次背景颜色
             colourTertiary: '#ff7272', // 三次背景颜色
           },
           advanced_category: {
-            colour: '#a5d599', // 背景颜色（十六进制表示）
-            colourSecondary: '#a5d599', // 二次背景颜色
-            colourTertiary: '#a5d599', // 三次背景颜色
+            colour: '#4FD284', // 背景颜色（十六进制表示）
+            colourSecondary: '#4FD284', // 二次背景颜色
+            colourTertiary: '#4FD284', // 三次背景颜色
           },
         },
         'componentStyles': {
@@ -271,8 +263,12 @@ export default {
       });
 
       //注册创建函数的button按钮
-      this.workspace.registerButtonCallback('createFunctionCallback', () => {
-        EventBus.$emit('showFunctionEditor');
+      this.workspace.registerButtonCallback('createAdvancedToolbox', (e) => {
+        if (e.text == '点击创建新函数') {
+          EventBus.$emit('showFunctionEditor');
+        } else if (e.text == '点击创建新常量') {
+          EventBus.$emit('showConstantEditor');
+        }
         // 关闭选中工具箱中的函数类别
         Blockly.getMainWorkspace().toolbox_.setSelectedItem(null);
       });
@@ -352,24 +348,33 @@ export default {
       //注册函数类别的工作箱回调
       this.workspace.registerToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY', () => {
         console.log('函数类别的工具箱回调');
-
-        // 如果没有函数，返回创建新函数的按钮
-        if (this.functionBlockStore.functionBlock.length === 0) {
-          return [
-            { kind: "label", text: "函数" },
-            { kind: "button", text: "点击创建新函数", callbackKey: "createFunctionCallback" }
-          ];
-        }
-
-        let dynamicBlocks = this.initCallFuncion();
-
+        let callFuncionBlocks = this.initCallFuncion();
+        let constantBlocks = this.initConstant();
+        let arrayBlocks = this.initArray();
 
         return [
-          { kind: "label", text: "函数" },
-          { kind: "button", text: "点击创建新函数", callbackKey: "createFunctionCallback" },
-          { kind: "label", text: "我的函数" },
-          ...dynamicBlocks
-        ]; // 返回动态生成的块列表;
+          ...callFuncionBlocks,
+          { kind: "label", text: "" },
+
+          ...constantBlocks,
+          { kind: "label", text: "" },
+
+          ...arrayBlocks,
+          { kind: "label", text: "" },
+
+          { kind: "label", text: "文本" },
+          { kind: "block", type: "string" },
+          { kind: "block", type: "string_length" },
+          { kind: "label", text: "" },
+
+          { kind: "label", text: "括号" },
+          { kind: "block", type: "bracket" },
+          { kind: "label", text: "" },
+
+          { kind: "label", text: "显示" },
+          { kind: "block", type: "test_field_bitmap" },
+
+        ];
       });
 
       // Toolbox添加
@@ -502,7 +507,6 @@ export default {
           // ...this.toolbox.contents,
           // 子组件的工具箱内容
           ...this.dominateToolbox.contents,
-          ...this.specialToolbox.contents,
           ...this.logicToolbox.contents,
           ...this.mathToolbox.contents,
           ...this.operationToolbox.contents,
@@ -520,15 +524,17 @@ export default {
       this.projectName = projectName;
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
-      this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.functionBlockStore.functionBlock);
+      this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock);
       console.log(state);
       // 读取自定义函数的数据
-      const functionBlockData = this.functionBlockStore.functionBlock;
+      const functionBlockData = this.advancedBlockStore.functionBlock;
+      const constantBlock = this.advancedBlockStore.constantBlock;
 
       // 将工作区状态和自定义函数数据一起保存到 localStorage
       const workspaceData = {
         blocksState: state,//工作区的块
-        functionBlocks: functionBlockData//自定义函数的数据
+        functionBlocks: functionBlockData,//自定义函数的数据
+        constantBlock: constantBlock
       };
       localStorage.setItem('workspaceData', JSON.stringify(workspaceData));
     },
@@ -541,10 +547,10 @@ export default {
         if (savedData) {
           const Data = JSON.parse(savedData);//解析数据
           const state = Data.blocksState;//获取工作区的块
-          const functionBlockData = Data.functionBlocks;
-          this.functionBlockStore.functionBlock = functionBlockData;//将自定义函数的数据存储到store中
+          this.advancedBlockStore.functionBlock = Data.functionBlocks;//将自定义函数的数据存储到store中
+          this.advancedBlockStore.constantBlock = Data.constantBlock;//将自定义函数的数据存储到store中
           console.log('恢复工作区数据:', state);
-          console.log('恢复自定义函数数据:', this.functionBlockStore.functionBlock);
+          console.log('恢复自定义函数数据:', this.advancedBlockStore.functionBlock);
 
           let newBlock;
           let functionBlockArray = [];//存储函数块
@@ -560,6 +566,7 @@ export default {
           });
           this.$nextTick(() => {
             this.initCallFuncion()
+            this.initConstant()
             // 尝试加载数据到工作区 
             try {
               Blockly.serialization.workspaces.load(state, this.workspace);
@@ -594,10 +601,6 @@ export default {
 
     },
 
-    // 接收子组件传递的工具箱并存储
-    specialBox(specialBox) {
-      this.specialToolbox = specialBox
-    },
     dominateBox(dominateBox) {
       this.dominateToolbox = dominateBox
     },
@@ -640,10 +643,11 @@ export default {
       console.log(res);
 
     },
+
     receiveBlock(block) {
       if (block) {
         const state = JSON.parse(block.text);
-        this.functionBlockStore.functionBlock = block.founctionBlock.split(' |&&| ').map(subStr => subStr.split(', '));
+        this.advancedBlockStore.functionBlock = block.founctionBlock.split(' |&&| ').map(subStr => subStr.split(', '));
 
         let newBlock;
         let functionBlockArray = [];//存储函数块
@@ -660,23 +664,22 @@ export default {
 
         this.$nextTick(() => {
           this.initCallFuncion()
+          this.initConstant()
           // 尝试加载数据到工作区 
           try {
             Blockly.serialization.workspaces.load(state, this.workspace);
             this.refreshFunctionBlock(functionBlockArray);
           } catch (error) {
             console.error('加载工作区时出错:', error);
-            location.reload();  // 刷新页面
+            // location.reload();  // 刷新页面
           }
         });
       }
-
-
-
     },
+
     // 保存编辑的函数块
     saveEditBlock(stateWithPosition) {
-      this.functionBlockStore.editFunctionBlock = stateWithPosition; // 将块状态保存到 store
+      this.advancedBlockStore.editFunctionBlock = stateWithPosition; // 将块状态保存到 store
     },
 
     //添加自定义函数
@@ -702,7 +705,7 @@ export default {
 
       funName = selectedParams[nameIndex]; // 获取函数名
       if (funName == 'myFunction') {
-        funName = funName + (this.functionBlockStore.functionBlock.length + 1);
+        funName = funName + (this.advancedBlockStore.functionBlock.length + 1);
         selectedParams[0] = funName;
       }
 
@@ -747,13 +750,14 @@ export default {
 
       selectedParams.unshift(clonedBlock.id);
       //向函数块的store中添加函数块
-      this.functionBlockStore.functionBlock.push(selectedParams);
+      this.advancedBlockStore.functionBlock.push(selectedParams);
 
       // 添加删除函数块的监听
       this.addRemoveCallFunctionBlocks(clonedBlock);
 
+      // 声明调用函数，防止在点击工作区前菜单调用函数报错
       this.initCallFuncion();
-
+      this.initConstant();
       // 更新工具箱，刷新函数类别
       this.workspace.updateToolbox(this.mergedToolbox);
     },
@@ -767,7 +771,7 @@ export default {
           // 检查是否删除了指定的克隆块
           if (deletedBlockIds.includes(clonedBlock.id)) {
             // 在这里处理块删除的逻辑
-            this.functionBlockStore.functionBlock = this.functionBlockStore.functionBlock.filter(
+            this.advancedBlockStore.functionBlock = this.advancedBlockStore.functionBlock.filter(
               params => params[0] !== clonedBlock.id
             );
             // 从工作区中删除块
@@ -831,7 +835,7 @@ export default {
       console.log('恢复编辑的函数块');
       console.log('编辑前的块', oddBlock);
 
-      const Block = JSON.parse(this.functionBlockStore.editFunctionBlock.blockState);//解析数据
+      const Block = JSON.parse(this.advancedBlockStore.editFunctionBlock.blockState);//解析数据
       const newBlock = Blockly.serialization.blocks.append(Block, this.workspace);
 
       let inputField;
@@ -842,7 +846,7 @@ export default {
 
       name = selectedParams[0]; // 获取函数名
       if (name == 'myFunction') {
-        let oddIndex = this.functionBlockStore.functionBlock.findIndex((item) => {
+        let oddIndex = this.advancedBlockStore.functionBlock.findIndex((item) => {
 
           return item[0] == oddBlock.id; // 条件满足时返回 true
         });
@@ -914,10 +918,10 @@ export default {
       oddBlock.dispose(true);
 
       this.addRemoveCallFunctionBlocks(newBlock);
-      this.functionBlockStore.functionBlock.push(selectedParams);
+      this.advancedBlockStore.functionBlock.push(selectedParams);
 
 
-      newBlock.moveBy(this.functionBlockStore.editFunctionBlock.position.x, this.functionBlockStore.editFunctionBlock.position.y); // 移动块到正确位置
+      newBlock.moveBy(this.advancedBlockStore.editFunctionBlock.position.x, this.advancedBlockStore.editFunctionBlock.position.y); // 移动块到正确位置
       newBlock.initSvg(); // 初始化块的SVG
       newBlock.render();  // 渲染块
 
@@ -925,94 +929,264 @@ export default {
 
     // 初始化调用函数块
     initCallFuncion() {
-      let callFunctionBlockArry = [];
+      let callFunctionBlockArry = [
+        {
+          kind: "label",
+          text: "函数"
+        },
+        {
+          kind: "button",
+          text: "点击创建新函数",
+          callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
+        },];
 
+      if (this.advancedBlockStore.functionBlock.length > 0) {
+        callFunctionBlockArry.push({
+          kind: "label",
+          text: "我的函数"
+        });
+        this.advancedBlockStore.functionBlock.forEach((functionArray) => {
+          const functionName = functionArray[1]; // 获取函数名
 
-      this.functionBlockStore.functionBlock.forEach((functionArray) => {
-        const functionName = functionArray[1]; // 获取函数名
+          // 定义块
+          const blockDefinition = {
+            init: function () {
+              // 添加输入字段，用于显示和设置函数名
+              this.appendDummyInput('funName')
+                .appendField("调用函数")
+                .appendField(new Blockly.FieldLabel(functionName), "NAME"); // 获取传递的动态函数名
 
-        // 定义块
+              // 添加输入字段，用于显示和设置函数名
+              this.appendDummyInput('Id')
+                .appendField(new Blockly.FieldLabel(functionArray[0]), "ID") // 获取传递的动态函数名
+                .setVisible(false); // 隐藏;
+
+              let paramInput;
+              if (functionArray.length > 2) {
+                // 添加其他输入或参数
+                paramInput = this.appendDummyInput('PARAM');
+                paramInput.appendField("参数:");
+                // 添加参数
+                this.addInput(paramInput, functionArray);
+
+              }
+
+              // 设置块的连接属性
+              this.setPreviousStatement(true, null); // 允许前面有代码块连接
+              this.setNextStatement(true, null);     // 允许后面有代码块连接
+              this.setColour('#4FD284',); // 设置块的颜色
+              this.setTooltip('调用已定义的函数');
+              this.setHelpUrl('');
+            },
+
+            addInput: function (paramInput, functionArray) {
+              for (let paramIndex = 2; paramIndex < functionArray.length; paramIndex++) {
+                let parts = functionArray[paramIndex].split('--&&--');
+                let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
+
+                if (valueAfterPrefix === '文本') {
+                  paramInput.appendField(new Blockly.FieldTextInput(parts[0] || "text"), `PARAM${paramIndex}`);
+                } else if (valueAfterPrefix === '布尔值') {
+                  // 定义下拉框选项
+                  const booleanDropdownOptions = [
+                    ["true", "true"],
+                    ["false", "false"]
+                  ];
+                  paramInput.appendField(new Blockly.FieldDropdown(booleanDropdownOptions), `PARAM${paramIndex}`);
+                } else if (valueAfterPrefix === '整形') {
+                  paramInput.appendField(new Blockly.FieldNumber(0, -2147483648, 2147483647, 1), `PARAM${paramIndex}`);
+                } else if (valueAfterPrefix === '浮点数') {
+                  paramInput.appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), `PARAM${paramIndex}`);
+                } else if (valueAfterPrefix === '长整形') {
+                  paramInput.appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), `PARAM${paramIndex}`);
+                } else {
+                  const arrayDropdownOptions = [
+                    ["array1", "abcd"],
+                    ["array2", "efgh"],
+                    ["array3", "ijkl"],
+                  ];
+                  paramInput.appendField(new Blockly.FieldDropdown(arrayDropdownOptions), `PARAM${paramIndex}`);
+                }
+              }
+            }
+          };
+
+          // 注册块类型
+          const blockType = `call_function_${functionName}`; // 为每个块生成一个唯一的类型名称
+          Blockly.Blocks[blockType] = blockDefinition;
+          javascriptGenerator.forBlock[blockType] = generateCallFunctionCode; // 注册相同的代码生成器
+
+          // 创建调用函数块
+          const callFunctionBlock = {
+            kind: 'block',
+            type: blockType, // 使用唯一的块类型
+            fields: {
+              NAME: functionName, // 动态设置函数名
+            },
+          };
+
+          // 将生成的调用函数块加入到动态块数组
+          callFunctionBlockArry.push(callFunctionBlock);
+        });
+      }
+
+      return callFunctionBlockArry;
+    },
+
+    //初始化常数块
+    initConstant() {
+      let constantBlockArry = [
+        {
+          kind: "label",
+          text: "常量"
+        },
+        {
+          kind: "button",
+          text: "点击创建新常量",
+          callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
+        },
+      ];
+
+      if (this.advancedBlockStore.constantBlock.length > 0) {
+        constantBlockArry.push({
+          kind: "label",
+          text: "我的常量"
+        });
+
+        const that = this;
+        // 定义常量块
         const blockDefinition = {
           init: function () {
-            // 添加输入字段，用于显示和设置函数名
-            this.appendDummyInput('funName')
-              .appendField("调用函数")
-              .appendField(new Blockly.FieldLabel(functionName), "NAME"); // 获取传递的动态函数名
+            this.appendDummyInput('constant')
 
-            // 添加输入字段，用于显示和设置函数名
-            this.appendDummyInput('Id')
-              .appendField(new Blockly.FieldLabel(functionArray[0]), "ID") // 获取传递的动态函数名
-              .setVisible(false); // 隐藏;
+            let constantInput;
+            constantInput = this.getInput('constant');
+            constantInput.appendField("将常数");
 
-            let paramInput;
-            if (functionArray.length > 2) {
-              // 添加其他输入或参数
-              paramInput = this.appendDummyInput('PARAM');
-              paramInput.appendField("参数:");
-              // 添加参数
-              this.addInput(paramInput, functionArray);
 
-            }
+            // 添加常数选项
+            let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            this.addConstant(constantInput, this.dropdownField);
+
+            constantInput.appendField("设置为")
+              .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER") // 获取传递的动态函数名
+
 
             // 设置块的连接属性
             this.setPreviousStatement(true, null); // 允许前面有代码块连接
             this.setNextStatement(true, null);     // 允许后面有代码块连接
-            this.setColour('#a5d599',); // 设置块的颜色
+            this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
           },
 
-          addInput: function (paramInput, functionArray) {
-            for (let paramIndex = 2; paramIndex < functionArray.length; paramIndex++) {
-              let parts = functionArray[paramIndex].split('--&&--');
-              let valueAfterPrefix = parts[1]; // 获取 "--" 后面的部分
-
-              if (valueAfterPrefix === '文本') {
-                paramInput.appendField(new Blockly.FieldTextInput(parts[0] || "text"), `PARAM${paramIndex}`);
-              } else if (valueAfterPrefix === '布尔值') {
-                // 定义下拉框选项
-                const booleanDropdownOptions = [
-                  ["true", "true"],
-                  ["false", "false"]
-                ];
-                paramInput.appendField(new Blockly.FieldDropdown(booleanDropdownOptions), `PARAM${paramIndex}`);
-              } else if (valueAfterPrefix === '整形') {
-                paramInput.appendField(new Blockly.FieldNumber(0, -2147483648, 2147483647, 1), `PARAM${paramIndex}`);
-              } else if (valueAfterPrefix === '浮点数') {
-                paramInput.appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), `PARAM${paramIndex}`);
-              } else if (valueAfterPrefix === '长整形') {
-                paramInput.appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), `PARAM${paramIndex}`);
-              } else {
-                const arrayDropdownOptions = [
-                  ["array1", "abcd"],
-                  ["array2", "efgh"],
-                  ["array3", "ijkl"],
-                ];
-                paramInput.appendField(new Blockly.FieldDropdown(arrayDropdownOptions), `PARAM${paramIndex}`);
-              }
+          getConstant: function (constantBlock) {
+            let constantDropdownOptions = []
+            for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+              constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
             }
-          }
-        };
-
-        // 注册块类型
-        const blockType = `call_function_${functionName}`; // 为每个块生成一个唯一的类型名称
-        Blockly.Blocks[blockType] = blockDefinition;
-        javascriptGenerator.forBlock[blockType] = generateCallFunctionCode; // 注册相同的代码生成器
-
-        // 创建调用函数块
-        const callFunctionBlock = {
-          kind: 'block',
-          type: blockType, // 使用唯一的块类型
-          fields: {
-            NAME: functionName, // 动态设置函数名
+            return constantDropdownOptions;
+          },
+          addConstant: function (constantInput, dropdownField) {
+            constantInput.appendField(dropdownField, "CONSTANT");
+          },
+          addNewConstant: function (currentOptions, constantDropdownOptions) {
+            currentOptions.unshift(constantDropdownOptions[0]);
           },
         };
 
-        // 将生成的调用函数块加入到动态块数组
-        callFunctionBlockArry.push(callFunctionBlock);
+        // 注册常量块类型
+        const blockType = 'constantBlock'; // 为每个块生成一个唯一的类型名称
+        Blockly.Blocks[blockType] = blockDefinition;
+
+        // 创建常量块
+        const constantBlock = {
+          kind: 'block',
+          type: blockType, // 使用唯一的块类型
+        };
+
+        // 定义常量改变块
+        const blockDefinition_change = {
+          init: function () {
+            this.appendDummyInput('constant')
+              .appendField("以")
+              .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER") // 获取传递的动态函数名
+              .appendField("为幅度改变常数")
+
+            let constantInput;
+            constantInput = this.getInput('constant');
+
+
+            // 添加常数选项
+            let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            this.addConstant(constantInput, this.dropdownField);
+
+
+            // 设置块的连接属性
+            this.setPreviousStatement(true, null); // 允许前面有代码块连接
+            this.setNextStatement(true, null);     // 允许后面有代码块连接
+            this.setColour('#4FD284',); // 设置块的颜色
+            this.setTooltip('调用已定义的函数');
+            this.setHelpUrl('');
+          },
+
+          getConstant: function (constantBlock) {
+            let constantDropdownOptions = []
+            for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+              constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
+            }
+            return constantDropdownOptions;
+          },
+          addConstant: function (constantInput, dropdownField) {
+            constantInput.appendField(dropdownField, "CONSTANT");
+          },
+          addNewConstant: function (currentOptions, constantDropdownOptions) {
+            currentOptions.unshift(constantDropdownOptions[0]);
+          },
+        };
+
+        // 注册常量改变块类型
+        const blockType_change = 'constantBlock_change'; // 为每个块生成一个唯一的类型名称
+        Blockly.Blocks[blockType_change] = blockDefinition_change;
+
+        // 创建常量改变块
+        const constantBlock_change = {
+          kind: 'block',
+          type: blockType_change, // 使用唯一的块类型
+        };
+
+        // 将生成的常量相关块加入到数组
+        constantBlockArry.push(constantBlock);
+        constantBlockArry.push(constantBlock_change);
+      }
+      return constantBlockArry
+    },
+
+    //初始化数组块
+    initArray() {
+      let arrayBlockArry = [
+        { kind: "label", text: "数组" },
+        { kind: "button", text: "点击创建新数组", callbackKey: "createArrayCallback" },
+      ];
+      return arrayBlockArry
+    },
+
+    //刷新当前工作区里的常数块
+    refreshConstant() {
+      const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
+      allBlocks.forEach((block) => {
+        // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
+        if (block.type == 'constantBlock' || block.type == 'constantBlock_change') {
+          let constantDropdownOptions = block.getConstant(this.advancedBlockStore.constantBlock);
+          const currentOptions = block.dropdownField.getOptions();
+          block.addNewConstant(currentOptions, constantDropdownOptions);
+        }
       });
-      return callFunctionBlockArry;
-    }
+    },
+
+
 
   }
 };

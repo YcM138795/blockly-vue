@@ -1,7 +1,8 @@
 <template>
   <div>
     <!-- 函数编辑对话框 -->
-    <el-dialog title="创建函数" :visible.sync="isVisible" @close="closeEditor" :close-on-click-modal="false" width="50%">
+    <el-dialog title="创建函数" :visible.sync="isVisible_function" @close="closeEditor_function"
+      :close-on-click-modal="false" width="50%">
       <el-form>
         <el-form-item label="参数类型">
           <button @click="addParm('文本')">文本</button>
@@ -28,6 +29,13 @@
         <button type="primary" @click="saveFunction">保存</button>
       </div>
     </el-dialog>
+    <el-dialog title="创建常数" :visible.sync="isVisible_constant" @close="closeEditor_constant"
+      :close-on-click-modal="false" width="30%">
+      <input type="text" placeholder="请输入常数名" class="constantInput" id="constantInput">
+      <div slot="footer" class="dialog-footer">
+        <button type="primary" @click="saveConstant">保存</button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,9 +44,9 @@ import { EventBus } from '../utils/eventBus';
 import * as Blockly from 'blockly/core';
 import 'blockly/blocks';
 import 'blockly/javascript';
-import './Advanced/functionDefined/function'
+import './Advanced/advanced'
 import { getFieldName } from '../utils/functionBlockUtils'
-import { useFunctionBlockStore } from '@/store/functionBlockStore';//引入自定义函数的store
+import { useAdvancedBlockStore } from '@/store/advancedBlockStore';//引入自定义函数的store
 
 
 
@@ -46,7 +54,8 @@ export default {
   name: 'ContentView',
   data() {
     return {
-      isVisible: false,//编辑对话框是否可见
+      isVisible_function: false,//函数编辑对话框是否可见
+      isVisible_constant: false,//常数编辑对话框是否可见
       workspace: null,
       selectedParams: ['myFunction'], // 存储选中的参数类型
       currentDeleteButton: null,//当前删除按钮的存储
@@ -54,21 +63,22 @@ export default {
       newBlockPosition: { x: 50, y: 50 },//新块的位置
       block: 0,//已经添加的存储块
       oddBlock: null,//存储奇数块
-      functionBlockStore: useFunctionBlockStore(),//自定义函数的store
+      advancedBlockStore: useAdvancedBlockStore(),//自定义函数的store
     };
   },
   methods: {
+    //函数部分
     // 显示函数编辑对话框
-    showEditor() {
+    functionShowEditor() {
 
-      this.isVisible = true;
+      this.isVisible_function = true;
       this.$nextTick(() => {
         this.initializeBlockly();
       });
     },
 
     // 关闭函数编辑对话框
-    closeEditor() {
+    closeEditor_function() {
       // 清理工作区和状态
       this.oddBlock = null;
       this.selectedParams = ['myFunction'];
@@ -77,10 +87,8 @@ export default {
         this.workspace = null; // 确保 workspace 被清理
       }
       // 现在可以安全地隐藏对话框
-      this.isVisible = false;
-    }
-    ,
-
+      this.isVisible_function = false;
+    },
 
     // 初始化 Blockly
     initializeBlockly() {
@@ -346,7 +354,6 @@ export default {
       this.updateBlock();
     },
 
-
     // 处理下拉框变化
     handleChange(selectType) {
       let selectedValue = this.$refs[selectType].value;
@@ -375,19 +382,26 @@ export default {
 
     // 保存函数
     saveFunction() {
+      if (this.selectedParams.length > 6) {
+        this.$message({
+          message: '参数超过最大限制5',
+          type: 'warning'
+        });
+        return;
+      }
       let funName = this.selectedParams[0];
       let boolean
       if (this.oddBlock) {
         if (funName != 'myFunction' && funName != this.oddBlock.getInput('funName').fieldRow[1].value_)
-          boolean = this.functionBlockStore.ifFunNameExist(funName, this.oddBlock.id);
+          boolean = this.advancedBlockStore.ifFunNameExist(funName, this.oddBlock.id);
       } else {
-        boolean = this.functionBlockStore.ifFunNameExist(funName);
+        boolean = this.advancedBlockStore.ifFunNameExist(funName);
       }
 
       if (boolean) {
         this.$message({
           message: '函数名已存在，请重新输入',
-          type: 'warning' 
+          type: 'warning'
         });
         return;
       }
@@ -399,7 +413,7 @@ export default {
 
       // 使用 $nextTick 确保 DOM 更新完成后再销毁组件
       this.$nextTick(() => {
-        this.closeEditor();
+        this.closeEditor_function();
       });
     },
 
@@ -428,14 +442,45 @@ export default {
         }
       });
 
-      this.showEditor();
+      this.functionShowEditor();
+    },
+
+    //常数部分
+    // 显示常量编辑对话框
+    constantShowEditor(){
+      
+      this.isVisible_constant = true;
+    },
+
+    // 关闭常量编辑对话框
+    closeEditor_constant(){
+      this.isVisible_constant = false;
+    },
+
+    // 保存常量
+    saveConstant(){
+      var inputValue = document.getElementById('constantInput').value; // 获取输入框的值
+      if(inputValue == ''){
+        this.$message({
+          message: '不能设置常量名字为空',
+          type: 'warning'
+        });
+        return; // 如果输入框为空则返回
+      } 
+      this.advancedBlockStore.constantBlock.unshift(inputValue); // 将常量添加到常量数组
+      document.getElementById('constantInput').value = ''; // 清空输入框
+      this.closeEditor_constant(); // 关闭对话框
+      EventBus.$emit('refreshConstant'); // 刷新常量
+
     }
   },
 
   created() {
-    EventBus.$on('showFunctionEditor', this.showEditor);
+    EventBus.$on('showFunctionEditor', this.functionShowEditor);
     EventBus.$on('edit_function', this.edit_function);
+    EventBus.$on('showConstantEditor', this.constantShowEditor);
   },
+
 
 };
 </script>
@@ -496,5 +541,12 @@ select {
 .el-dialog__wrapper {
   background-color: rgba(0, 0, 0, 0.5);
   /* 设置更深的黑色 */
+}
+
+.constantInput{
+  padding: 10px;
+  border-radius: 20px;
+  width: 80%;
+  height: 20px;
 }
 </style>

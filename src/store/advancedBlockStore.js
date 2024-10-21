@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 
-export const useFunctionBlockStore = defineStore('functionBlockStore', {
+export const useAdvancedBlockStore = defineStore('advancedBlockStore', {
   state: () => ({
     functionBlock: [],
+    constantBlock: [],
+    arrayBlock: [],
     editFunctionBlock: {}
   }),
   actions: {

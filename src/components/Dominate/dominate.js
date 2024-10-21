@@ -6,6 +6,55 @@ import { javascriptGenerator } from 'blockly/javascript';
 
 //函数
 {
+    // int_main:开始的函数
+    {
+        Blockly.Blocks['int_main'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "int_main",
+                    "message0": "开始入口",
+                    "args0": [],
+                    "message1": "%1",
+                    "args1": [
+                        {
+                            "type": "input_statement",
+                            "name": "operate",
+                            "check": ['']
+                        }
+                    ],
+                    "colour": '#4FD284',
+                    "tooltip": "开始(唯一且不可删除)",
+                    "helpUrl": "",
+                    "deletable": false,
+                    "style": {
+                        "hat": "cap"              // 使用帽子块的外观，这样这个块看起来像程序的开始
+                    }
+                }
+                ),
+                    // 设置块不可删除
+                    this.setDeletable(false);
+            },
+            // 设置块不可删除
+        };
+        javascriptGenerator.forBlock['int_main'] = function (block) {
+            var statements_operate = javascriptGenerator.statementToCode(block, 'operate');
+            // TODO: Assemble javascript into code variable.
+            var code = `int main(void){
+  board_init();
+  usbdev_init();
+  board_sdh_gpio_init();
+  fatfs_sdh_driver_register();
+  ota_init();\n
+  xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);
+  xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);
+${statements_operate}
+  vTaskStartScheduler();
+	while (1);\n}\n`;
+            return code;
+        };
+    }
+
+
     // light_task:灯函数
     {
         Blockly.Blocks['light_task'] = {
@@ -23,7 +72,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -55,7 +104,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -87,7 +136,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -119,7 +168,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -151,7 +200,7 @@ import { javascriptGenerator } from 'blockly/javascript';
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
