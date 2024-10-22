@@ -657,7 +657,7 @@ export default {
     receiveBlock(block) {
       if (block) {
         console.log(block);
-        
+
         const state = JSON.parse(block.text);
         this.advancedBlockStore.functionBlock = block.functionBlock.split(' |&&| ').map(subStr => subStr.split(', '));
         this.advancedBlockStore.constantBlock = block.constantBlock.split(' |&&| ')
@@ -1218,11 +1218,11 @@ export default {
             // 添加点击事件
             this.appendDummyInput()
               .appendField(new Blockly.FieldImage(
-                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
-                15, 15, "*", false), 'ADD_IMAGE')
+                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E6%95%B0%E7%BB%84%E5%A2%9E%E5%8A%A0.svg",
+                30, 30, "*", false), 'ADD_IMAGE')
               .appendField(new Blockly.FieldImage(
-                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
-                15, 15, "*", false), 'RE_IMAGE');
+                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E6%95%B0%E7%BB%84%E5%87%8F%E5%B0%91.svg",
+                30, 30, "*", false), 'RE_IMAGE');
 
             const imageFieldADD = this.getField('ADD_IMAGE');
             const imageFieldRE = this.getField('RE_IMAGE');
@@ -1355,11 +1355,11 @@ export default {
             // 添加点击事件
             this.appendDummyInput()
               .appendField(new Blockly.FieldImage(
-                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
-                15, 15, "*", false), 'ADD_IMAGE')
+                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E6%95%B0%E7%BB%84%E5%A2%9E%E5%8A%A0.svg",
+                30, 30, "*", false), 'ADD_IMAGE')
               .appendField(new Blockly.FieldImage(
-                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
-                15, 15, "*", false), 'RE_IMAGE');
+                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E6%95%B0%E7%BB%84%E5%87%8F%E5%B0%91.svg",
+                30, 30, "*", false), 'RE_IMAGE');
 
             const imageFieldADD = this.getField('ADD_IMAGE');
             const imageFieldRE = this.getField('RE_IMAGE');
