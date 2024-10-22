@@ -44,7 +44,7 @@ export default {
                             {
                                 kind: "button",
                                 text: "点击创建新数组",
-                                callbackKey: "createArrayCallback"  // 关键：添加callbackKey
+                                callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
                             }, 
                             {
                                 kind: "label",

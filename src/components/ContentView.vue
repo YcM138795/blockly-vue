@@ -36,6 +36,13 @@
         <button type="primary" @click="saveConstant">保存</button>
       </div>
     </el-dialog>
+    <el-dialog title="创建数组" :visible.sync="isVisible_array" @close="closeEditor_constant"
+      :close-on-click-modal="false" width="30%">
+      <input type="text" placeholder="请输入数组名" class="arrayInput" id="arrayInput">
+      <div slot="footer" class="dialog-footer">
+        <button type="primary" @click="saveArray">保存</button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -56,6 +63,7 @@ export default {
     return {
       isVisible_function: false,//函数编辑对话框是否可见
       isVisible_constant: false,//常数编辑对话框是否可见
+      isVisible_array: false,//数组编辑对话框是否可见
       workspace: null,
       selectedParams: ['myFunction'], // 存储选中的参数类型
       currentDeleteButton: null,//当前删除按钮的存储
@@ -70,7 +78,6 @@ export default {
     //函数部分
     // 显示函数编辑对话框
     functionShowEditor() {
-
       this.isVisible_function = true;
       this.$nextTick(() => {
         this.initializeBlockly();
@@ -447,31 +454,59 @@ export default {
 
     //常数部分
     // 显示常量编辑对话框
-    constantShowEditor(){
-      
+    constantShowEditor() {
       this.isVisible_constant = true;
     },
 
     // 关闭常量编辑对话框
-    closeEditor_constant(){
+    closeEditor_constant() {
       this.isVisible_constant = false;
     },
 
     // 保存常量
-    saveConstant(){
+    saveConstant() {
       var inputValue = document.getElementById('constantInput').value; // 获取输入框的值
-      if(inputValue == ''){
+      if (inputValue == '') {
         this.$message({
           message: '不能设置常量名字为空',
           type: 'warning'
         });
         return; // 如果输入框为空则返回
-      } 
+      }
       this.advancedBlockStore.constantBlock.unshift(inputValue); // 将常量添加到常量数组
       document.getElementById('constantInput').value = ''; // 清空输入框
       this.closeEditor_constant(); // 关闭对话框
       EventBus.$emit('refreshConstant'); // 刷新常量
 
+    },
+
+    // 数组部分
+    // 显示数组编辑对话框
+    showArrayEditor() {
+      this.isVisible_array = true;
+    },
+
+    // 关闭数组编辑对话框
+    closeEditor_array() {
+      this.isVisible_array = false;
+    },
+
+    // 保存数组
+    saveArray(){
+      var inputValue = document.getElementById('arrayInput').value; // 获取输入框的值
+      if (inputValue == '') {
+        this.$message({
+          message: '不能设置数组名字为空',
+          type: 'warning'
+        });
+        return; // 如果输入框为空则返回
+      }
+      this.advancedBlockStore.arrayBlock.unshift(inputValue); // 将常量添加到常量数组
+      console.log(this.advancedBlockStore.arrayBlock);
+      
+      document.getElementById('arrayInput').value = ''; // 清空输入框
+      this.closeEditor_array(); // 关闭对话框
+      EventBus.$emit('refreshArray'); // 刷新常量
     }
   },
 
@@ -479,6 +514,7 @@ export default {
     EventBus.$on('showFunctionEditor', this.functionShowEditor);
     EventBus.$on('edit_function', this.edit_function);
     EventBus.$on('showConstantEditor', this.constantShowEditor);
+    EventBus.$on('showArrayEditor', this.showArrayEditor);
   },
 
 
@@ -543,7 +579,7 @@ select {
   /* 设置更深的黑色 */
 }
 
-.constantInput{
+.constantInput , .arrayInput{
   padding: 10px;
   border-radius: 20px;
   width: 80%;

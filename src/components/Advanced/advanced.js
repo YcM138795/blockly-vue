@@ -106,7 +106,7 @@ import '@blockly/field-bitmap';
                 } else if (preFix == 'array_int') {
                     parmType = 'int*';
                 } else if (preFix == 'array_string') {
-                    parmType = 'string*';
+                    parmType = 'char**';
                 } else if (preFix == 'array_double') {
                     parmType = 'double*';
                 }
@@ -150,7 +150,7 @@ import '@blockly/field-bitmap';
             return `double ${dropdown_operation} = ${number};\n`;
         };
     }
-    
+
     //常量改变
     {
         javascriptGenerator.forBlock['constantBlock_change'] = function (block) {
@@ -166,7 +166,7 @@ import '@blockly/field-bitmap';
         };
     }
 
-    //数组
+
     //文本
     {
         //string:字符串
@@ -299,3 +299,217 @@ import '@blockly/field-bitmap';
     }
 
 }
+
+
+//数组
+// 定义块
+// Blockly.Blocks['dynamic_array_block'] = {
+//     init: function () {
+//         this.appendDummyInput('constant')
+
+//         let constantInput;
+//         constantInput = this.getInput('constant');
+//         constantInput.appendField("将");
+
+//         // // 添加常数选项
+//         // let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+//         // this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+//         // this.addConstant(constantInput, this.dropdownField);
+
+
+//         // constantInput.appendField("设置为")
+//         //     .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER") // 获取传递的动态函数名
+
+
+//         this.appendDummyInput()
+//             .appendField(new Blockly.FieldImage(
+//                 "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
+//                 15, 15, "*", false), 'ADD_IMAGE');
+//         this.appendDummyInput()
+//             .appendField(new Blockly.FieldImage(
+//                 "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
+//                 15, 15, "*", false), 'RE_IMAGE');
+//         // 设置点击事件
+//         const imageFieldADD = this.getField('ADD_IMAGE');
+//         const imageFieldRE = this.getField('RE_IMAGE');
+
+//         if (imageFieldADD) {
+//             imageFieldADD.setOnClickHandler(() => this.onClickHandlerADD(constantInput));
+//         }
+//         if (imageFieldRE) {
+//             imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE(constantInput));
+//         }
+
+//         this.setPreviousStatement(true, null);
+//         this.setNextStatement(true, null);
+//         this.setColour('#4FD284');
+//         this.setTooltip("");
+//         this.setHelpUrl("");
+//     },
+//     // 增加数组数据
+//     onClickHandlerADD: function (constantInput) {
+//         console.log("Image clicked!");
+//         if (constantInput) {
+//             constantInput
+//                 .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER"); // 获取传递的动态函数名
+//         }
+//     },
+//     // 删除数组数据
+//     onClickHandlerRE: function (constantInput) {
+//         console.log("Image clicked!");
+//         if (constantInput) {
+//             constantInput.removeField("NUMBER");
+//         }
+//     },
+//     getConstant: function (constantBlock) {
+//         let constantDropdownOptions = []
+//         for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+//             constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
+//         }
+//         return constantDropdownOptions;
+//     },
+//     addConstant: function (constantInput, dropdownField) {
+//         constantInput.appendField(dropdownField, "CONSTANT");
+//     },
+//     addNewConstant: function (currentOptions, constantDropdownOptions) {
+//         currentOptions.unshift(constantDropdownOptions[0]);
+//     },
+// };
+
+
+Blockly.Blocks['arrayBlock_double'] = {
+    init: function () {        
+        this.appendDummyInput('constant')
+            .appendField("将");
+
+        this.numberCount = 0; // 初始化计数器
+        const constantInput = this.getInput('constant');
+
+        if (this.arrayBlock) {
+            // // 添加常数选项
+            let constantDropdownOptions = this.getConstant(this.arrayBlock);
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            this.addConstant(constantInput, this.dropdownField);
+        }
+
+        // 添加点击事件
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldImage(
+                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
+                15, 15, "*", false), 'ADD_IMAGE')
+            .appendField(new Blockly.FieldImage(
+                "https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8A%A0%E5%8F%B7.aeaaeea0.svg",
+                15, 15, "*", false), 'RE_IMAGE');
+
+        const imageFieldADD = this.getField('ADD_IMAGE');
+        const imageFieldRE = this.getField('RE_IMAGE');
+
+        if (imageFieldADD) {
+            imageFieldADD.setOnClickHandler(() => this.onClickHandlerADD());
+        }
+        if (imageFieldRE) {
+            imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
+        }
+
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#4FD284');
+        this.setTooltip("");
+        this.setHelpUrl("");
+    },
+    getConstant: function (constantBlock) {
+        let constantDropdownOptions = []
+        for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+            constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
+        }
+        return constantDropdownOptions;
+    },
+    addConstant: function (constantInput, dropdownField) {
+        constantInput.appendField(dropdownField, "CONSTANT");
+    },
+    addNewConstant: function (currentOptions, constantDropdownOptions) {
+        currentOptions.unshift(constantDropdownOptions[0]);
+    },
+    // 增加数组数据
+    onClickHandlerADD: function () {
+        const constant = this.getInput('constant');
+        const fieldName = "NUMBER_" + this.numberCount; // 生成唯一字段名称
+        constant.appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), fieldName);
+        this.numberCount++; // 更新计数器
+    },
+
+    // 删除数组数据
+    onClickHandlerRE: function () {
+        const constant = this.getInput('constant');
+        if (this.numberCount > 0) {
+            const fieldName = "NUMBER_" + (this.numberCount - 1); // 获取最后一个字段的名称
+            if (this.getField(fieldName)) {
+                constant.removeField(fieldName, true); // 移除输入字段
+                this.numberCount--; // 更新计数器
+            }
+        }
+    },
+
+    saveExtraState: function () {
+        return {
+            'itemCount': this.numberCount,
+            'arrayBlock': this.arrayBlock,
+        };
+    },
+
+    loadExtraState: function (state) {
+        console.log(state);
+        this.numberCount = state['itemCount'];
+        this.arrayBlock = state['arrayBlock'];
+        if (this.arrayBlock) {
+            // // 添加常数选项
+            let constantDropdownOptions = this.getConstant(this.arrayBlock);
+            let dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            this.addConstant(this.getInput('constant'), dropdownField);
+        }
+        console.log(this.arrayBlock);
+
+        for (let i = 0; i < this.numberCount; i++) {
+            const fieldName = "NUMBER_" + i;
+            this.getInput('constant').appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), fieldName);
+        }
+    },
+};
+
+
+
+
+javascriptGenerator.forBlock['arrayBlock_double'] = function (block) {
+    var dropdown_operation = block.getFieldValue('CONSTANT');
+    
+    let array = [];
+    for (let i = 0; i < block.numberCount; i++) {
+        let number = block.getFieldValue('NUMBER_' + i);
+        array.push(number);
+    }
+    
+    // 拼接成 double myNumbers[] = {...};
+    let arrayString = array.join(', ');
+    let code = `double ${dropdown_operation}[] = {${arrayString}};\n`;
+    
+    return code; // 返回拼接的代码
+};
+
+javascriptGenerator.forBlock['arrayBlock_string'] = function (block) {
+    var dropdown_operation = block.getFieldValue('CONSTANT');
+    
+    let array = [];
+    for (let i = 0; i < block.numberCount; i++) {
+        let string = block.getFieldValue('STRING_' + i);
+        array.push(string);
+    }
+    
+    // 拼接成 double myNumbers[] = {...};
+    let arrayString = array.map(str => `"${str}"`).join(', ');
+    let code = `char* ${dropdown_operation}[] = {${arrayString}};\n`;
+    
+    return code; // 返回拼接的代码
+};
+
+
+
