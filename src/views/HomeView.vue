@@ -181,6 +181,8 @@ export default {
       EventBus.$on('saveEditBlock', this.saveEditBlock);
       EventBus.$on('refreshConstant', this.refreshConstant);
       EventBus.$on('refreshArray', this.refreshArray);
+      EventBus.$on('deleteArray', this.deleteArray);
+      EventBus.$on('deleteConstant', this.deleteConstant);
 
       // 如果已有工作区，销毁当前工作区
       if (this.workspace && this.workspaceChangeListener) {
@@ -860,6 +862,7 @@ export default {
       let funName = newBlock.getInput('funName');
       let name;
 
+
       name = selectedParams[0]; // 获取函数名
       if (name == 'myFunction') {
         let oddIndex = this.advancedBlockStore.functionBlock.findIndex((item) => {
@@ -869,6 +872,7 @@ export default {
         name = name + (oddIndex + 1);
         selectedParams[0] = name;
       }
+
       funName.fieldRow[1].setValue(name);
 
       if (selectedParams.length == 1) {
@@ -896,7 +900,6 @@ export default {
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
         if (block.type.startsWith('call_function_') && block.getFieldValue('ID') === oddBlock.id) {
-
 
           const blockDefinition = {
             init: function () {
@@ -931,10 +934,14 @@ export default {
           }
         }
       });
+
+      console.log(oddBlock);
+      
       oddBlock.dispose(true);
 
       this.addRemoveCallFunctionBlocks(newBlock);
       this.advancedBlockStore.functionBlock.push(selectedParams);
+      console.log(1);
 
 
       newBlock.moveBy(this.advancedBlockStore.editFunctionBlock.position.x, this.advancedBlockStore.editFunctionBlock.position.y); // 移动块到正确位置
@@ -1063,7 +1070,7 @@ export default {
         },
       ];
 
-      if (this.advancedBlockStore.constantBlock.length > 0) {
+      if (this.advancedBlockStore.constantBlock.length > 2) {
         constantBlockArry.push({
           kind: "label",
           text: "我的常量"
@@ -1087,6 +1094,7 @@ export default {
 
             constantInput.appendField("设置为")
               .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER") // 获取传递的动态函数名
+            this.constantBlock = that.advancedBlockStore.constantBlock;
 
 
             // 设置块的连接属性
@@ -1107,8 +1115,50 @@ export default {
           addConstant: function (constantInput, dropdownField) {
             constantInput.appendField(dropdownField, "CONSTANT");
           },
-          addNewConstant: function (currentOptions, constantDropdownOptions) {
-            currentOptions.unshift(constantDropdownOptions[0]);
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index) {
+            if (Index != undefined) {
+              currentOptions[Index][0] = constantDropdownOptions[Index][0];
+              currentOptions[Index][1] = constantDropdownOptions[Index][1];
+
+              // 自动选择当前选项
+              this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+            } else {
+              currentOptions.unshift(constantDropdownOptions[0]);
+            }
+          },
+          deleteNewConstant: function (Index) {
+            // 获取下拉框的所有选项
+            const currentOptions = this.getField('CONSTANT').getOptions();
+            // 获取当前下拉框的值
+            const currentValue = this.getField('CONSTANT').getValue();
+            const index = currentOptions.findIndex(option => option[0] === currentValue);
+            currentOptions.splice(Index, 1);
+            if (index == Index) {
+              this.dispose(true);
+            }
+          },
+          saveExtraState: function () {
+            return {
+              'constantBlock': this.constantBlock,
+            };
+          },
+          loadExtraState: function (state) {
+            this.constantBlock = state['constantBlock'];
+            if (this.constantBlock) {
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+
+                if (newValue == 'Fn:重命名此常量') {
+                  EventBus.$emit('showConstantEditor', '重命名此常量', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此常量') {
+                  EventBus.$emit('deleteConstant', index);
+                  return this.getField('CONSTANT')
+                }
+                return newValue; // 返回新值以更新显示
+              });
+            }
           },
         };
 
@@ -1138,7 +1188,7 @@ export default {
             let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
             this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
             this.addConstant(constantInput, this.dropdownField);
-
+            this.constantBlock = that.advancedBlockStore.constantBlock;
 
             // 设置块的连接属性
             this.setPreviousStatement(true, null); // 允许前面有代码块连接
@@ -1158,8 +1208,50 @@ export default {
           addConstant: function (constantInput, dropdownField) {
             constantInput.appendField(dropdownField, "CONSTANT");
           },
-          addNewConstant: function (currentOptions, constantDropdownOptions) {
-            currentOptions.unshift(constantDropdownOptions[0]);
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index) {
+            if (Index != undefined) {
+              currentOptions[Index][0] = constantDropdownOptions[Index][0];
+              currentOptions[Index][1] = constantDropdownOptions[Index][1];
+
+              // 自动选择当前选项
+              this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+            } else {
+              currentOptions.unshift(constantDropdownOptions[0]);
+            }
+          },
+          deleteNewConstant: function (Index) {
+            // 获取下拉框的所有选项
+            const currentOptions = this.getField('CONSTANT').getOptions();
+            // 获取当前下拉框的值
+            const currentValue = this.getField('CONSTANT').getValue();
+            const index = currentOptions.findIndex(option => option[0] === currentValue);
+            currentOptions.splice(Index, 1);
+            if (index == Index) {
+              this.dispose(true);
+            }
+          },
+          saveExtraState: function () {
+            return {
+              'constantBlock': this.constantBlock,
+            };
+          },
+          loadExtraState: function (state) {
+            this.constantBlock = state['constantBlock'];
+            if (this.constantBlock) {
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+
+                if (newValue == 'Fn:重命名此常量') {
+                  EventBus.$emit('showConstantEditor', '重命名此常量', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此常量') {
+                  EventBus.$emit('deleteConstant', index);
+                  return this.getField('CONSTANT')
+                }
+                return newValue; // 返回新值以更新显示
+              });
+            }
           },
         };
 
@@ -1188,7 +1280,7 @@ export default {
         { kind: "button", text: "点击创建新数组", callbackKey: "createAdvancedToolbox" },
       ];
 
-      if (this.advancedBlockStore.arrayBlock.length > 0) {
+      if (this.advancedBlockStore.arrayBlock.length > 2) {
         arrayBlockArry.push({
           kind: "label",
           text: "我的数组"
@@ -1251,8 +1343,28 @@ export default {
             constantInput.appendField(dropdownField, "CONSTANT");
             constantInput.appendField("设为浮点数数组");
           },
-          addNewConstant: function (currentOptions, constantDropdownOptions) {
-            currentOptions.unshift(constantDropdownOptions[0]);
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index) {
+
+            if (Index != undefined) {
+              currentOptions[Index][0] = constantDropdownOptions[Index][0];
+              currentOptions[Index][1] = constantDropdownOptions[Index][1];
+
+              // 自动选择当前选项
+              this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+            } else {
+              currentOptions.unshift(constantDropdownOptions[0]);
+            }
+          },
+          deleteNewConstant: function (Index) {
+            // 获取下拉框的所有选项
+            const currentOptions = this.getField('CONSTANT').getOptions();
+            // 获取当前下拉框的值
+            const currentValue = this.getField('CONSTANT').getValue();
+            const index = currentOptions.findIndex(option => option[0] === currentValue);
+            currentOptions.splice(Index, 1);
+            if (index == Index) {
+              this.dispose(true);
+            }
           },
           // 增加数组数据
           onClickHandlerADD: function () {
@@ -1293,7 +1405,6 @@ export default {
             };
           },
           loadExtraState: function (state) {
-            console.log(state);
             this.numberCount = state['itemCount'];
             this.arrayBlock = state['arrayBlock'];
             if (this.arrayBlock) {
@@ -1303,7 +1414,23 @@ export default {
                 let dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
                 this.addConstant(this.getInput('constant'), dropdownField);
               }
+
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+
+                if (newValue == 'Fn:重命名此数组') {
+                  EventBus.$emit('showArrayEditor', '重命名此浮点数数组', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此数组') {
+                  EventBus.$emit('deleteArray', index);
+                  return this.getField('CONSTANT')
+                }
+
+                return newValue; // 返回新值以更新显示
+              });
             }
+
             if (this.numberCount > 0) {
               for (let i = 0; i < 3; i++) {
                 const fieldName = "NUMBER_" + i;
@@ -1316,8 +1443,6 @@ export default {
             } else {
               this.numberCount = 3
             }
-
-
           },
         };
 
@@ -1388,8 +1513,28 @@ export default {
             constantInput.appendField(dropdownField, "CONSTANT");
             constantInput.appendField("设为字符串数组");
           },
-          addNewConstant: function (currentOptions, constantDropdownOptions) {
-            currentOptions.unshift(constantDropdownOptions[0]);
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index) {
+
+            if (Index != undefined) {
+              currentOptions[Index][0] = constantDropdownOptions[Index][0];
+              currentOptions[Index][1] = constantDropdownOptions[Index][1];
+
+              // 自动选择当前选项
+              this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+            } else {
+              currentOptions.unshift(constantDropdownOptions[0]);
+            }
+          },
+          deleteNewConstant: function (Index) {
+            // 获取下拉框的所有选项
+            const currentOptions = this.getField('CONSTANT').getOptions();
+            // 获取当前下拉框的值
+            const currentValue = this.getField('CONSTANT').getValue();
+            const index = currentOptions.findIndex(option => option[0] === currentValue);
+            currentOptions.splice(Index, 1);
+            if (index == Index) {
+              this.dispose(true);
+            }
           },
           // 增加数组数据
           onClickHandlerADD: function () {
@@ -1407,7 +1552,6 @@ export default {
             }
 
           },
-
           // 删除数组数据
           onClickHandlerRE: function () {
             if (this.numberCount == 1) {
@@ -1433,6 +1577,8 @@ export default {
             console.log(state);
             this.numberCount = state['itemCount'];
             this.arrayBlock = state['arrayBlock'];
+            console.log(this.arrayBlock);
+
             if (this.arrayBlock) {
               if (!this.getField('CONSTANT')) {
                 // // 添加常数选项
@@ -1440,7 +1586,23 @@ export default {
                 let dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
                 this.addConstant(this.getInput('constant'), dropdownField);
               }
+
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+
+                if (newValue == 'Fn:重命名此数组') {
+                  EventBus.$emit('showArrayEditor', '重命名此浮点数数组', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此数组') {
+                  EventBus.$emit('deleteArray', index);
+                  return this.getField('CONSTANT')
+                }
+
+                return newValue; // 返回新值以更新显示
+              });
             }
+
             if (this.numberCount > 0) {
               for (let i = 0; i < 3; i++) {
                 const fieldName = "STRING_" + i;
@@ -1453,8 +1615,6 @@ export default {
             } else {
               this.numberCount = 3
             }
-
-
           },
         };
 
@@ -1477,33 +1637,59 @@ export default {
     },
 
     //刷新当前工作区里的常数块
-    refreshConstant() {
+    refreshConstant(Index) {
       const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
         if (block.type == 'constantBlock' || block.type == 'constantBlock_change') {
           console.log(block);
-
           let constantDropdownOptions = block.getConstant(this.advancedBlockStore.constantBlock);
           const currentOptions = block.dropdownField.getOptions();
-          block.addNewConstant(currentOptions, constantDropdownOptions);
+          block.addNewConstant(currentOptions, constantDropdownOptions, Index);
+        }
+      });
+    },
+
+    //刷新当前工作区里的常数块
+    deleteConstant(Index) {
+      this.advancedBlockStore.constantBlock.splice(Index, 1);
+      const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
+      allBlocks.forEach((block) => {
+        // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
+        if (block.type == 'constantBlock' || block.type == 'constantBlock_change') {
+          block.constantBlock = this.advancedBlockStore.constantBlock;
+          block.deleteNewConstant(Index);
         }
       });
     },
 
     //刷新当前工作区里的数组块
-    refreshArray() {
+    refreshArray(Index) {
+
       const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
         if (block.type == 'arrayBlock_double' || block.type == 'arrayBlock_string') {
+          block.arrayBlock = this.advancedBlockStore.arrayBlock;
           let arrayDropdownOptions = block.getConstant(this.advancedBlockStore.arrayBlock);
           const currentOptions = block.dropdownField.getOptions();
-          block.addNewConstant(currentOptions, arrayDropdownOptions);
+          block.addNewConstant(currentOptions, arrayDropdownOptions, Index);
         }
       });
     },
 
+    //删除数组块
+    deleteArray(Index) {
+      this.advancedBlockStore.arrayBlock.splice(Index, 1);
+      const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
+      allBlocks.forEach((block) => {
+        // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
+        if (block.type == 'arrayBlock_double' || block.type == 'arrayBlock_string') {
+          block.arrayBlock = this.advancedBlockStore.arrayBlock;
+          block.deleteNewConstant(Index);
+        }
+      });
+    }
   }
 };
 </script>
