@@ -7,16 +7,10 @@
         <el-form-item label="参数类型">
           <button @click="addParm('文本')">文本</button>
           <button @click="addParm('布尔值')">布尔值</button>
-          <select ref="numberSelect" @change="handleChange('numberSelect')">
-            <option value="" disabled selected>数字</option>
-            <option value="整形">整形</option>
-            <option value="浮点数">浮点数</option>
-            <option value="长整形">长整形</option>
-          </select>
+          <button @click="addParm('浮点数')">浮点数</button>
           <select ref="arraySelect" @change="handleChange('arraySelect')">
             <option value="" selected disabled>数组</option>
-            <option value="数字数组">数字数组</option>
-            <option value="字符数组">字符数组</option>
+            <option value="字符串数组">字符串数组</option>
             <option value="浮点数数组">浮点数数组</option>
           </select>
         </el-form-item>
@@ -72,7 +66,6 @@ export default {
       currentDeleteButton: null,//当前删除按钮的存储
       newBlock: null,//新块的存储
       newBlockPosition: { x: 50, y: 50 },//新块的位置
-      block: 0,//已经添加的存储块
       oddBlock: null,//存储奇数块
       advancedBlockStore: useAdvancedBlockStore(),//自定义函数的store
     };
@@ -117,8 +110,38 @@ export default {
 
       this.workspace.clear(); // 清除之前的所有块
 
+      Blockly.Blocks['function_definition_edit'] = {
+        init: function () {
+
+          // 设置块的样式和其他基本属性
+          this.setStyle('function_definition_style');
+          this.setTooltip('');
+          this.setHelpUrl('');
+
+          // 添加一个字段（函数名称）
+          this.appendDummyInput('funName')
+            .appendField('函数')
+            .appendField(new Blockly.FieldTextInput('myFunction'), 'NAME');
+
+          // 添加参数部分，默认无参数
+          this.appendDummyInput('Param')
+
+          // 添加执行部分（语句输入区）
+          this.appendStatementInput('inner').appendField('执行');
+        },
+        customContextMenu: function (options) {
+
+          // 过滤掉“复制”选项
+          options.forEach(option => {
+            if (option.text === "复制") {
+              option.enabled = false;
+            }
+          })
+        }
+      };
+
       // 创建新的块并添加到工作区
-      this.newBlock = this.workspace.newBlock('function_definition');
+      this.newBlock = this.workspace.newBlock('function_definition_edit');
       // 删除原有的输入项
       if (this.newBlock.getInput('funName')) {
         this.newBlock.removeInput('funName');
@@ -222,7 +245,7 @@ export default {
             } else if (valueAfterPrefix === '数字数组') {
               inputField = new Blockly.FieldTextInput(`${name}`);
               inputName = 'array_int--&--' + index;
-            } else if (valueAfterPrefix === '字符数组') {
+            } else if (valueAfterPrefix === '字符串数组') {
               inputField = new Blockly.FieldTextInput(`${name}`);
               inputName = 'array_string--&--' + index;
             } else if (valueAfterPrefix === '浮点数数组') {
@@ -248,14 +271,10 @@ export default {
               }
             };
           }
-
-
         });
       }
-
       // 添加其他的块内容（如执行部分）
       this.newBlock.appendStatementInput('inner').appendField('执行');
-      this.block = this.newBlock;
     },
 
     // 显示删除图标
@@ -335,27 +354,6 @@ export default {
       document.addEventListener('click', hideDeleteButton);
     },
 
-    // 获取字段类型
-    getParamType(param) {
-      if (param === 'text') {
-        return '文本';
-      } else if (param === 'boolean') {
-        return '布尔值';
-      } else if (param === 'number_int') {
-        return '整形';
-      } else if (param === 'number_double') {
-        return '浮点数';
-      } else if (param === 'number_long') {
-        return '长整形';
-      } else if (param === 'array_int') {
-        return '数字数组';
-      } else if (param === 'array_string') {
-        return '字符数组';
-      } else if (param === 'array_double') {
-        return '浮点数数组';
-      }
-    },
-
     // 删除指定索引的参数
     removeParam(index) {
       // 从 selectedParams 中删除参数
@@ -365,20 +363,16 @@ export default {
     },
 
     // 处理下拉框变化
-    handleChange(selectType) {
-      let selectedValue = this.$refs[selectType].value;
+    handleChange(arraySelect) {
+      let selectedValue = this.$refs[arraySelect].value;
 
-      if (selectType === 'numberSelect' && selectedValue) {
-        selectedValue = '--&&--' + selectedValue;
-        this.selectedParams.push(selectedValue);
-      } else if (selectType === 'arraySelect' && selectedValue) {
-        selectedValue = '--&&--' + selectedValue;
-        this.selectedParams.push(selectedValue);
-      }
+      selectedValue = '--&&--' + selectedValue;
+      this.selectedParams.push(selectedValue);
+
 
       // 更新块并重置下拉框
       this.updateBlock();
-      this.$refs[selectType].selectedIndex = 0; // 重置下拉框为默认选项
+      this.$refs[arraySelect].selectedIndex = 0; // 重置下拉框为默认选项
     },
 
     // 添加参数
@@ -417,7 +411,7 @@ export default {
       }
 
       // 触发自定义事件，添加函数块
-      EventBus.$emit('addMyFunction', this.selectedParams, this.block, this.oddBlock != null, this.oddBlock);
+      EventBus.$emit('addMyFunction', this.selectedParams, this.oddBlock != null, this.oddBlock);
 
       // 使用 $nextTick 确保 DOM 更新完成后再销毁组件
       this.$nextTick(() => {
@@ -427,6 +421,7 @@ export default {
 
     //编辑函数
     edit_function(block) {
+
       this.oddBlock = block;
       console.log('编辑函数');
       let value;
@@ -440,22 +435,20 @@ export default {
             if (index > 0) {
               value = filed.value_;
               let type = filed.name;
-              let parts = type.split('--&--');
-              let valueBeforePrefix = parts[0]; // 获取 "--" 前面的部分
-              let parm = this.getParamType(valueBeforePrefix);
-              value = (value == parm) ? '' : value;
-              this.selectedParams.push(value + '--&&--' + parm);
+              value = (value == type) ? '' : value;
+              this.selectedParams.push(value + '--&&--' + type);
             }
           })
         }
       });
+      console.log(this.selectedParams);
 
       this.functionShowEditor();
     },
 
     //常数部分
     // 显示常量编辑对话框
-    constantShowEditor(str,index) {
+    constantShowEditor(str, index) {
       if (str) {
         this.constantText = str;
         this.editIndex = index;
@@ -480,7 +473,7 @@ export default {
         });
         return; // 如果输入框为空则返回
       }
-      if(this.advancedBlockStore.constantBlock.includes(inputValue)){
+      if (this.advancedBlockStore.constantBlock.includes(inputValue)) {
         this.$message({
           message: '该数组名字已存在,请重新输入',
           type: 'warning'
@@ -494,7 +487,7 @@ export default {
         this.advancedBlockStore.constantBlock.unshift(inputValue); // 将常量添加到常量数组
       }
 
-      EventBus.$emit('refreshConstant',this.editIndex); // 刷新常量
+      EventBus.$emit('refreshConstant', this.editIndex); // 刷新常量
       this.closeEditor_constant(); // 关闭对话框
       document.getElementById('constantInput').value = ''; // 清空输入框
 
@@ -527,7 +520,7 @@ export default {
         });
         return; // 如果输入框为空则返回
       }
-      if(this.advancedBlockStore.arrayBlock.includes(inputValue)){
+      if (this.advancedBlockStore.arrayBlock.includes(inputValue)) {
         this.$message({
           message: '该数组名字已存在,请重新输入',
           type: 'warning'

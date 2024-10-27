@@ -9,15 +9,9 @@ function getFieldName(param, index) {
         return 'text--&--' + index;
     } else if (valueAfterPrefix === '布尔值') {
         return 'boolean--&--' + index;
-    } else if (valueAfterPrefix === '整形') {
-        return 'number_int--&--' + index;
     } else if (valueAfterPrefix === '浮点数') {
         return 'number_double--&--' + index;
-    } else if (valueAfterPrefix === '长整形') {
-        return 'number_long--&--' + index;
-    } else if (valueAfterPrefix === '数字数组') {
-        return 'array_int--&--' + index;
-    } else if (valueAfterPrefix === '字符数组') {
+    } else if (valueAfterPrefix === '字符串数组') {
         return 'array_string--&--' + index;
     } else if (valueAfterPrefix === '浮点数数组') {
         return 'array_double--&--' + index;

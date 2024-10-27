@@ -23,19 +23,71 @@ import '@blockly/field-bitmap';
 
                 // 添加参数部分，默认无参数
                 this.appendDummyInput('Param')
+                    .appendField('参数:无', 'paramName');
+
 
                 // 添加执行部分（语句输入区）
                 this.appendStatementInput('inner').appendField('执行');
             },
             customContextMenu: function (options) {
-
                 // 过滤掉“复制”选项
                 options.forEach(option => {
                     if (option.text === "复制") {
                         option.enabled = false;
                     }
                 })
-            }
+            },
+            addParam: function (selectedParams) {
+                //设置函数名
+                const nameInput = this.getField('NAME');
+                nameInput.setValue(selectedParams[1]);
+
+                //设置参数
+                const constantInput = this.getInput('Param');
+                if (selectedParams.length >= 3) {
+                    if (this.getField('paramName').value_ == '参数:无') {
+                        this.setFieldValue('参数:', 'paramName');
+                    }
+                }
+
+                let newField
+                for (let index = 2; index < selectedParams.length; index++) {
+                    let parts = selectedParams[index].split('--&&--');
+                    // 创建新的输入字段
+                    if (parts[0]) {
+                        newField = new Blockly.FieldTextInput(parts[0]);// 将字段添加到输入槽
+                    } else {
+                        newField = new Blockly.FieldTextInput(parts[1]);// 将字段添加到输入槽
+                    }
+                    constantInput.appendField(newField, parts[1]);
+                }
+            },
+            refreshParam: function (selectedParams) {
+                console.log(selectedParams);
+                const constantInput = this.getInput('Param');
+                if (constantInput) {
+                    // 遍历 constantInput 的所有字段并逐个删除
+                    const fields = constantInput.fieldRow.slice(); // 创建副本防止修改原数组时出错
+                    fields.forEach((field) => {
+                        if (field.name !== 'paramName') { // 保留 'paramName' 字段
+                            constantInput.removeField(field.name);
+                        }
+                    });
+                }
+                this.param = selectedParams; // 保存参数
+                this.addParam(selectedParams); // 重新添加参数  
+            },
+            saveExtraState: function () {
+                return {
+                    'param': this.param,
+                };
+            },
+            loadExtraState: function (state) {
+                this.param = state['param'];
+                if (this.param) {
+                    this.addParam(this.param);
+                }
+            },
         };
 
         Blockly.Themes.Classic.blockStyles["function_definition_style"] = {
@@ -55,8 +107,6 @@ import '@blockly/field-bitmap';
                     parm.push(fullParm);
                 }
             });
-
-
             let code = '';
 
             //拼接函数名
@@ -70,11 +120,9 @@ import '@blockly/field-bitmap';
                 let valueBeforePrefix = parts[0]; // 获取 '--&&--' 前面的部分
                 let valueAfterPrefix = parts[1]; // 获取 '--&&--' 后面的部分
 
-                let value = valueBeforePrefix.split('--&--'); //获取参数类型
-                let preFix = value[0]; //获取参数名
 
-                preFix = getParmType(preFix); //获取参数类型
-                let parmName = getParmName(valueAfterPrefix, value); //获取参数名
+                let preFix = getParmType(valueBeforePrefix); //获取参数类型
+                let parmName = getParmName(valueBeforePrefix, valueAfterPrefix, index); //获取参数名
 
                 code += `${preFix} ${parmName}`;
 
@@ -93,50 +141,34 @@ import '@blockly/field-bitmap';
             //函数--获取参数类型
             function getParmType(preFix) {
                 let parmType;
-
-                if (preFix === 'text') {
+                if (preFix === '文本') {
                     parmType = 'char*';
-                } else if (preFix == 'boolean') {
+                } else if (preFix == '布尔值') {
                     parmType = 'bool';
-                } else if (preFix == 'number_int') {
-                    parmType = 'int';
-                } else if (preFix == 'number_double') {
+                } else if (preFix == '浮点数') {
                     parmType = 'double';
-                } else if (preFix == 'number_long') {
-                    parmType = 'long';
-                } else if (preFix == 'array_int') {
-                    parmType = 'int*';
-                } else if (preFix == 'array_string') {
+                } else if (preFix == '字符串数组') {
                     parmType = 'char**';
-                } else if (preFix == 'array_double') {
+                } else if (preFix == '浮点数数组') {
                     parmType = 'double*';
                 }
                 return parmType;
             }
-            function getParmName(valueAfterPrefix, value) {
-                let parmName;
-                let full = '';
-                full += value[0] + value[1];
+            function getParmName(valueAfterPrefix, value, index) {
+                let bool = (value == valueAfterPrefix) ? false : true;
+                let fullName;
                 if (valueAfterPrefix == '文本') {
-                    parmName = full;
+                    fullName = (bool) ? value : 'text' + index;
                 } else if (valueAfterPrefix == '布尔值') {
-                    parmName = full;
-                } else if (valueAfterPrefix == '整形') {
-                    parmName = full;
+                    fullName = (bool) ? value : 'boolean' + index;
                 } else if (valueAfterPrefix == '浮点数') {
-                    parmName = full;
-                } else if (valueAfterPrefix == '长整型') {
-                    parmName = full;
-                } else if (valueAfterPrefix == '数字数组') {
-                    parmName = full;
-                } else if (valueAfterPrefix == '字符数组') {
-                    parmName = full;
+                    fullName = (bool) ? value : 'number_double' + index;
+                } else if (valueAfterPrefix == '字符串数组') {
+                    fullName = (bool) ? value : 'array_string' + index;
                 } else if (valueAfterPrefix == '浮点数数组') {
-                    parmName = full;
-                } else {
-                    parmName = valueAfterPrefix
+                    fullName = (bool) ? value : 'array_double' + index;
                 }
-                return parmName;
+                return fullName;
             }
 
             return code;

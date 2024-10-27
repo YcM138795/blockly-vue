@@ -14,19 +14,6 @@ function registerFunctionBlockContextMenuOptions() {
     callback: function (scope) {
       EventBus.$emit('edit_function', scope.block);
 
-      const blockState =JSON.stringify(Blockly.serialization.blocks.save(scope.block)) ; // 保存块状态
-      
-      
-      const position = scope.block.getRelativeToSurfaceXY(); // 获取相对位置
-      const stateWithPosition = {
-        blockState,
-        position: {
-        x: position.x,
-        y: position.y,
-        }
-      };
-      
-      EventBus.$emit('saveEditBlock', stateWithPosition);
     },
     scopeType: Blockly.ContextMenuRegistry.ScopeType.BLOCK,
     id: 'edit_function',

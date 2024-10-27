@@ -230,7 +230,7 @@ export default {
                 return;
             }
             this.loading = true; // 开始显示加载动画
-            this.$emit('loading',this.loading);
+            this.$emit('loading',this.loading,'代码编译中');
             this.viewShow = this.viewShow !== 'dowmload' ? 'dowmload' : 'workbench';
             let state;
             state = await Compile(this.code);
