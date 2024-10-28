@@ -530,7 +530,7 @@ export default {
       this.projectName = projectName;
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
-      this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
+      // this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
       console.log(state);
       // 读取自定义函数的数据
       const functionBlockData = this.advancedBlockStore.functionBlock;
@@ -811,8 +811,8 @@ export default {
               this.addParam(functionArray, functionArray);
 
               // 设置块的连接属性
-              this.setPreviousStatement(true, null); // 允许前面有代码块连接
-              this.setNextStatement(true, null);     // 允许后面有代码块连接
+              this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+              this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
               this.setColour('#4FD284',); // 设置块的颜色
               this.setTooltip('调用已定义的函数');
               this.setHelpUrl('');
@@ -983,8 +983,8 @@ export default {
 
 
             // 设置块的连接属性
-            this.setPreviousStatement(true, null); // 允许前面有代码块连接
-            this.setNextStatement(true, null);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
@@ -1075,8 +1075,8 @@ export default {
             this.constantBlock = that.advancedBlockStore.constantBlock;
 
             // 设置块的连接属性
-            this.setPreviousStatement(true, null); // 允许前面有代码块连接
-            this.setNextStatement(true, null);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
@@ -1210,8 +1210,8 @@ export default {
               imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
             }
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284');
             this.setTooltip("");
             this.setHelpUrl("");
@@ -1380,8 +1380,8 @@ export default {
               imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
             }
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284');
             this.setTooltip("");
             this.setHelpUrl("");

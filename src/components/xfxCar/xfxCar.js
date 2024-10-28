@@ -199,11 +199,6 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                 const code = `Light_init();\n`;
                 return code;
             }
-            dartGenerator.forBlock['init_Light'] = function () {
-                // var number_digital = block.getFieldValue('digital');
-                var code = `console.log('初始化灯')\n`
-                return code;
-            };
         }
 
         //Light_on:亮灯
