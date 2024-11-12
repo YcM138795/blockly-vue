@@ -323,8 +323,8 @@ import '@blockly/field-bitmap';
                         colours: { filled: '#4d8c8c', empty: '#fff' }
                     },
                 ],
-                "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-                "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+                "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                 "colour": '#4FD284'
             },
         ]);

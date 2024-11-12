@@ -74,11 +74,11 @@ async function pollCompileResult(taskId, timeout = 20000, interval = 1000) {
             count++;
             const elapsed = Date.now() - startTime;
 
-            if(count==21){
+            if (count == 21) {
                 console.log('轮询次数:', count);
                 const result = await getCompileResult(taskId);
-                    clearInterval(pollInterval);  // 超时，停止轮询
-                    resolve(result.msg);  // 返回第二个接口信息
+                clearInterval(pollInterval);  // 超时，停止轮询
+                resolve(result.msg);  // 返回第二个接口信息
             }
             // 检查是否超过超时时间
             if (elapsed > timeout) {
@@ -90,7 +90,7 @@ async function pollCompileResult(taskId, timeout = 20000, interval = 1000) {
             // 调用获取编译结果的函数
             const result = await getCompileResult(taskId);
             console.log('编译结果:', result.msg);
-            
+
 
             if (result && result.msg && result.msg.startsWith('https://')) {  // 判断是否包含有效的 URL
                 clearInterval(pollInterval);  // 成功，停止轮询
@@ -124,20 +124,28 @@ async function Compile(data) {
     #include "bl61x_fmq.h"
     #include "bl61x_Motors.h"
     #include "bl61x_Ultrasonic.h"
+    #include "bl61x_M6050.h"
+    // #include "bl61x_M6050.c"
+    // #include "bl61x_led.h"
     #include "ota.h"
     #include "log.h"
-    
-    #define DBG_TAG "MAIN"
+    #include "bt_connect.h"
+
+    #define DBG_TAG "MAIN"    
     #define VERSION __DATE__ " " __TIME__
     
+    static struct bflb_device_s *gpio;
     static TaskHandle_t logo_handle;
     static TaskHandle_t zforth_handle;
     static TaskHandle_t usbdev_handle;
     static TaskHandle_t light_handle;
     static TaskHandle_t fmq_handle;
     static TaskHandle_t motors_handle;
-    static TaskHandle_t servo_handle;
     static TaskHandle_t ultrasonic_handle;
+    static TaskHandle_t led_handle;
+    static TaskHandle_t m6050_handle;
+    static TaskHandle_t mpu_handle;		//陀螺仪功能任务（主板朝上闪灯）
+    static TaskHandle_t servo_handle;
     
     void version(void) {
 	char buf[128];
@@ -145,27 +153,104 @@ async function Compile(data) {
 	zf_txs(buf);
     }
 
+    struct bflb_device_s *uart0 = NULL;
+    struct bflb_device_s *i2c0;
+
+    volatile int pitch1,roll1,yaw1;
+
     void ultrasonic_task(void *param);
     void motors_task(void *param);
     void servo_task(void *param);
     void fmq_task(void *param);
-    void light_task(void *param);\n`+ data;
+    void light_task(void *param);
+    void led_task(void *param);
+    void mpu_task(void *param);
+    
+    void bl61x_mpu6050_task(void *param)
+    {
+
+        int i=0;
+        int report=1;
+
+        float pitch,roll,yaw; 		//欧拉角
+        short aacx,aacy,aacz;		//加速度传感器原始数据
+        short gyrox,gyroy,gyroz;	//陀螺仪原始数据
+        short temp;					//温度
+    
+        bl61x_mpu6050_init(i2c0);
+
+        printf("-----\\r\\n");
+
+
+        while(1)
+        {
+
+            if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
+            { 
+                temp=MPU6050_Get_Temperature();	//得到温度值
+                MPU6050_Get_Accelerometer(&aacx,&aacy,&aacz);	//得到加速度传感器数据
+                MPU6050_Get_Gyroscope(&gyrox,&gyroy,&gyroz);	//得到陀螺仪数据
+
+
+                if((i%10)==0)
+                { 
+                if(temp<0)
+                {
+                    temp=-temp;		//转为正数
+                }
+
+                printf("Temperature:%d*c\\r\\n",temp);
+
+                temp=pitch*10;
+                if(temp<0)
+                {
+                    temp=-temp;		//转为正数
+                }
+
+                printf("Pitch:%d\\r\\n",temp);
+                pitch1=temp;
+                temp=roll*10;
+                if(temp<0)
+                {
+                    temp=-temp;		//转为正数
+                }
+
+                printf("Roll:%d\\r\\n",temp);
+                roll1=temp;
+                temp=yaw*10;
+                if(temp<0)
+                {
+                    temp=-temp;		//转为正数
+                }
+
+                printf("Yaw:%d\\r\\n",temp);
+                yaw1=temp;
+                }
+            }
+            
+                
+            i++;			
+            vTaskDelay(30);
+
+        }
+        vTaskDelete(NULL);
+    }\n`+ data;
 
     try {
         console.log('开始编译');
         const taskId = await getId(data);  // 获取 taskId
         const fileUrl = await pollCompileResult(taskId);  // 获取编译结果文件 URL
 
-        if(fileUrl.startsWith('Compiling')){
+        if (fileUrl.startsWith('Compiling')) {
             return '代码编译超时,请稍后再试';
         }
-        if(fileUrl=='代码编译出错,积木代码逻辑有误'){
+        if (fileUrl == '代码编译出错,积木代码逻辑有误') {
             return '代码编译出错,积木代码逻辑有误';
         }
-        if(fileUrl.startsWith('Task')){
+        if (fileUrl.startsWith('Task')) {
             return '服务器繁忙，请稍后再试';
         }
-        if(fileUrl.startsWith('Error')){
+        if (fileUrl.startsWith('Error')) {
             return '阿里云服务器出错，请稍后再试';
         }
 
@@ -181,121 +266,7 @@ async function Compile(data) {
     }
 }
 
-// // 转换blob，下载文件
-// function downFile(blob, fileName) {
-//     try {
-//         // 触发文件下载
-//         const downloadUrl = URL.createObjectURL(blob);
-//         const a = document.createElement('a');
-//         a.href = downloadUrl;
-//         a.download = fileName;
-//         document.body.appendChild(a);
-//         a.click();
-//         document.body.removeChild(a);
-//         URL.revokeObjectURL(downloadUrl); // 释放URL对象
-
-//         console.log('文件下载完成:', fileName);
-
-//     } catch (error) {
-//         console.error('处理文件时出错:', error);
-//     }
-// }
-
 // 导出函数
 export { Compile };
 
 
-
-// // 导入 axios
-// import axios from 'axios';
-// import { EventBus } from './eventBus'; // 引入事件总线
-
-// 下载文件并返回 Blob 对象
-// async function downloadFile(url) {
-//     try {
-//         const response = await axios({
-//             method: 'GET',
-//             url: url,
-//             responseType: 'blob' // 获取二进制数据
-//         });
-
-//         return response.data; // 返回 Blob 对象
-//     } catch (error) {
-//         console.error('下载文件时出错:', error);
-//         throw error;
-//     }
-// }
-
-
-
-// // 主函数：下载文件并处理
-// async function postData(data) {
-//     data = `#include <FreeRTOS.h>
-//     #include "task.h"
-//     #include "bflb_core.h"
-//     #include "bflb_mtimer.h"
-//     #include "bflb_uart.h"
-//     #include "board.h"
-//     #include "io.h"
-//     #include "ota.h"
-//     #include "i2c.h"
-//     #include "spi.h"
-//     #include "usbdev.h"
-//     #include "logo.h"
-//     #include "zforth.h"
-//     #include "zforth_bl61x.h"
-//     #include "bl61x_light.h"
-//     #include "bl61x_fmq.h"
-//     #include "bl61x_Motors.h"
-//     #include "bl61x_Ultrasonic.h"
-//     #include "ota.h"
-//     #include "log.h"
-    
-//     #define DBG_TAG "MAIN"
-//     #define VERSION __DATE__ " " __TIME__
-    
-//     static TaskHandle_t logo_handle;
-//     static TaskHandle_t zforth_handle;
-//     static TaskHandle_t usbdev_handle;
-//     static TaskHandle_t light_handle;
-//     static TaskHandle_t fmq_handle;
-//     static TaskHandle_t motors_handle;
-//     static TaskHandle_t ultrasonic_handle;
-    
-//     void version(void) {
-// 	char buf[128];
-// 	snprintf(buf, 127, "version: %s\\n\\r", VERSION);
-// 	zf_txs(buf);
-//     }
-
-//     void ultrasonic_task(void *param);
-//     void motors_task(void *param);
-//     void fmq_task(void *param);
-//     void light_task(void *param);\n`+ data;
-
-//     try {
-//         console.log('开始编译');
-
-//         const response = await axios.post('https://edu.jnuiclab.com/api/admin/oss/replace', {
-//             code: data
-//         });
-//         console.log('c代码', data);
-
-//         const fileUrl = response.data.msg;
-//         console.log('Download URL:', fileUrl);
-
-//         const blob = await downloadFile(fileUrl);
-
-//         // 直接处理 Blob 对象并触发文件下载
-//         handleFile(blob, 'binary_file.ota');
-
-//         return '二进制文件获取成功';
-
-//     } catch (error) {
-//         console.error('主函数错误:', error);
-//         return '二进制文件获取失败';
-//     }
-// }
-
-// // 导出函数
-// export { postData };

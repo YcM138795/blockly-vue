@@ -29,6 +29,11 @@ export default {
               {
                 kind: "block",
 
+                type: "led_task"
+              },
+              {
+                kind: "block",
+
                 type: "light_task"
               },
               {
@@ -45,6 +50,11 @@ export default {
                 kind: "block",
 
                 type: "motors_task"
+              },
+              {
+                kind: "block",
+
+                type: "mpu_task"
               },
               {
                 kind: "block",

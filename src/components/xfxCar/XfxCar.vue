@@ -41,7 +41,27 @@ export default {
               },
               {
                 "kind": "label",
-                "text": "灯控制"
+                "text": "烧录板灯控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_led_task"
+              },
+              {
+                kind: "block",
+                type: "init_Led"
+              },
+              {
+                kind: "block",
+                type: "Led_on"
+              },
+              {
+                kind: "block",
+                type: "Led_off"
+              },
+              {
+                "kind": "label",
+                "text": "小车灯控制"
               },
               {
                 kind: "block",
@@ -127,6 +147,18 @@ export default {
               {
                 kind: "block",
                 type: "stop_motor"
+              },
+              {
+                "kind": "label",
+                "text": "陀螺仪控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_mpu_task"
+              },
+              {
+                kind: "block",
+                type: "judgment_board"
               },
               {
                 kind: "label",

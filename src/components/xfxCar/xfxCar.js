@@ -2,6 +2,8 @@ import * as Blockly from 'blockly/core';
 import { javascriptGenerator, Order } from 'blockly/javascript';
 import { dartGenerator } from 'blockly/dart';
 import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块的插件
+import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
+
 
 
 //小飞象智能车
@@ -26,11 +28,11 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                             {
                                 "type": "input_statement",
                                 "name": "inner",
-                                "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                                "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -65,11 +67,11 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                             {
                                 "type": "input_statement",
                                 "name": "inner",
-                                "check":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task']
+                                "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -114,8 +116,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -140,9 +142,276 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 
     }
 
+    //烧录板灯
+    {
+        //XTask_led_task:烧录板灯操作任务执行函数
+        {
+            Blockly.Blocks['XTask_led_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_led_task",
+                        "tooltip": "烧录板灯操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "烧录板灯操作任务执行 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": [''],
+                        "nextStatement": [''],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_led_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(led_task, (char *)"led_task",  512, NULL, 9, &led_handle);\n`;
+                return code;
+            }
+        }
+
+        //init_Led:初始化烧录板灯
+        {
+            Blockly.Blocks['init_Led'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "init_Led",
+                        "tooltip": "初始化烧录板灯",
+                        "helpUrl": "",
+                        "message0": "初始化烧录板灯 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['init_Led'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `Led_init();\n`;
+                return code;
+            }
+        }
+
+        //Led_on:烧录板灯亮
+        {
+            Blockly.Blocks['Led_on'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "Led_on",
+                        "tooltip": "烧录板灯亮",
+                        "helpUrl": "",
+                        "message0": "烧录板灯亮 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['Led_on'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `Led_on();\n`;
+                return code;
+            }
+        }
+
+        //Led_off:烧录板灯灭
+        {
+            Blockly.Blocks['Led_off'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "Led_off",
+                        "tooltip": "烧录板灯灭",
+                        "helpUrl": "",
+                        "message0": "烧录板灯灭 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['Led_off'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `Led_off();\n`;
+                return code;
+            }
+        }
 
 
-    //灯
+    }
+
+    //陀螺仪
+    {
+        //XTask_mpu_task:陀螺仪操作任务执行函数
+        {
+            Blockly.Blocks['XTask_mpu_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_led_task",
+                        "tooltip": "陀螺仪操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "陀螺仪操作任务执行 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": [''],
+                        "nextStatement": [''],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_mpu_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, 9, &mpu_handle);\n`;
+                return code;
+            }
+        }
+
+        //judgment_board:方向判断
+        {
+            class ImageTextGridDropdown extends FieldGridDropdown {
+                constructor(options, config) {
+                    super(options, config);
+                }
+
+                showEditor_() {
+                    super.showEditor_();
+                    const dropdownDiv = Blockly.DropDownDiv.getContentDiv();
+
+                    // 遍历所有选项并修改它们
+                    this.getOptions().forEach(([option], index) => {
+                        const imgElement = dropdownDiv.querySelectorAll('img')[index];
+
+                        // 如果选项是一个对象并且包含图片信息
+                        if (imgElement && typeof option === 'object' && option.alt) {
+                            // 确保已有的图片标签存在
+                            const textSpan = imgElement.parentNode.querySelector('span.blocklyDropdownTextLabel');
+
+                            // 如果没有找到文本标签，则创建新的文本标签
+                            if (!textSpan) {
+                                const spanElement = document.createElement('span');
+                                spanElement.innerText = option.alt;  // 使用图片下方的文本
+                                spanElement.style.color = 'white';
+                                spanElement.style.display = 'block';  // 确保文本显示在图片下方
+                                spanElement.style.marginTop = '5px';  // 为文本添加一些间距
+
+                                // 添加居中样式
+                                spanElement.style.textAlign = 'center';  // 居中文本
+                                spanElement.style.width = '100%';  // 确保span占满父元素的宽度
+
+                                // 设置图片的居中样式
+                                imgElement.style.display = 'block';  // 使图片成为块级元素
+                                imgElement.style.margin = '0 auto';  // 居中图片
+
+                                imgElement.parentNode.appendChild(spanElement);  // 将文本添加到图片下面
+                            }
+                        }
+                    });
+
+                }
+            }
+            Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
+
+            Blockly.defineBlocksWithJsonArray([
+                {
+                    type: 'judgment_board',
+                    "message0": "方向判断:当 %1 %2 执行 %3",
+                    args0: [
+                        {
+                            type: 'ImageTextGridDropdown',
+                            name: 'options',
+                            options: [
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%9B%BE%E6%A0%87%E5%90%91%E4%B8%8A.png',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '图标向上',
+                                }, '图标向上'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%9B%BE%E6%A0%87%E5%90%91%E4%B8%8B.png',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '图标向下',
+                                }, '图标向下'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%9B%BE%E6%A0%87%E5%B7%A6%E5%80%BE.png',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '图标左倾',
+                                }, '图标左倾'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%9B%BE%E6%A0%87%E5%8F%B3%E5%80%BE.png',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '图标右倾',
+                                }, '图标右倾'],
+                            ],
+                        },
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "inner"
+                        }
+                    ],
+                    "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                    "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                    "colour": '#ff7272'
+                },
+            ]);
+
+            javascriptGenerator.forBlock['judgment_board'] = function (block, generator) {
+                let judge;
+                const dropdown_name = block.getFieldValue('options');
+                const statement_inner = generator.statementToCode(block, 'inner');
+
+                if (dropdown_name == '图标向上') {
+                    judge = 'if((pitch1<200) && (pitch1>0) && (roll1>1600) && (roll1<1800))'
+                } else if (dropdown_name == '图标向下') {
+                    judge = 'if((pitch1<200) && (pitch1>0) && (roll1>0) && (roll1<200))';
+                } else if (dropdown_name == '图标左倾') {
+                    judge = 'if((pitch1<800) && (pitch1>0) && (roll1>0) && (roll1<900))';
+                } else {
+                    judge = 'if((pitch1<800) && (pitch1>0) && (roll1>900) && (roll1<1100))'
+                }
+
+                const code = `${judge} {\n${statement_inner}\n}\n`;
+                return code;
+            }
+        }
+
+    }
+
+    //小车灯
     {
         //XTask_light_task:灯操作任务执行函数
         {
@@ -159,7 +428,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":[''],
+                        "previousStatement": [''],
                         "nextStatement": [''],
                         "colour": '#ff7272'
                     })
@@ -172,6 +441,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                 return code;
             }
         }
+
         //init_Light:初始化灯
         {
             Blockly.Blocks['init_Light'] = {
@@ -187,8 +457,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -230,8 +500,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -282,8 +552,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -325,7 +595,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":[''],
+                        "previousStatement": [''],
                         "nextStatement": [''],
                         "colour": '#ff7272'
                     })
@@ -354,8 +624,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -402,8 +672,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 },
@@ -470,8 +740,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -546,8 +816,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -647,8 +917,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -698,7 +968,7 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement":[''],
+                        "previousStatement": [''],
                         "nextStatement": [''],
                         "colour": '#ff7272'
                     })
@@ -727,8 +997,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -782,8 +1052,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -796,129 +1066,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                 const code = `Motors_${dropdown_options}(${number_speed});\n`;
                 return code;
             }
-            // dartGenerator.forBlock['Motors_move'] = function (block) {
-            //     const dropdown_motor_number = block.getFieldValue('motor_number');
-            //     const number_speed = block.getFieldValue('speed');
-
-            //     // TODO: Assemble dart into the code variable.
-            //     const code = `console.log('直流电机${dropdown_motor_number}速度${number_speed}')\n`;
-            //     return code;
-            // }
         }
 
-        // //Motors_left:电机控制左平移
-        // {
-        //     Blockly.Blocks['Motors_left'] = {
-        //         init: function () {
-        //             this.jsonInit({
-        //                 "type": "Motors_left",
-        //                 "tooltip": "",
-        //                 "helpUrl": "",
-        //                 "message0": "左平移    速度 %1 角度 %2 %3",
-        //                 "args0": [
-        //                     {
-        //                         "type": "field_number",
-        //                         "name": "speed",
-        //                         "value": 0,
-        //                         "min": 0,
-        //                         "max": 100
-        //                     },
-        //                     {
-        //                         "type": "field_dropdown",
-        //                         "name": "direction",
-        //                         "options": [
-        //                             [
-        //                                 "左",
-        //                                 "0"
-        //                             ],
-        //                             [
-        //                                 "左前",
-        //                                 "1"
-        //                             ],
-        //                             [
-        //                                 "左后",
-        //                                 "-1"
-        //                             ]
-        //                         ]
-        //                     },
-        //                     {
-        //                         "type": "input_dummy",
-        //                         "name": "NAME"
-        //                     }
-        //                 ],
-        //                 "previousStatement": null,
-        //                 "nextStatement": null,
-        //                 "colour": '#ff7272'
-        //             })
-        //         }
-        //     }
-        //     javascriptGenerator.forBlock['Motors_left'] = function (block) {
-        //         const number_speed = block.getFieldValue('speed');
-        //         const dropdown_direction = block.getFieldValue('direction');
-
-        //         // TODO: Assemble javascript into the code variable.
-        //         const code = `Motors_left(${number_speed},${dropdown_direction});\n`;
-        //         return code;
-        //     }
-
-        // }
-
-        // //Motors_right:电机控制右平移
-        // {
-        //     Blockly.Blocks['Motors_right'] = {
-        //         init: function () {
-        //             this.jsonInit({
-        //                 "type": "Motors_right",
-        //                 "tooltip": "",
-        //                 "helpUrl": "",
-        //                 "message0": "右平移    速度 %1 角度 %2 %3",
-        //                 "args0": [
-        //                     {
-        //                         "type": "field_number",
-        //                         "name": "speed",
-        //                         "value": 0,
-        //                         "min": 0,
-        //                         "max": 100
-        //                     },
-        //                     {
-        //                         "type": "field_dropdown",
-        //                         "name": "direction",
-        //                         "options": [
-        //                             [
-        //                                 "右",
-        //                                 "0"
-        //                             ],
-        //                             [
-        //                                 "右前",
-        //                                 "1"
-        //                             ],
-        //                             [
-        //                                 "右后",
-        //                                 "-1"
-        //                             ]
-        //                         ]
-        //                     },
-        //                     {
-        //                         "type": "input_dummy",
-        //                         "name": "NAME"
-        //                     }
-        //                 ],
-        //                 "previousStatement": null,
-        //                 "nextStatement": null,
-        //                 "colour": '#ff7272'
-        //             })
-        //         }
-        //     }
-        //     javascriptGenerator.forBlock['Motors_right'] = function (block) {
-        //         const number_speed = block.getFieldValue('speed');
-        //         const dropdown_direction = block.getFieldValue('direction');
-
-        //         // TODO: Assemble javascript into the code variable.
-        //         const code = `Motors_right(${number_speed},${dropdown_direction});\n`;
-        //         return code;
-        //     }
-
-        // }
 
         //Motors_around:电机控制右平移
         {
@@ -956,8 +1105,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -1006,8 +1155,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                             "name": "NAME"
                         }
                     ],
-                    "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                    "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                    "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                    "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                     "colour": '#ff7272'
                 }
             ]);
@@ -1085,8 +1234,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement":['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -1119,8 +1268,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     }
                     )
@@ -1188,8 +1337,8 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task','XTask_fmq_task','XTask_servo_task','XTask_motors_task','XTask_ultrasonic_task'],
+                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
                         "colour": '#ff7272'
                     })
                 }
@@ -1259,11 +1408,4 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
             }
         }
     }
-
-
 }
-
-
-
-
-

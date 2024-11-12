@@ -21,8 +21,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00',
             "tooltip": "字符输出函数",
             "helpUrl": ""
@@ -57,8 +57,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00',
             "tooltip": "数字输出函数",
             "helpUrl": ""
@@ -113,11 +113,11 @@ import { dartGenerator } from 'blockly/dart';
               {
                 "type": "input_statement",
                 "name": "operation",
-                "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
+                "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
               }
             ],
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00'
           });
         }
@@ -191,8 +191,8 @@ import { dartGenerator } from 'blockly/dart';
             "type": "printf",
             "message0": "break",
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00',
             "tooltip": "函数跳出函数",
             "helpUrl": ""
@@ -218,8 +218,8 @@ import { dartGenerator } from 'blockly/dart';
             "type": "printf",
             "message0": "continue ",
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00',
             "tooltip": "函数继续函数",
             "helpUrl": ""
@@ -263,8 +263,8 @@ import { dartGenerator } from 'blockly/dart';
               }
             ],
             "inputsInline": true,
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00',
             "tooltip": "数字常量定义",
             "helpUrl": ""
@@ -304,8 +304,8 @@ import { dartGenerator } from 'blockly/dart';
                 "name": "target"
               }
             ],
-            "previousStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
-            "nextStatement": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task'],
+            "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+            "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
             "colour": '#FFBF00'
           })
         }

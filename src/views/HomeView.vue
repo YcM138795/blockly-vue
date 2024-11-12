@@ -77,7 +77,7 @@ export default {
       toolboxPosition: "end", //工具箱在底部
       advancedBlockStore: useAdvancedBlockStore(),//自定义函数的store
       //特殊块
-      entryBlockTypes: ['int_main', 'light_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'function_definition'],
+      entryBlockTypes: ['int_main', 'light_task', 'led_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'mpu_task', 'function_definition'],
       toolbox: {
         contents: [
           {
@@ -411,6 +411,15 @@ export default {
             // 设置指定块的位置，例如添加在已有块的旁边
             customBlock.moveBy(250, 50);  // 可根据需要修改坐标
           }
+        } else if (block.type === 'XTask_led_task') {
+          if (!this.hasCustomBlock('led_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('led_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+          }
         } else if (block.type === 'XTask_fmq_task') {
           if (!this.hasCustomBlock('fmq_task')) {
             // 仅当工作区没有指定块时，才添加块，防止重复添加
@@ -418,7 +427,7 @@ export default {
             customBlock.initSvg();
             customBlock.render();
             // 设置指定块的位置，例如添加在已有块的旁边
-            customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+            customBlock.moveBy(250, 250);  // 可根据需要修改坐标
           }
         } else if (block.type === 'XTask_servo_task') {
           if (!this.hasCustomBlock('servo_task')) {
@@ -427,7 +436,7 @@ export default {
             customBlock.initSvg();
             customBlock.render();
             // 设置指定块的位置，例如添加在已有块的旁边
-            customBlock.moveBy(250, 250);  // 可根据需要修改坐标
+            customBlock.moveBy(450, 250);  // 可根据需要修改坐标
           }
         } else if (block.type === 'XTask_motors_task') {
           if (!this.hasCustomBlock('motors_task')) {
@@ -436,16 +445,25 @@ export default {
             customBlock.initSvg();
             customBlock.render();
             // 设置指定块的位置，例如添加在已有块的旁边
-            customBlock.moveBy(450, 250);  // 可根据需要修改坐标
+            customBlock.moveBy(250, 50);  // 可根据需要修改坐标
           }
-        } else if (block.type === 'XTask_ultrasonic_task') {
+        }else if (block.type === 'XTask_ultrasonic_task') {
           if (!this.hasCustomBlock('ultrasonic_task')) {
             // 仅当工作区没有指定块时，才添加块，防止重复添加
             const customBlock = this.workspace.newBlock('ultrasonic_task');
             customBlock.initSvg();
             customBlock.render();
             // 设置指定块的位置，例如添加在已有块的旁边
-            customBlock.moveBy(250, 450);  // 可根据需要修改坐标
+            customBlock.moveBy(450, 50);  // 可根据需要修改坐标
+          }
+        } else if (block.type === 'XTask_mpu_task') {
+          if (!this.hasCustomBlock('mpu_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('mpu_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(250, 250);  // 可根据需要修改坐标
           }
         }
       })
@@ -530,7 +548,7 @@ export default {
       this.projectName = projectName;
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
-      // this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
+      this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
       console.log(state);
       // 读取自定义函数的数据
       const functionBlockData = this.advancedBlockStore.functionBlock;
@@ -552,12 +570,13 @@ export default {
       try {
         // 尝试从本地存储中读取数据
         const savedData = localStorage.getItem('workspaceData');
+
         if (savedData) {
           const Data = JSON.parse(savedData);//解析数据
           const state = Data.blocksState;//获取工作区的块
-          this.advancedBlockStore.functionBlock = Data.functionBlocks;//获取自定义函数的数据
-          this.advancedBlockStore.constantBlock = Data.constantBlock;//获取常量的数据
-          this.advancedBlockStore.arrayBlock = Data.arrayBlock;//获取数组的数据
+          this.advancedBlockStore.functionBlock = Data.functionBlocks || [];//获取自定义函数的数据
+          this.advancedBlockStore.constantBlock = Data.constantBlock || ["Fn:重命名此常量", "Fn:删除此常量"];//获取常量的数据
+          this.advancedBlockStore.arrayBlock = Data.arrayBlock || ["Fn:重命名此数组", "Fn:删除此数组"];//获取数组的数据
           console.log('恢复工作区数据:', state);
 
           this.$nextTick(() => {
@@ -781,6 +800,7 @@ export default {
           callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
         },];
 
+
       if (this.advancedBlockStore.functionBlock.length > 0) {
         callFunctionBlockArry.push({
           kind: "label",
@@ -811,8 +831,8 @@ export default {
               this.addParam(functionArray, functionArray);
 
               // 设置块的连接属性
-              this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-              this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+              this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+              this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
               this.setColour('#4FD284',); // 设置块的颜色
               this.setTooltip('调用已定义的函数');
               this.setHelpUrl('');
@@ -983,8 +1003,8 @@ export default {
 
 
             // 设置块的连接属性
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
@@ -1075,8 +1095,8 @@ export default {
             this.constantBlock = that.advancedBlockStore.constantBlock;
 
             // 设置块的连接属性
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
@@ -1210,8 +1230,8 @@ export default {
               imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
             }
 
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284');
             this.setTooltip("");
             this.setHelpUrl("");
@@ -1380,8 +1400,8 @@ export default {
               imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
             }
 
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
+            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
             this.setColour('#4FD284');
             this.setTooltip("");
             this.setHelpUrl("");
@@ -1686,5 +1706,9 @@ body {
   border: 10px solid #E9F1FC;
   border-radius: 30px;
   flex: 1;
+}
+
+.blocklyDropDownContent .blocklyDropdownTextLabel {
+  color: black !important;
 }
 </style>

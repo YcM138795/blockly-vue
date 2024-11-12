@@ -47,6 +47,7 @@ import { javascriptGenerator } from 'blockly/javascript';
   ota_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);
+  xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);		//陀螺仪任务
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}\n`;
@@ -54,6 +55,38 @@ ${statements_operate}
         };
     }
 
+
+    // led_task:烧录板灯函数
+    {
+        Blockly.Blocks['led_task'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "light_task",
+                    "tooltip": "烧录板灯函数(仅一个)",
+                    "helpUrl": "",
+                    "message0": "烧录板灯函数 %1 %2",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "operate",
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                        }
+                    ],
+                    "colour": '#B463FF'
+                })
+            }
+        };
+        javascriptGenerator.forBlock['led_task'] = function (block, generator) {
+            var statements_operate = generator.statementToCode(block, 'operate');
+            // TODO: Assemble javascript into code variable.
+            var code = `void led_task(void *param){\n${statements_operate}}\n`;
+            return code;
+        };
+    }
 
     // light_task:灯函数
     {
@@ -72,7 +105,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -104,7 +137,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -136,7 +169,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -168,7 +201,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
@@ -179,6 +212,38 @@ ${statements_operate}
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
             var code = `void servo_task(void *param){\n${statements_operate}}\n`;
+            return code;
+        };
+    }
+
+    // mpu_task:陀螺仪函数
+    {
+        Blockly.Blocks['mpu_task'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "mpu_task",
+                    "tooltip": "陀螺仪函数(仅一个)",
+                    "helpUrl": "",
+                    "message0": "陀螺仪函数 %1 %2",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "operate",
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                        }
+                    ],
+                    "colour": '#B463FF'
+                })
+            }
+        };
+        javascriptGenerator.forBlock['mpu_task'] = function (block, generator) {
+            var statements_operate = generator.statementToCode(block, 'operate');
+            // TODO: Assemble javascript into code variable.
+            var code = `void mpu_task(void *param){\n${statements_operate}}\n`;
             return code;
         };
     }
@@ -200,7 +265,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_ultrasonic_task']
+                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
                         }
                     ],
                     "colour": '#B463FF'
