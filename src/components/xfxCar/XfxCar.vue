@@ -40,6 +40,18 @@ export default {
                 type: "delay"
               },
               {
+                kind: "block",
+                type: "gpio_write"
+              },
+              {
+                "kind": "label",
+                "text": "陀螺仪控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_mpu6050__task"
+              },
+              {
                 "kind": "label",
                 "text": "烧录板灯控制"
               },

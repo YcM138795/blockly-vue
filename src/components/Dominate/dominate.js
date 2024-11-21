@@ -51,7 +51,6 @@ const suffix = `while(1){
   ota_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);
-  xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);		//陀螺仪任务
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}\n`;
