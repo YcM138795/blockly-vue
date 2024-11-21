@@ -234,6 +234,9 @@ async function Compile(data) {
 
         }
         vTaskDelete(NULL);
+        while(1){
+            vTaskDelay(1000);
+        }
     }\n`+ data;
 
     try {

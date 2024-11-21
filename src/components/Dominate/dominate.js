@@ -3,6 +3,10 @@ import { javascriptGenerator } from 'blockly/javascript';
 
 // import { EventBus } from '../../utils/eventBus';
 
+//后缀
+const suffix = `while(1){
+  vTaskDelay(1000);
+}`
 
 //函数
 {
@@ -61,7 +65,7 @@ ${statements_operate}
         Blockly.Blocks['led_task'] = {
             init: function () {
                 this.jsonInit({
-                    "type": "light_task",
+                    "type": "led_task",
                     "tooltip": "烧录板灯函数(仅一个)",
                     "helpUrl": "",
                     "message0": "烧录板灯函数 %1 %2",
@@ -83,7 +87,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['led_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void led_task(void *param){\n${statements_operate}}\n`;
+            var code = `void led_task(void *param){\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -115,7 +119,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['light_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void light_task(void *param){\n${statements_operate}}\n`;
+            var code = `void light_task(void *param){\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -147,7 +151,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['fmq_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void fmq_task(void *param){\n${statements_operate}}\n`;
+            var code = `void fmq_task(void *param){\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -179,7 +183,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['motors_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void motors_task(void *param){\n${statements_operate}}\n`;
+            var code = `void motors_task(void *param){\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -211,7 +215,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['servo_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void servo_task(void *param){\n${statements_operate}}\n`;
+            var code = `void servo_task(void *param){\n${statements_operate}\n}\n`;
             return code;
         };
     }
@@ -243,7 +247,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['mpu_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void mpu_task(void *param){\n${statements_operate}}\n`;
+            var code = `void mpu_task(void *param){\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -275,7 +279,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['ultrasonic_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void ultrasonic_task(void *param){\n${statements_operate}}\n`;
+            var code = `void ultrasonic_task(void *param){\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
