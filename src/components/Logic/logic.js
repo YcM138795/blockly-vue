@@ -2,7 +2,7 @@ import * as Blockly from 'blockly/core';
 import { javascriptGenerator, Order } from 'blockly/javascript';
 import { dartGenerator } from 'blockly/dart';
 import '@blockly/block-plus-minus';
-
+import { XTaskCheckTypes } from '../config/config';
 // 检查语言包是否已加载
 
 
@@ -87,16 +87,16 @@ import '@blockly/block-plus-minus';
           {
             "type": "input_statement",
             "name": "do",
-            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+            "check": XTaskCheckTypes
           },
           {
             "type": "input_statement",
             "name": "else",
-            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+            "check": XTaskCheckTypes
           }
         ],
-        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+        "previousStatement": XTaskCheckTypes,
+        "nextStatement": XTaskCheckTypes,
         "colour": '#FF962E',
         "inputsInline": true
       })
@@ -136,11 +136,11 @@ import '@blockly/block-plus-minus';
           {
             "type": "input_statement",
             "name": "operate",
-            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+            "check": XTaskCheckTypes
           }
         ],
-        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+        "previousStatement": XTaskCheckTypes,
+        "nextStatement": XTaskCheckTypes,
         "colour": '#FF962E',
         "tooltip": "循环",
         "helpUrl": ""
@@ -342,11 +342,11 @@ import '@blockly/block-plus-minus';
           {
             "type": "input_statement",
             "name": "operation",
-            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+            "check": XTaskCheckTypes
           }
         ],
-        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+        "previousStatement": XTaskCheckTypes,
+        "nextStatement": XTaskCheckTypes,
         "inputsInline": true,
         "colour": '#FF962E',
         "tooltip": "if单判断",

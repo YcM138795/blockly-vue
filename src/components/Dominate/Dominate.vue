@@ -61,6 +61,11 @@ export default {
 
                 type: "ultrasonic_task"
               },
+              {
+                kind: "block",
+
+                type: "ir_task"
+              },
             ]
           },
         ],

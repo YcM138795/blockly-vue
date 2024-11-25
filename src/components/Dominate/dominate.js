@@ -1,12 +1,15 @@
 import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from 'blockly/javascript';
+import {XTaskCheckTypes} from '../../components/config/config';
 
 // import { EventBus } from '../../utils/eventBus';
 
 //后缀
 const suffix = `while(1){
   vTaskDelay(1000);
-}`
+  }`
+//前缀
+const prefix = `gpio = bflb_device_get_by_name("gpio");`
 
 //函数
 {
@@ -76,7 +79,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -86,7 +89,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['led_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void led_task(void *param){\n${statements_operate}\n${suffix}}\n`;
+            var code = `void led_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -108,7 +111,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -118,7 +121,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['light_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void light_task(void *param){\n${statements_operate}\n${suffix}}\n`;
+            var code = `void light_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -140,7 +143,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -150,7 +153,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['fmq_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void fmq_task(void *param){\n${statements_operate}\n${suffix}}\n`;
+            var code = `void fmq_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -172,7 +175,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -182,7 +185,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['motors_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void motors_task(void *param){\n${statements_operate}\n${suffix}}\n`;
+            var code = `void motors_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -204,7 +207,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -236,7 +239,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -246,7 +249,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['mpu_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void mpu_task(void *param){\n${statements_operate}\n${suffix}}\n`;
+            var code = `void mpu_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -268,7 +271,7 @@ ${statements_operate}
                         {
                             "type": "input_statement",
                             "name": "operate",
-                            "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                            "check": XTaskCheckTypes
                         }
                     ],
                     "colour": '#B463FF'
@@ -278,7 +281,66 @@ ${statements_operate}
         javascriptGenerator.forBlock['ultrasonic_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void ultrasonic_task(void *param){\n${statements_operate}\n${suffix}}\n`;
+            var code = `void ultrasonic_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
+            return code;
+        };
+    }
+
+    // ir_task:红外遥控函数
+    {
+        Blockly.Blocks['ir_task'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "ir_task",
+                    "tooltip": "红外遥控函数(仅一个)",
+                    "helpUrl": "",
+                    "message0": "红外遥控函数 %1 %2",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "operate",
+                            "check": XTaskCheckTypes
+                        }
+                    ],
+                    "colour": '#B463FF'
+                })
+            }
+        };
+
+        javascriptGenerator.forBlock['ir_task'] = function (block, generator) {
+            var statements_operate = generator.statementToCode(block, 'operate');
+            // TODO: Assemble javascript into code variable.
+            var code = `int ir_task(void)
+{
+    printf("IR NEC case:\\r\\n");
+
+    board_ir_gpio_init();
+    Motors_init();
+
+    uint64_t rx_data;
+    uint8_t rx_len;
+    struct bflb_ir_rx_config_s rx_cfg;
+
+    irrx = bflb_device_get_by_name("irrx");
+
+    /* RX init */
+    rx_cfg.rx_mode = IR_RX_NEC;
+    rx_cfg.input_inverse = true;
+    rx_cfg.deglitch_enable = false;
+    bflb_ir_rx_init(irrx, &rx_cfg);
+
+    /* Enable rx, wait for sending */
+    bflb_ir_rx_enable(irrx, true);
+    
+    ${prefix}
+    ${statements_operate}
+    ${suffix}
+}\n`;
+
             return code;
         };
     }

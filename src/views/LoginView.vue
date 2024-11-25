@@ -44,8 +44,8 @@
     data() {
       return {
         ruleForm: {
-          username: "",
-          password:'',
+          username: "15858607893",
+          password:'15858607893',
           code:'',
           uuid: ""
         },

@@ -4,7 +4,7 @@ import '@blockly/field-bitmap';
 
 
 
-//高级
+//基础
 {
     //函数
     {
@@ -308,32 +308,32 @@ import '@blockly/field-bitmap';
         }
     }
 
-    //显示框
-    {
-        Blockly.defineBlocksWithJsonArray([
-            {
-                type: 'test_field_bitmap',
-                message0: 'bitmap: %1',
-                args0: [
-                    {
-                        type: 'field_bitmap',
-                        name: 'FIELDNAME',
-                        width: 5,
-                        height: 5,
-                        colours: { filled: '#4d8c8c', empty: '#fff' }
-                    },
-                ],
-                "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                "colour": '#4FD284'
-            },
-        ]);
-        javascriptGenerator.forBlock['test_field_bitmap'] = function () {
-            // TODO: Assemble javascript into code variable.
-            var code = ``;
-            return code;
-        };
-    }
+    // //显示框
+    // {
+    //     Blockly.defineBlocksWithJsonArray([
+    //         {
+    //             type: 'test_field_bitmap',
+    //             message0: 'bitmap: %1',
+    //             args0: [
+    //                 {
+    //                     type: 'field_bitmap',
+    //                     name: 'FIELDNAME',
+    //                     width: 5,
+    //                     height: 5,
+    //                     colours: { filled: '#4d8c8c', empty: '#fff' }
+    //                 },
+    //             ],
+    //             "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+    //             "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+    //             "colour": '#4FD284'
+    //         },
+    //     ]);
+    //     javascriptGenerator.forBlock['test_field_bitmap'] = function () {
+    //         // TODO: Assemble javascript into code variable.
+    //         var code = ``;
+    //         return code;
+    //     };
+    // }
 
 }
 

@@ -3,7 +3,7 @@ import { javascriptGenerator, Order } from 'blockly/javascript';
 import { dartGenerator } from 'blockly/dart';
 import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块的插件
 import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
-
+import { XTaskCheckTypes } from '../config/config';
 
 
 //小飞象智能车
@@ -28,11 +28,11 @@ import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
                             {
                                 "type": "input_statement",
                                 "name": "inner",
-                                "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                                "check": XTaskCheckTypes
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -67,11 +67,11 @@ import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
                             {
                                 "type": "input_statement",
                                 "name": "inner",
-                                "check": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']
+                                "check": XTaskCheckTypes
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -116,8 +116,8 @@ import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -236,8 +236,8 @@ import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -333,8 +333,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -362,8 +362,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -391,8 +391,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -528,8 +528,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                             "name": "inner"
                         }
                     ],
-                    "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                    "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                    "previousStatement": XTaskCheckTypes,
+                    "nextStatement": XTaskCheckTypes,
                     "colour": '#ff7272'
                 },
             ]);
@@ -602,8 +602,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -697,8 +697,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -769,8 +769,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -817,8 +817,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 },
@@ -885,8 +885,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -961,8 +961,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1062,8 +1062,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1142,8 +1142,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1190,15 +1190,15 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 100
+                                "max": 4095
                             },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1229,7 +1229,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 100
+                                "max": 4095
                             },
                             {
                                 "type": "field_dropdown",
@@ -1250,8 +1250,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1284,7 +1284,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                             "name": "speed",
                             "value": 0,
                             "min": 0,
-                            "max": 100
+                            "max": 4095
                         },
                         {
                             'type': 'field_dependent_dropdown',
@@ -1300,8 +1300,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                             "name": "NAME"
                         }
                     ],
-                    "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                    "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                    "previousStatement": XTaskCheckTypes,
+                    "nextStatement": XTaskCheckTypes,
                     "colour": '#ff7272'
                 }
             ]);
@@ -1354,7 +1354,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 100
+                                "max": 4095
                             },
                             {
                                 "type": "field_dropdown",
@@ -1379,8 +1379,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1413,8 +1413,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     }
                     )
@@ -1482,8 +1482,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "NAME"
                             }
                         ],
-                        "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-                        "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
@@ -1550,6 +1550,38 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 const code = `Ultrasonic_get_distance(&distance)`;
                 // TODO: Change Order.NONE to the correct operator precedence strength
                 return [code, Order.NONE];
+            }
+        }
+    }
+    
+    //红外线
+    {
+        //XTask_ir_task:红外线操作任务执行函数
+        {
+            Blockly.Blocks['XTask_ir_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_ir_task",
+                        "tooltip": "红外线操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "红外线操作任务执行函数 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": [''],
+                        "nextStatement": [''],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_ir_task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(ir_task, (char *)"ir_task",  4096, NULL, 7, &ir_task_handle);\n`;
+                return code;
             }
         }
     }

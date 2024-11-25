@@ -52,7 +52,7 @@ import store from '@/store';
 Blockly.setLocale(zh_hans);
 import { useAdvancedBlockStore } from '@/store/advancedBlockStore';//引入自定义函数的store
 import * as monaco from 'monaco-editor';
-
+import { XTaskCheckTypes } from '@/components/config/config';
 
 export default {
   name: "CarGame",
@@ -77,7 +77,7 @@ export default {
       toolboxPosition: "end", //工具箱在底部
       advancedBlockStore: useAdvancedBlockStore(),//自定义函数的store
       //特殊块
-      entryBlockTypes: ['int_main', 'light_task', 'led_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'mpu_task', 'function_definition'],
+      entryBlockTypes: ['int_main', 'light_task', 'led_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'mpu_task', 'function_definition','ir_task'],
       toolbox: {
         contents: [
           {
@@ -375,8 +375,8 @@ export default {
           { kind: "block", type: "bracket" },
           { kind: "label", text: "" },
 
-          { kind: "label", text: "显示" },
-          { kind: "block", type: "test_field_bitmap" },
+          // { kind: "label", text: "显示" },
+          // { kind: "block", type: "test_field_bitmap" },
         ];
       });
 
@@ -464,6 +464,15 @@ export default {
             customBlock.render();
             // 设置指定块的位置，例如添加在已有块的旁边
             customBlock.moveBy(250, 250);  // 可根据需要修改坐标
+          }
+        }else if (block.type === 'XTask_ir_task') {
+          if (!this.hasCustomBlock('ir_task')) {
+            // 仅当工作区没有指定块时，才添加块，防止重复添加
+            const customBlock = this.workspace.newBlock('ir_task');
+            customBlock.initSvg();
+            customBlock.render();
+            // 设置指定块的位置，例如添加在已有块的旁边
+            customBlock.moveBy(450, 50);  // 可根据需要修改坐标
           }
         }
       })
@@ -831,8 +840,8 @@ export default {
               this.addParam(functionArray, functionArray);
 
               // 设置块的连接属性
-              this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-              this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+              this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+              this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
               this.setColour('#4FD284',); // 设置块的颜色
               this.setTooltip('调用已定义的函数');
               this.setHelpUrl('');
@@ -1003,8 +1012,8 @@ export default {
 
 
             // 设置块的连接属性
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
             this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
@@ -1095,8 +1104,8 @@ export default {
             this.constantBlock = that.advancedBlockStore.constantBlock;
 
             // 设置块的连接属性
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
             this.setColour('#4FD284',); // 设置块的颜色
             this.setTooltip('调用已定义的函数');
             this.setHelpUrl('');
@@ -1230,8 +1239,8 @@ export default {
               imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
             }
 
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
             this.setColour('#4FD284');
             this.setTooltip("");
             this.setHelpUrl("");
@@ -1400,8 +1409,8 @@ export default {
               imageFieldRE.setOnClickHandler(() => this.onClickHandlerRE());
             }
 
-            this.setPreviousStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']); // 允许前面有代码块连接
-            this.setNextStatement(true, ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task']);     // 允许后面有代码块连接
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
             this.setColour('#4FD284');
             this.setTooltip("");
             this.setHelpUrl("");

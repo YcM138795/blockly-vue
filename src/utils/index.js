@@ -125,27 +125,28 @@ async function Compile(data) {
     #include "bl61x_Motors.h"
     #include "bl61x_Ultrasonic.h"
     #include "bl61x_M6050.h"
-    // #include "bl61x_M6050.c"
-    // #include "bl61x_led.h"
     #include "ota.h"
     #include "log.h"
+    #include "ir_task.h"
+    #include "bflb_ir.h"
     #include "bt_connect.h"
 
     #define DBG_TAG "MAIN"    
     #define VERSION __DATE__ " " __TIME__
     
     static struct bflb_device_s *gpio;
-    static TaskHandle_t logo_handle;
-    static TaskHandle_t zforth_handle;
-    static TaskHandle_t usbdev_handle;
-    static TaskHandle_t light_handle;
-    static TaskHandle_t fmq_handle;
-    static TaskHandle_t motors_handle;
-    static TaskHandle_t ultrasonic_handle;
-    static TaskHandle_t led_handle;
-    static TaskHandle_t m6050_handle;
+    static TaskHandle_t logo_handle;	//logo显示任务
+    static TaskHandle_t zforth_handle;	//
+    static TaskHandle_t usbdev_handle;	//
+    static TaskHandle_t light_handle;	//车灯任务
+    static TaskHandle_t fmq_handle;		//蜂鸣器任务
+    static TaskHandle_t motors_handle;	//电机任务
+    static TaskHandle_t ultrasonic_handle;	//超声波任务
+    static TaskHandle_t led_handle;		//板子上的灯任务
+    static TaskHandle_t m6050_handle;	//陀螺仪任务
     static TaskHandle_t mpu_handle;		//陀螺仪功能任务（主板朝上闪灯）
-    static TaskHandle_t servo_handle;
+    static TaskHandle_t servo_handle;		//舵机任务
+    static TaskHandle_t ir_task_handle;	//红外遥控任务
     
     void version(void) {
 	char buf[128];
@@ -155,6 +156,7 @@ async function Compile(data) {
 
     struct bflb_device_s *uart0 = NULL;
     struct bflb_device_s *i2c0;
+    struct bflb_device_s *irrx;
 
     volatile int pitch1,roll1,yaw1;
 
@@ -165,6 +167,7 @@ async function Compile(data) {
     void light_task(void *param);
     void led_task(void *param);
     void mpu_task(void *param);
+    int ir_task(void);
     
     void bl61x_mpu6050_task(void *param)
     {
