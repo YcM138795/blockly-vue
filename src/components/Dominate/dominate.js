@@ -7,7 +7,7 @@ import {XTaskCheckTypes} from '../../components/config/config';
 //后缀
 const suffix = `while(1){
   vTaskDelay(1000);
-  }`
+  }\n`
 //前缀
 const prefix = `gpio = bflb_device_get_by_name("gpio");`
 
@@ -48,10 +48,12 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
             // TODO: Assemble javascript into code variable.
             var code = `int main(void){
   board_init();
+  board_i2c0_gpio_init(); // GPIO0 GPIO1
   usbdev_init();
   board_sdh_gpio_init();
   fatfs_sdh_driver_register();
-  ota_init();\n
+  ota_init();
+  btconnt_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);
 ${statements_operate}
@@ -217,7 +219,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['servo_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void servo_task(void *param){\n${statements_operate}\n}\n`;
+            var code = `void servo_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }
@@ -341,6 +343,38 @@ ${statements_operate}
     ${suffix}
 }\n`;
 
+            return code;
+        };
+    }
+
+    // logo_task:logo函数
+    {
+        Blockly.Blocks['logo_task'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "logo_task",
+                    "tooltip": "logo函数(仅一个)",
+                    "helpUrl": "",
+                    "message0": "logo函数 %1 %2",
+                    "args0": [
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                        {
+                            "type": "input_statement",
+                            "name": "operate",
+                            "check": XTaskCheckTypes
+                        }
+                    ],
+                    "colour": '#B463FF'
+                })
+            }
+        };
+        javascriptGenerator.forBlock['logo_task'] = function (block, generator) {
+            var statements_operate = generator.statementToCode(block, 'operate');
+            // TODO: Assemble javascript into code variable.
+            var code = `void logo_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }

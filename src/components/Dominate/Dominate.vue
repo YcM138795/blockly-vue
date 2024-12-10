@@ -66,6 +66,11 @@ export default {
 
                 type: "ir_task"
               },
+              {
+                kind: "block",
+
+                type: "logo_task"
+              },
             ]
           },
         ],

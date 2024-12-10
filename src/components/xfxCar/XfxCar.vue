@@ -181,6 +181,26 @@ export default {
                 type: "judgment_board"
               },
               {
+                "kind": "label",
+                "text": "logo控制"
+              },
+              {
+                kind: "block",
+                type: "XTask_logo_task"
+              },
+              {
+                kind: "block",
+                type: "init_logo"
+              },
+              {
+                kind: "block",
+                type: "logo_display"
+              },
+              {
+                kind: "block",
+                type: "lcd_clear"
+              },
+              {
                 kind: "label",
                 text: "超声波控制"
               },

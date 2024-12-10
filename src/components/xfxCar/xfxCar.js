@@ -5,6 +5,49 @@ import '@blockly/field-dependent-dropdown'; //引入定义Motors_left_right块�
 import { FieldGridDropdown } from '@blockly/field-grid-dropdown';
 import { XTaskCheckTypes } from '../config/config';
 
+class ImageTextGridDropdown extends FieldGridDropdown {
+    constructor(options, config) {
+        super(options, config);
+    }
+
+    showEditor_() {
+        super.showEditor_();
+        const dropdownDiv = Blockly.DropDownDiv.getContentDiv();
+
+        // 遍历所有选项并修改它们
+        this.getOptions().forEach(([option], index) => {
+            const imgElement = dropdownDiv.querySelectorAll('img')[index];
+
+            // 如果选项是一个对象并且包含图片信息
+            if (imgElement && typeof option === 'object' && option.alt) {
+                // 确保已有的图片标签存在
+                const textSpan = imgElement.parentNode.querySelector('span.blocklyDropdownTextLabel');
+
+                // 如果没有找到文本标签，则创建新的文本标签
+                if (!textSpan) {
+                    const spanElement = document.createElement('span');
+                    spanElement.innerText = option.alt;  // 使用图片下方的文本
+                    spanElement.style.color = 'white';
+                    spanElement.style.display = 'block';  // 确保文本显示在图片下方
+                    spanElement.style.marginTop = '5px';  // 为文本添加一些间距
+
+                    // 添加居中样式
+                    spanElement.style.textAlign = 'center';  // 居中文本
+                    spanElement.style.width = '100%';  // 确保span占满父元素的宽度
+
+                    // 设置图片的居中样式
+                    imgElement.style.display = 'block';  // 使图片成为块级元素
+                    imgElement.style.margin = '0 auto';  // 居中图片
+
+                    imgElement.parentNode.appendChild(spanElement);  // 将文本添加到图片下面
+                }
+            }
+        });
+
+    }
+}
+Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
+
 
 //小飞象智能车
 {
@@ -441,49 +484,6 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
 
         //judgment_board:方向判断
         {
-            class ImageTextGridDropdown extends FieldGridDropdown {
-                constructor(options, config) {
-                    super(options, config);
-                }
-
-                showEditor_() {
-                    super.showEditor_();
-                    const dropdownDiv = Blockly.DropDownDiv.getContentDiv();
-
-                    // 遍历所有选项并修改它们
-                    this.getOptions().forEach(([option], index) => {
-                        const imgElement = dropdownDiv.querySelectorAll('img')[index];
-
-                        // 如果选项是一个对象并且包含图片信息
-                        if (imgElement && typeof option === 'object' && option.alt) {
-                            // 确保已有的图片标签存在
-                            const textSpan = imgElement.parentNode.querySelector('span.blocklyDropdownTextLabel');
-
-                            // 如果没有找到文本标签，则创建新的文本标签
-                            if (!textSpan) {
-                                const spanElement = document.createElement('span');
-                                spanElement.innerText = option.alt;  // 使用图片下方的文本
-                                spanElement.style.color = 'white';
-                                spanElement.style.display = 'block';  // 确保文本显示在图片下方
-                                spanElement.style.marginTop = '5px';  // 为文本添加一些间距
-
-                                // 添加居中样式
-                                spanElement.style.textAlign = 'center';  // 居中文本
-                                spanElement.style.width = '100%';  // 确保span占满父元素的宽度
-
-                                // 设置图片的居中样式
-                                imgElement.style.display = 'block';  // 使图片成为块级元素
-                                imgElement.style.margin = '0 auto';  // 居中图片
-
-                                imgElement.parentNode.appendChild(spanElement);  // 将文本添加到图片下面
-                            }
-                        }
-                    });
-
-                }
-            }
-            Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
-
             Blockly.defineBlocksWithJsonArray([
                 {
                     type: 'judgment_board',
@@ -721,7 +721,6 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
         }
 
     }
-
 
     //蜂鸣器
     {
@@ -1169,7 +1168,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                         "type": "Motors_move",
                         "tooltip": "前进和后退的移动",
                         "helpUrl": "",
-                        "message0": "移动 %1 速度 %2 %3",
+                        "message0": "移动 %1 速度百分比 %2 % %3",
                         "args0": [
                             {
                                 "type": "field_dropdown",
@@ -1190,7 +1189,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 4095
+                                "max": 100,
+                                "precision": 0.1
                             },
                             {
                                 "type": "input_dummy",
@@ -1206,9 +1206,10 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
             javascriptGenerator.forBlock['Motors_move'] = function (block) {
                 const dropdown_options = block.getFieldValue('options');
                 const number_speed = block.getFieldValue('speed');
+                const speed = 4095 * number_speed / 100;
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `Motors_${dropdown_options}(${number_speed});\n`;
+                const code = `Motors_${dropdown_options}(${speed});\n`;
                 return code;
             }
         }
@@ -1222,14 +1223,15 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                         "type": "Motors_around",
                         "tooltip": "",
                         "helpUrl": "",
-                        "message0": "原地打转    速度 %1 角度 %2 %3",
+                        "message0": "原地打转    速度百分比 %1 % 角度 %2 %3",
                         "args0": [
                             {
                                 "type": "field_number",
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 4095
+                                "max": 100,
+                                "precision": 0.1
                             },
                             {
                                 "type": "field_dropdown",
@@ -1259,9 +1261,10 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
             javascriptGenerator.forBlock['Motors_around'] = function (block) {
                 const number_speed = block.getFieldValue('speed');
                 const dropdown_direction = block.getFieldValue('direction');
+                const speed = 4095 * number_speed / 100;
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `Motors_around(${number_speed},${dropdown_direction});\n`;
+                const code = `Motors_around(${speed},${dropdown_direction});\n`;
                 return code;
             }
 
@@ -1272,7 +1275,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
             Blockly.defineBlocksWithJsonArray([
                 {
                     'type': 'Motors_left_right',
-                    'message0': '方向 %1 速度 %2 角度 %3 %4 ',
+                    'message0': '方向 %1 速度百分比 %2 % 角度 %3 %4 ',
                     'args0': [
                         {
                             'type': 'field_dropdown',
@@ -1284,7 +1287,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                             "name": "speed",
                             "value": 0,
                             "min": 0,
-                            "max": 4095
+                            "max": 100,
+                            "precision": 0.1
                         },
                         {
                             'type': 'field_dependent_dropdown',
@@ -1309,9 +1313,11 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 const dropdown_options1 = block.getFieldValue('direction');
                 const dropdown_options2 = block.getFieldValue('speed');
                 const dropdown_options3 = block.getFieldValue('angle');
+                const speed = 4095 * dropdown_options2 / 100;
+
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `Motors_${dropdown_options1}(${dropdown_options2},${dropdown_options3});\n`;
+                const code = `Motors_${dropdown_options1}(${speed},${dropdown_options3});\n`;
                 return code;
             }
         }
@@ -1325,7 +1331,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                         "type": "motor_control_single",
                         "tooltip": "电机单控制轮胎运动",
                         "helpUrl": "",
-                        "message0": "电机轮胎  %1 速度 %2 运动控制 %3 %4",
+                        "message0": "电机轮胎  %1 速度百分比 %2 % 运动控制 %3 %4",
                         "args0": [
                             {
                                 "type": "field_dropdown",
@@ -1354,7 +1360,8 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 4095
+                                "max": 100,
+                                "precision": 0.1
                             },
                             {
                                 "type": "field_dropdown",
@@ -1389,9 +1396,10 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 const dropdown_options1 = block.getFieldValue('options1');
                 const number_speed = block.getFieldValue('speed');
                 const dropdown_options2 = block.getFieldValue('options2');
+                const speed = 4095 * number_speed / 100;
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `motor_control(${dropdown_options1},${number_speed},${dropdown_options2});\n`;
+                const code = `motor_control(${dropdown_options1},${speed},${dropdown_options2});\n`;
                 return code;
             }
 
@@ -1553,7 +1561,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
             }
         }
     }
-    
+
     //红外线
     {
         //XTask_ir_task:红外线操作任务执行函数
@@ -1584,5 +1592,214 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 return code;
             }
         }
+    }
+
+    //logo
+    {
+        //XTask_logo_task:logo操作任务执行函数
+        {
+            Blockly.Blocks['XTask_logo_task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_logo_task",
+                        "tooltip": "logo操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "logo操作任务执行函数 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": [''],
+                        "nextStatement": [''],
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_logo_task'] = function () {
+                // TODO: Assemble javascript into the code variable.
+                const code = `xTaskCreate(logo_task, (char *)"logo_task", 8192, NULL,configMAX_PRIORITIES - 1, &logo_handle);\n`;
+                return code;
+            }
+        }
+
+        //init_logo:初始化logo显示
+        {
+            Blockly.Blocks['init_logo'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "init_logo",
+                        "tooltip": "初始化logo显示",
+                        "helpUrl": "",
+                        "message0": "初始化logo显示 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['init_logo'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `lcd_bl_init();
+	lcd_bl_on();
+	lcd_init();\n`;
+                return code;
+            }
+        }
+
+        //logo_display:logo显示
+        {
+            Blockly.defineBlocksWithJsonArray([
+                {
+                    type: 'logo_display',
+                    tooltip: 'logo显示',
+                    "message0": "logo显示 %1 %2",
+                    args0: [
+                        {
+                            type: 'ImageTextGridDropdown',
+                            name: 'options',
+                            options: [
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8F%89%E5%8F%B7.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: 'X号',
+                                }, '叉号'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%AF%B9%E5%8F%B7.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '√号',
+                                }, '对号'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E7%88%B1%E5%BF%832.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '爱心',
+                                }, '爱心'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E7%AC%91%E8%84%B81.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '笑脸',
+                                }, '笑脸'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%93%AD%E8%84%B8.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '哭脸',
+                                }, '哭脸'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E4%B8%8A%E7%AE%AD%E5%A4%B4.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '上箭头',
+                                }, '上箭头'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E4%B8%8B%E7%AE%AD%E5%A4%B4.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '下箭头',
+                                }, '下箭头'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%B7%A6%E7%AE%AD%E5%A4%B4.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '左箭头',
+                                }, '左箭头'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E5%8F%B3%E7%AE%AD%E5%A4%B4.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '右箭头',
+                                }, '右箭头'],
+                                [{
+                                    src: 'https://html-static-resource.oss-cn-hangzhou.aliyuncs.com/graph_code/img/%E4%BA%94%E8%A7%92%E6%98%9F.jpg',
+                                    width: 25,
+                                    height: 25,
+                                    alt: '五角星',
+                                }, '五角星'],
+                            ],
+                        },
+                        {
+                            "type": "input_dummy",
+                            "name": "NAME"
+                        },
+                    ],
+                    "previousStatement": XTaskCheckTypes,
+                    "nextStatement": XTaskCheckTypes,
+                    "colour": '#ff7272'
+                },
+            ]);
+
+            javascriptGenerator.forBlock['logo_display'] = function (block) {
+                let logo;
+                const dropdown_name = block.getFieldValue('options');
+
+                if (dropdown_name == '叉号') {
+                    logo = 'logo_cha();'
+                } else if (dropdown_name == '对号') {
+                    logo = 'logo_gou();';
+                } else if (dropdown_name == '爱心') {
+                    logo = 'logo_aixin();';
+                } else if (dropdown_name == '笑脸') {
+                    logo = 'logo_xiaolian();';
+                } else if (dropdown_name == '哭脸') {
+                    logo = 'logo_kulian();';
+                } else if (dropdown_name == '上箭头') {
+                    logo = 'logo_shang();';
+                } else if (dropdown_name == '下箭头') {
+                    logo = 'logo_xia();';
+                } else if (dropdown_name == '左箭头') {
+                    logo = 'logo_zuo();';
+                } else if (dropdown_name == '右箭头') {
+                    logo = 'logo_you();';
+                } else if (dropdown_name == '五角星') {
+                    logo = 'logo_wujiaoxing();';
+                }
+
+                const code = `${logo}\n vTaskDelay(3000);\n`;
+                return code;
+            }
+        }
+
+        //lcd_clear:显示板清空
+        {
+            Blockly.Blocks['lcd_clear'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "lcd_clear",
+                        "tooltip": "显示板清空",
+                        "helpUrl": "",
+                        "message0": "显示板清空 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['lcd_clear'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `lcd_clear(0x0);
+	vTaskDelay(100);\n`;
+                return code;
+            }
+        }
+
     }
 }
