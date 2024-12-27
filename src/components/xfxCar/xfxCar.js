@@ -952,7 +952,35 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                     [
                                         "舵机9",
                                         "9"
-                                    ]
+                                    ],
+                                    [
+                                        "舵机10",
+                                        "10"
+                                    ],
+                                    [
+                                        "舵机11",
+                                        "11"
+                                    ],
+                                    [
+                                        "舵机12",
+                                        "12"
+                                    ],
+                                    [
+                                        "舵机13",
+                                        "13"
+                                    ],
+                                    [
+                                        "舵机14",
+                                        "14"
+                                    ],
+                                    [
+                                        "舵机15",
+                                        "15"
+                                    ],
+                                    [
+                                        "舵机16",
+                                        "16"
+                                    ],
                                 ]
                             },
                             {
@@ -973,14 +1001,6 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 const code = `Servo_stop(${dropdown_servo});\n`;
                 return code;
             }
-            dartGenerator.forBlock['init_Servo_state'] = function (block) {
-                const dropdown_servo = block.getFieldValue('servo');
-
-                // TODO: Assemble dart into the code variable.
-                const code = `console.log('舵机${dropdown_servo}初始化状态')\n`;
-                return code;
-            }
-
         }
 
         //Servo_operation:舵机操作
@@ -989,9 +1009,9 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 init: function () {
                     this.jsonInit({
                         "type": "steering_gear360",
-                        "tooltip": "舵机360度",
+                        "tooltip": "舵机180度",
                         "helpUrl": "",
-                        "message0": "舵机   编号 %1    方向 %2 度数(0~90) %3 %4",
+                        "message0": "舵机   编号 %1    方向 %2 度数(0~180) %3 %4",
                         "args0": [
                             {
                                 "type": "field_dropdown",
@@ -1032,7 +1052,35 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                     [
                                         "S9",
                                         "9"
-                                    ]
+                                    ],
+                                    [
+                                        "S10",
+                                        "10"
+                                    ],
+                                    [
+                                        "S11",
+                                        "11"
+                                    ],
+                                    [
+                                        "S12",
+                                        "12"
+                                    ],
+                                    [
+                                        "S13",
+                                        "13"
+                                    ],
+                                    [
+                                        "S14",
+                                        "14"
+                                    ],
+                                    [
+                                        "S15",
+                                        "15"
+                                    ],
+                                    [
+                                        "S16",
+                                        "16"
+                                    ],
                                 ]
                             },
                             {
@@ -1054,7 +1102,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                                 "name": "speed",
                                 "value": 0,
                                 "min": 0,
-                                "max": 90
+                                "max": 180
                             },
                             {
                                 "type": "input_dummy",
@@ -1082,17 +1130,118 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                 // TODO: Assemble javascript into the code variable.
                 return code;
             }
-            // dartGenerator.forBlock['Servo_operation'] = function (block) {
-            //     const dropdown_serial_number = block.getFieldValue('serial_number');
-            //     const dropdown__turn_around = block.getFieldValue(' turn_around');
-            //     const number_speed = block.getFieldValue('speed');
-
-            //     // TODO: Assemble dart into the code variable.
-            //     const code = `console.log('舵机(360度)编号${dropdown_serial_number} 方向${dropdown__turn_around} 速度${number_speed}')\n`;
-            //     return code;
-            // }
 
         }
+
+        //Servo_set:舵机设置角度
+        {
+            Blockly.Blocks['Servo_set'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "Servo_set",
+                        "tooltip": "舵机设置度",
+                        "helpUrl": "",
+                        "message0": "舵机   编号 %1  度数(0~180) %2 %3",
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "serial_number",
+                                "options": [
+                                    [
+                                        "S1",
+                                        "1"
+                                    ],
+                                    [
+                                        "S2",
+                                        "2"
+                                    ],
+                                    [
+                                        "S3",
+                                        "3"
+                                    ],
+                                    [
+                                        "S4",
+                                        "4"
+                                    ],
+                                    [
+                                        "S5",
+                                        "5"
+                                    ],
+                                    [
+                                        "S6",
+                                        "6"
+                                    ],
+                                    [
+                                        "S7",
+                                        "7"
+                                    ],
+                                    [
+                                        "S8",
+                                        "8"
+                                    ],
+                                    [
+                                        "S9",
+                                        "9"
+                                    ],
+                                    [
+                                        "S10",
+                                        "10"
+                                    ],
+                                    [
+                                        "S11",
+                                        "11"
+                                    ],
+                                    [
+                                        "S12",
+                                        "12"
+                                    ],
+                                    [
+                                        "S13",
+                                        "13"
+                                    ],
+                                    [
+                                        "S14",
+                                        "14"
+                                    ],
+                                    [
+                                        "S15",
+                                        "15"
+                                    ],
+                                    [
+                                        "S16",
+                                        "16"
+                                    ],
+                                ]
+                            },
+                            {
+                                "type": "field_number",
+                                "name": "speed",
+                                "value": 0,
+                                "min": 0,
+                                "max": 180
+                            },
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['Servo_set'] = function (block) {
+                const dropdown_serial_number = block.getFieldValue('serial_number');
+                const number_speed = block.getFieldValue('speed');
+                const code = `Servo_jiaodu(${dropdown_serial_number}, ${number_speed});\n`; 
+
+                // TODO: Assemble javascript into the code variable.
+                return code;
+            }
+
+        }
+
     }
 
     //电机

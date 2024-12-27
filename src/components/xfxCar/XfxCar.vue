@@ -45,14 +45,6 @@ export default {
               },
               {
                 "kind": "label",
-                "text": "陀螺仪控制"
-              },
-              {
-                kind: "block",
-                type: "XTask_mpu6050__task"
-              },
-              {
-                "kind": "label",
                 "text": "红外线控制"
               },
               {
@@ -128,9 +120,14 @@ export default {
                 kind: "block",
                 type: "init_Servo"
               },
+              
               {
                 kind: "block",
                 type: "init_Servo_state"
+              },
+              {
+                kind: "block",
+                type: "Servo_set"
               },
               {
                 kind: "block",
