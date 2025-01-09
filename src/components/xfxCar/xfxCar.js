@@ -549,7 +549,7 @@ ${setWay}(gpio, ${dropdown_gpio});\n`;
                     judge = 'if((pitch1<800) && (pitch1>0) && (roll1>900) && (roll1<1100))'
                 }
 
-                const code = `${judge} {\n${statement_inner}\n}\n`;
+                const code = `${judge}{\n${statement_inner}\n}\nvTaskDelay(500);\n`;
                 return code;
             }
         }

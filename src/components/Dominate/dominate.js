@@ -56,6 +56,7 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
   btconnt_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES - 3, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES - 3, &zforth_handle);
+  xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, 9, &mpu_handle);
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}\n`;
@@ -251,7 +252,7 @@ ${statements_operate}
         javascriptGenerator.forBlock['mpu_task'] = function (block, generator) {
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
-            var code = `void mpu_task(void *param){\n${prefix}\n${statements_operate}\n${suffix}}\n`;
+            var code = `void mpu_task(void *param){\n${prefix}\nbl61x_mpu6050_init(i2c0);\n${statements_operate}\n${suffix}}\n`;
             return code;
         };
     }

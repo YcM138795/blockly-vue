@@ -2,11 +2,6 @@ import * as Blockly from 'blockly/core';
 import {javascriptGenerator, Order} from 'blockly/javascript';
 import {dartGenerator} from 'blockly/dart';
 
-
-
-
-
-
 // 数学
 {
 

@@ -5,10 +5,7 @@ import '@blockly/block-plus-minus';
 import { XTaskCheckTypes } from '../config/config';
 // 检查语言包是否已加载
 
-
 // import "./if"
-
-
 
 // false:逻辑块false
 {
