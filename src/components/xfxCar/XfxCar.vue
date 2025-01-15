@@ -23,34 +23,8 @@ export default {
               "icon": "xfxCarIcon"
             },
             "contents": [
-              {
-                "kind": "label",
-                "text": "基础"
-              },
-              {
-                kind: "block",
-                type: "forever"
-              },
-              {
-                kind: "block",
-                type: "implement"
-              },
-              {
-                kind: "block",
-                type: "delay"
-              },
-              {
-                kind: "block",
-                type: "gpio_write"
-              },
-              {
-                "kind": "label",
-                "text": "红外线控制"
-              },
-              {
-                kind: "block",
-                type: "XTask_ir_task"
-              },
+              { "kind": "label", "text": "红外线控制" },
+              { kind: "block", type: "XTask_ir_task" },
               {
                 "kind": "label",
                 "text": "烧录板灯控制"
@@ -120,7 +94,7 @@ export default {
                 kind: "block",
                 type: "init_Servo"
               },
-              
+
               {
                 kind: "block",
                 type: "init_Servo_state"

@@ -1,11 +1,275 @@
 import * as Blockly from 'blockly/core';
 import { javascriptGenerator, Order } from 'blockly/javascript';
 import '@blockly/field-bitmap';
-
+import { XTaskCheckTypes } from '../config/config';
 
 
 //基础
 {
+
+    //基础
+    {
+
+        //forever:无限循环
+        {
+            Blockly.Blocks['forever'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "forever",
+                        "tooltip": "",
+                        "helpUrl": "",
+                        "message0": "无限循环 %1 %2",
+                        "args0": [
+                            {
+                                "type": "input_end_row",
+                                "name": "NAME"
+                            },
+                            {
+                                "type": "input_statement",
+                                "name": "inner",
+                                "check": XTaskCheckTypes
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['forever'] = function (block, generator) {
+                const statement_inner = generator.statementToCode(block, 'inner');
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `while(1){\n${statement_inner}\n}\n`;
+                return code;
+            }
+        }
+        //implement:执行内部逻辑
+        {
+            Blockly.Blocks['implement'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "_implement",
+                        "tooltip": "执行内部逻辑",
+                        "helpUrl": "",
+                        "message0": "while %1 %2 执行 %3",
+                        "args0": [
+                            {
+                                "type": "field_input",
+                                "name": " condition",
+                                "text": "1"
+                            },
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            },
+                            {
+                                "type": "input_statement",
+                                "name": "inner",
+                                "check": XTaskCheckTypes
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['implement'] = function (block, generator) {
+                const text__condition = block.getFieldValue(' condition');
+
+                const statement_inner = generator.statementToCode(block, 'inner');
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `while(${text__condition}){\n${statement_inner}\n}\n`;
+                return code;
+            }
+        }
+
+        //delay:延时
+        {
+            Blockly.Blocks['delay'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "delay",
+                        "tooltip": "",
+                        "helpUrl": "",
+                        "message0": "延时-- %1 毫秒 %2",
+                        "args0": [
+                            {
+                                "type": "field_number",
+                                "name": "timer",
+                                "value": 0,
+                                "min": 0
+                            },
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['delay'] = function (block) {
+                const number_timer = block.getFieldValue('timer');
+                let time = number_timer;
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `vTaskDelay(${time});\n`;
+                return code;
+            }
+        }
+
+        //gpio_write:向引脚写入值
+        {
+            Blockly.Blocks['gpio_write'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "gpio_write",
+                        "tooltip": "向引脚写入值",
+                        "helpUrl": "",
+                        "message0": "向  引脚 %1 数字写入值 %2 %3",
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "gpio",
+                                "options": [
+                                    [
+                                        "P0",
+                                        "GPIO_PIN_22"
+                                    ],
+                                    [
+                                        "P1",
+                                        "GPIO_PIN_25"
+                                    ],
+                                    [
+                                        "P2",
+                                        "GPIO_PIN_21"
+                                    ],
+                                    [
+                                        "P3",
+                                        "GPIO_PIN_27"
+                                    ],
+                                    [
+                                        "P4",
+                                        "GPIO_PIN_31"
+                                    ],
+                                    [
+                                        "P5",
+                                        "GPIO_PIN_32"
+                                    ],
+                                    [
+                                        "P6",
+                                        "GPIO_PIN_33"
+                                    ],
+                                    [
+                                        "P7",
+                                        "GPIO_PIN_34"
+                                    ],
+                                    [
+                                        "P8",
+                                        "GPIO_PIN_24"
+                                    ],
+                                    [
+                                        "P9",
+                                        "GPIO_PIN_6"
+                                    ],
+                                    [
+                                        "P10",
+                                        "GPIO_PIN_29"
+                                    ],
+                                    [
+                                        "P11",
+                                        "GPIO_PIN_30"
+                                    ],
+                                    [
+                                        "P12",
+                                        "GPIO_PIN_16"
+                                    ],
+                                    [
+                                        "P13",
+                                        "GPIO_PIN_17"
+                                    ],
+                                    [
+                                        "P14",
+                                        "GPIO_PIN_18"
+                                    ],
+                                    [
+                                        "P15",
+                                        "GPIO_PIN_28"
+                                    ],
+                                    [
+                                        "P16",
+                                        "GPIO_PIN_9"
+                                    ]
+                                ]
+                            },
+                            {
+                                "type": "field_number",
+                                "name": "number",
+                                "value": 0,
+                                "min": 0,
+                                "max": 1,
+                                "precision": 1
+                            },
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['gpio_write'] = function (block) {
+                const dropdown_gpio = block.getFieldValue('gpio');
+                const number_number = block.getFieldValue('number');
+
+                const setWay = number_number == 1 ? 'bflb_gpio_set' : 'bflb_gpio_reset';
+
+                // TODO: Assemble javascript into the code variable.
+                const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_OUTPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);
+    ${setWay}(gpio, ${dropdown_gpio});\n`;
+                return code;
+            }
+        }
+
+        //XTask_mpu6050__task:陀螺仪操作任务执行函数
+        {
+            Blockly.Blocks['XTask_mpu6050__task'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "XTask_mpu6050__task",
+                        "tooltip": "陀螺仪操作任务执行函数",
+                        "helpUrl": "",
+                        "message0": "陀螺仪操作任务执行 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": [''],
+                        "nextStatement": [''],
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['XTask_mpu6050__task'] = function () {
+
+                // TODO: Assemble javascript into the code variable.
+                const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n`;
+                return code;
+            }
+        }
+
+    }
+
     //函数
     {
         Blockly.Blocks['function_definition'] = {

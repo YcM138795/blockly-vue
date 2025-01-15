@@ -77,7 +77,7 @@ export default {
       toolboxPosition: "end", //工具箱在底部
       advancedBlockStore: useAdvancedBlockStore(),//自定义函数的store
       //特殊块
-      entryBlockTypes: ['int_main', 'light_task', 'led_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'mpu_task', 'function_definition','ir_task','logo_task'],
+      entryBlockTypes: ['int_main', 'light_task', 'led_task', 'ultrasonic_task', 'motors_task', 'servo_task', 'fmq_task', 'mpu_task', 'function_definition', 'ir_task', 'logo_task'],
       toolbox: {
         contents: [
           {
@@ -167,7 +167,7 @@ export default {
           }
         });
       }
-    }
+    },
   },
   methods: {
     //检测代码块有无重复添加
@@ -352,11 +352,18 @@ export default {
       //注册函数类别的工作箱回调
       this.workspace.registerToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY', () => {
         console.log('函数类别的工具箱回调');
+
         let callFuncionBlocks = this.initCallFuncion();
         let constantBlocks = this.initConstant();
         let arrayBlocks = this.initArray();
 
         return [
+          {"kind": "label","text": "基础"},
+          {kind: "block",type: "forever"},
+          {kind: "block",type: "implement"},
+          {kind: "block",type: "delay"},
+          {kind: "block",type: "gpio_write"},
+
           ...callFuncionBlocks,
           { kind: "label", text: "" },
 
@@ -447,7 +454,7 @@ export default {
             // 设置指定块的位置，例如添加在已有块的旁边
             customBlock.moveBy(250, 50);  // 可根据需要修改坐标
           }
-        }else if (block.type === 'XTask_ultrasonic_task') {
+        } else if (block.type === 'XTask_ultrasonic_task') {
           if (!this.hasCustomBlock('ultrasonic_task')) {
             // 仅当工作区没有指定块时，才添加块，防止重复添加
             const customBlock = this.workspace.newBlock('ultrasonic_task');
@@ -465,7 +472,7 @@ export default {
             // 设置指定块的位置，例如添加在已有块的旁边
             customBlock.moveBy(250, 250);  // 可根据需要修改坐标
           }
-        }else if (block.type === 'XTask_ir_task') {
+        } else if (block.type === 'XTask_ir_task') {
           if (!this.hasCustomBlock('ir_task')) {
             // 仅当工作区没有指定块时，才添加块，防止重复添加
             const customBlock = this.workspace.newBlock('ir_task');
@@ -474,7 +481,7 @@ export default {
             // 设置指定块的位置，例如添加在已有块的旁边
             customBlock.moveBy(450, 50);  // 可根据需要修改坐标
           }
-        }else if (block.type === 'XTask_logo_task') {
+        } else if (block.type === 'XTask_logo_task') {
           if (!this.hasCustomBlock('logo_task')) {
             // 仅当工作区没有指定块时，才添加块，防止重复添加
             const customBlock = this.workspace.newBlock('logo_task');

@@ -24,6 +24,14 @@ export default {
                                 text: "函数"
                             },
                             {
+                                kind: "label",
+                                text: "函数"
+                            },
+                            {
+                                kind: "label",
+                                text: "函数"
+                            },
+                            {
                                 kind: "button",
                                 text: "点击创建新函数",
                                 callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
