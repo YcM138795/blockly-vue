@@ -79,8 +79,8 @@
       const username = Cookies.get("username_stu");
       const password = Cookies.get("password_stu");
       this.ruleForm = {
-        username: username === undefined ? this.loginForm.username : username,
-        password: password === undefined ? this.loginForm.password : decrypt(password),
+        username: username === undefined ? this.ruleForm.username : username,
+        password: password === undefined ? this.ruleForm.password : decrypt(password),
       };
     },
       submitForm() {
