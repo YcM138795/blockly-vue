@@ -61,7 +61,7 @@
                         <div style="font-size: 13px;">历史文件</div>
                     </div>
                     <div class="history-files">
-                        <div v-if="history_files.length === 0">暂无工程项目</div>
+                        <div v-if="history_files.length === 0" style="height: 100%;display: contents">暂无工程项目</div>
                         <div class="history-file" v-for="(history_file, index) in history_files" :key="index"
                             @click="selectFile(index)" :class="{ 'selected-file': selectedIndex === index }">
                             <img src="../assets/img/historyFile_logo.png" />
@@ -384,7 +384,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.$store.dispatch('LogOut').then(() => {
-                    location.href = '/login';//返回登录界面
+                    location.href = '#/login';//返回登录界面
                 })
             }).catch(() => { });
         },
@@ -625,6 +625,7 @@ export default {
     overflow-y: auto;
     /* 允许垂直滚动 */
     padding: 0px 10px 10px 10px;
+    height: 100%;
 }
 
 .history-file {
