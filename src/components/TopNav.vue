@@ -3,7 +3,7 @@
         <div class="first-floor">
             <div class="TopNav">
                 <div class="left">
-                    <img src="../assets/img/logo.png" alt="logo" class="logo">
+                    <img src="https://jnui-edu.oss-cn-hangzhou.aliyuncs.com/commonResource/edu-logo.jpg" alt="logo" class="logo">
                 </div>
                 <div class="center">
                     <div class="custom-select-container">
@@ -424,7 +424,9 @@ export default {
     /* 让子元素平均分布在父容器内 */
     background-color: azure;
 }
-
+.logo{
+    width: 50px;
+}
 .left {
     text-align: left;
 }
@@ -680,10 +682,11 @@ export default {
     background-repeat: no-repeat;
     /* 禁止图片重复 */
 
-    width: 70px;
+    width: 80px;
     /* 按钮宽度，加宽形成椭圆 */
-    background-position: 15% center;
+    background-position: 25% center;
     /* 背景图向左靠边 */
+    padding-left: 17px;
 }
 
 .topButton:hover {
@@ -693,23 +696,24 @@ export default {
 
 .reset {
     background-image: url('../assets/img/reset.png');
-    /* 背景图片 */
-    margin-left: 50px;
 }
 
 .download {
     background-image: url('../assets/img/download.png');
-    width: 80px;
+    font-size: 11px;
     /* 按钮宽度，加宽形成椭圆 */
-    background-position: 10% center;
+    background-position: 22% center;
     /* 背景图向左靠边 */
+    padding-left: 15px;
 }
 
 .save {
     background-image: url('../assets/img/save.png');
+    
 }
 
 .historyFiles {
     background-image: url('../assets/img/menu.png');
+    
 }
 </style>

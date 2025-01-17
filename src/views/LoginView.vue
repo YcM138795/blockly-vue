@@ -1,7 +1,7 @@
 <template>
     <div class="login">
       <div>
-      <img src="../assets/img/login_logo.png">
+      <img src="https://jnui-edu.oss-cn-hangzhou.aliyuncs.com/commonResource/edu-logo.jpg" style="width: 100px;">
       </div>
       <div style="font-weight: bold;font-size: 20px;">登录</div>
       <div><img src="../assets/img/line.png"></div>
