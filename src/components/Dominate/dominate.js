@@ -48,7 +48,7 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
             // TODO: Assemble javascript into code variable.
             var code = `int main(void){
   board_init();
-  board_i2c0_gpio_init(); // GPIO0 GPIO1
+  board_i2c0_gpio_init(); 0
   usbdev_init();
   board_sdh_gpio_init();
   fatfs_sdh_driver_register();
@@ -56,7 +56,6 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
   btconnt_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, 1, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, 1, &zforth_handle);
-  xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}\n`;

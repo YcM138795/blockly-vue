@@ -263,7 +263,8 @@ import { XTaskCheckTypes } from '../config/config';
             javascriptGenerator.forBlock['XTask_mpu6050__task'] = function () {
 
                 // TODO: Assemble javascript into the code variable.
-                const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n`;
+                const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n
+                xTaskCreate(mpu task,(char *)"mpu task",512,NULL,9, &mpu handle);`;
                 return code;
             }
         }
