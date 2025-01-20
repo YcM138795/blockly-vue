@@ -56,7 +56,7 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
   btconnt_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, 1, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, 1, &zforth_handle);
-  xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, 9, &mpu_handle);
+  xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);
 ${statements_operate}
   vTaskStartScheduler();
 	while (1);\n}\n`;
