@@ -48,7 +48,7 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
             // TODO: Assemble javascript into code variable.
             var code = `int main(void){
   board_init();
-  board_i2c0_gpio_init(); 0
+  board_i2c0_gpio_init();
   usbdev_init();
   board_sdh_gpio_init();
   fatfs_sdh_driver_register();

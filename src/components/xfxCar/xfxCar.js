@@ -199,7 +199,7 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
             javascriptGenerator.forBlock['XTask_mpu_task'] = function () {
 
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, 9, &mpu_handle);\n`;
+                const code = `xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, 9, &mpu_handle);\nxTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);`;
                 return code;
             }
         }
