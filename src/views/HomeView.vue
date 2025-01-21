@@ -363,6 +363,7 @@ export default {
           {kind: "block",type: "implement"},
           {kind: "block",type: "delay"},
           {kind: "block",type: "gpio_write"},
+          {kind: "block",type: "gpio_output"},
 
           ...callFuncionBlocks,
           { kind: "label", text: "" },

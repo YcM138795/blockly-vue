@@ -208,12 +208,18 @@ import { XTaskCheckTypes } from '../config/config';
                                 ]
                             },
                             {
-                                "type": "field_number",
+                                "type": "field_dropdown",
                                 "name": "number",
-                                "value": 0,
-                                "min": 0,
-                                "max": 1,
-                                "precision": 1
+                                "options": [
+                                    [
+                                        "0",
+                                        "0"
+                                    ],
+                                    [
+                                        "1",
+                                        "1"
+                                    ]
+                                ]
                             },
                             {
                                 "type": "input_dummy",
@@ -235,6 +241,128 @@ import { XTaskCheckTypes } from '../config/config';
                 // TODO: Assemble javascript into the code variable.
                 const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_OUTPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);
     ${setWay}(gpio, ${dropdown_gpio});\n`;
+                return code;
+            }
+        }
+        {
+            Blockly.Blocks['gpio_output'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "gpio_output",
+                        "tooltip": "选择引脚的高低电平",
+                        "helpUrl": "",
+                        "message0": "当  引脚 %1 被按下时输出为 %2 %3 %4",
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "gpio",
+                                "options": [
+                                    [
+                                        "P0",
+                                        "GPIO_PIN_22"
+                                    ],
+                                    [
+                                        "P1",
+                                        "GPIO_PIN_25"
+                                    ],
+                                    [
+                                        "P2",
+                                        "GPIO_PIN_21"
+                                    ],
+                                    [
+                                        "P3",
+                                        "GPIO_PIN_27"
+                                    ],
+                                    [
+                                        "P4",
+                                        "GPIO_PIN_31"
+                                    ],
+                                    [
+                                        "P5",
+                                        "GPIO_PIN_32"
+                                    ],
+                                    [
+                                        "P6",
+                                        "GPIO_PIN_33"
+                                    ],
+                                    [
+                                        "P7",
+                                        "GPIO_PIN_34"
+                                    ],
+                                    [
+                                        "P8",
+                                        "GPIO_PIN_24"
+                                    ],
+                                    [
+                                        "P9",
+                                        "GPIO_PIN_6"
+                                    ],
+                                    [
+                                        "P10",
+                                        "GPIO_PIN_29"
+                                    ],
+                                    [
+                                        "P11",
+                                        "GPIO_PIN_30"
+                                    ],
+                                    [
+                                        "P12",
+                                        "GPIO_PIN_16"
+                                    ],
+                                    [
+                                        "P13",
+                                        "GPIO_PIN_17"
+                                    ],
+                                    [
+                                        "P14",
+                                        "GPIO_PIN_18"
+                                    ],
+                                    [
+                                        "P15",
+                                        "GPIO_PIN_28"
+                                    ],
+                                    [
+                                        "P16",
+                                        "GPIO_PIN_9"
+                                    ]
+                                ]
+                            },
+                            {
+                                "type": "field_dropdown",
+                                "name": "electrical_level",
+                                "options": [
+                                    [
+                                        "高电平",
+                                        "true"
+                                    ],
+                                    [
+                                        "低电平",
+                                        "false"
+                                    ]
+                                ]
+                            },
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                              },
+                              {
+                                "type": "input_statement",
+                                "name": "operation",
+                                "check": XTaskCheckTypes
+                              }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['gpio_output'] = function (block,generator) {
+                const dropdown_gpio = block.getFieldValue('gpio');
+                const electrical_level = block.getFieldValue('electrical_level')=="true"?true:false;
+                const statement_operation = generator.statementToCode(block, 'operation');
+                // TODO: Assemble javascript into the code variable.
+                const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_INPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);\nif(bflb_gpio_read(gpio, ${dropdown_gpio})==${electrical_level}){\n${statement_operation}};\n`;
                 return code;
             }
         }
@@ -263,7 +391,8 @@ import { XTaskCheckTypes } from '../config/config';
             javascriptGenerator.forBlock['XTask_mpu6050__task'] = function () {
 
                 // TODO: Assemble javascript into the code variable.
-                const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n`;
+                const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n
+                xTaskCreate(mpu task,(char *)"mpu task",512,NULL,9, &mpu handle);`;
                 return code;
             }
         }
