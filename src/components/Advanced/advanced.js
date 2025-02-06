@@ -459,7 +459,7 @@ import { XTaskCheckTypes } from '../config/config';
             }
             javascriptGenerator.forBlock['gpio_read'] = function (block) {
                 const gpio = block.getFieldValue('gpio');
-                const code = `bflb_gpio_read(gpio, ${gpio});`;
+                const code = `bflb_gpio_read(gpio, ${gpio})`;
                 return [code,Order.NONE];
             }
         }
