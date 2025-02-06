@@ -61,7 +61,7 @@ export default {
               },
               {
                 kind: "label",
-                text: "常量操作"
+                text: "变量操作"
               },
               {
                 kind: "block",

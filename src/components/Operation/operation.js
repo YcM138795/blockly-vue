@@ -239,7 +239,7 @@ import { XTaskCheckTypes } from '../config/config';
 
   }
 
-  //常量操作
+  //变量操作
   {
     //number_variable:变量
     {
@@ -266,7 +266,7 @@ import { XTaskCheckTypes } from '../config/config';
             "previousStatement": XTaskCheckTypes,
             "nextStatement": XTaskCheckTypes,
             "colour": '#FFBF00',
-            "tooltip": "数字常量定义",
+            "tooltip": "数字变量定义",
             "helpUrl": ""
           })
         }

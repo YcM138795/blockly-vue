@@ -268,7 +268,7 @@ export default {
 
         if (e.text == '点击创建新函数') {
           EventBus.$emit('showFunctionEditor');
-        } else if (e.text == '点击创建新常量') {
+        } else if (e.text == '点击创建新变量') {
           EventBus.$emit('showConstantEditor');
         } else if (e.text == '点击创建新数组') {
           EventBus.$emit('showArrayEditor');
@@ -364,7 +364,7 @@ export default {
           {kind: "block",type: "delay"},
           {kind: "block",type: "gpio_write"},
           {kind: "block",type: "gpio_output"},
-
+          {kind: "block",type: "gpio_read"},
           ...callFuncionBlocks,
           { kind: "label", text: "" },
 
@@ -601,7 +601,7 @@ export default {
           const Data = JSON.parse(savedData);//解析数据
           const state = Data.blocksState;//获取工作区的块
           this.advancedBlockStore.functionBlock = Data.functionBlocks || [];//获取自定义函数的数据
-          this.advancedBlockStore.constantBlock = Data.constantBlock || ["Fn:重命名此常量", "Fn:删除此常量"];//获取常量的数据
+          this.advancedBlockStore.constantBlock = Data.constantBlock || ["Fn:重命名此变量", "Fn:删除此变量"];//获取变量的数据
           this.advancedBlockStore.arrayBlock = Data.arrayBlock || ["Fn:重命名此数组", "Fn:删除此数组"];//获取数组的数据
           console.log('恢复工作区数据:', state);
 
@@ -992,11 +992,11 @@ export default {
       let constantBlockArry = [
         {
           kind: "label",
-          text: "常量"
+          text: "变量"
         },
         {
           kind: "button",
-          text: "点击创建新常量",
+          text: "点击创建新变量",
           callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
         },
       ];
@@ -1004,11 +1004,11 @@ export default {
       if (this.advancedBlockStore.constantBlock.length > 2) {
         constantBlockArry.push({
           kind: "label",
-          text: "我的常量"
+          text: "我的变量"
         });
 
         const that = this;
-        // 定义常量块
+        // 定义变量块
         const blockDefinition = {
           init: function () {
             this.appendDummyInput('constant')
@@ -1079,10 +1079,10 @@ export default {
                 const options = this.getField('CONSTANT').getOptions();
                 const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
 
-                if (newValue == 'Fn:重命名此常量') {
-                  EventBus.$emit('showConstantEditor', '重命名此常量', index);
+                if (newValue == 'Fn:重命名此变量') {
+                  EventBus.$emit('showConstantEditor', '重命名此变量', index);
                   return this.getField('CONSTANT')
-                } else if (newValue == 'Fn:删除此常量') {
+                } else if (newValue == 'Fn:删除此变量') {
                   EventBus.$emit('deleteConstant', index);
                   return this.getField('CONSTANT')
                 }
@@ -1092,17 +1092,17 @@ export default {
           },
         };
 
-        // 注册常量块类型
+        // 注册变量块类型
         const blockType = 'constantBlock'; // 为每个块生成一个唯一的类型名称
         Blockly.Blocks[blockType] = blockDefinition;
 
-        // 创建常量块
+        // 创建变量块
         const constantBlock = {
           kind: 'block',
           type: blockType, // 使用唯一的块类型
         };
 
-        // 定义常量改变块
+        // 定义变量改变块
         const blockDefinition_change = {
           init: function () {
             this.appendDummyInput('constant')
@@ -1172,10 +1172,10 @@ export default {
                 const options = this.getField('CONSTANT').getOptions();
                 const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
 
-                if (newValue == 'Fn:重命名此常量') {
-                  EventBus.$emit('showConstantEditor', '重命名此常量', index);
+                if (newValue == 'Fn:重命名此变量') {
+                  EventBus.$emit('showConstantEditor', '重命名此变量', index);
                   return this.getField('CONSTANT')
-                } else if (newValue == 'Fn:删除此常量') {
+                } else if (newValue == 'Fn:删除此变量') {
                   EventBus.$emit('deleteConstant', index);
                   return this.getField('CONSTANT')
                 }
@@ -1185,17 +1185,17 @@ export default {
           },
         };
 
-        // 注册常量改变块类型
+        // 注册变量改变块类型
         const blockType_change = 'constantBlock_change'; // 为每个块生成一个唯一的类型名称
         Blockly.Blocks[blockType_change] = blockDefinition_change;
 
-        // 创建常量改变块
+        // 创建变量改变块
         const constantBlock_change = {
           kind: 'block',
           type: blockType_change, // 使用唯一的块类型
         };
 
-        // 将生成的常量相关块加入到数组
+        // 将生成的变量相关块加入到数组
         constantBlockArry.push(constantBlock);
         constantBlockArry.push(constantBlock_change);
       }

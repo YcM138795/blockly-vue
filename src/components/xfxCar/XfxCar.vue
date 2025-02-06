@@ -26,6 +26,10 @@ export default {
               { "kind": "label", "text": "红外线控制" },
               { kind: "block", type: "XTask_ir_task" },
               {
+                kind: "block",
+                type: "init_Ir"
+              },
+              {
                 "kind": "label",
                 "text": "烧录板灯控制"
               },

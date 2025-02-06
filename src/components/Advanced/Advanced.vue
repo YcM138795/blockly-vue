@@ -38,11 +38,11 @@ export default {
                             },
                             {
                                 kind: "label",
-                                text: "常量"
+                                text: "变量"
                             },
                             {
                                 kind: "button",
-                                text: "点击创建新常量",
+                                text: "点击创建新变量",
                                 callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
                             },
                             {

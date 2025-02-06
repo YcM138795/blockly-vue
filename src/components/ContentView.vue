@@ -447,7 +447,7 @@ export default {
     },
 
     //常数部分
-    // 显示常量编辑对话框
+    // 显示变量编辑对话框
     constantShowEditor(str, index) {
       if (str) {
         this.constantText = str;
@@ -456,19 +456,19 @@ export default {
       this.isVisible_constant = true;
     },
 
-    // 关闭常量编辑对话框
+    // 关闭变量编辑对话框
     closeEditor_constant() {
       this.isVisible_constant = false;
       this.constantText == ''
       this.editIndex = undefined
     },
 
-    // 保存常量
+    // 保存变量
     saveConstant() {
       var inputValue = document.getElementById('constantInput').value; // 获取输入框的值
       if (inputValue == '') {
         this.$message({
-          message: '不能设置常量名字为空',
+          message: '不能设置变量名字为空',
           type: 'warning'
         });
         return; // 如果输入框为空则返回
@@ -484,10 +484,10 @@ export default {
       if (this.arrayText) {
         this.advancedBlockStore.constantBlock[this.editIndex] = inputValue;
       } else {
-        this.advancedBlockStore.constantBlock.unshift(inputValue); // 将常量添加到常量数组
+        this.advancedBlockStore.constantBlock.unshift(inputValue); // 将变量添加到变量数组
       }
 
-      EventBus.$emit('refreshConstant', this.editIndex); // 刷新常量
+      EventBus.$emit('refreshConstant', this.editIndex); // 刷新变量
       this.closeEditor_constant(); // 关闭对话框
       document.getElementById('constantInput').value = ''; // 清空输入框
 
@@ -531,10 +531,10 @@ export default {
       if (this.arrayText) {
         this.advancedBlockStore.arrayBlock[this.editIndex] = inputValue;
       } else {
-        this.advancedBlockStore.arrayBlock.unshift(inputValue); // 将常量添加到常量数组
+        this.advancedBlockStore.arrayBlock.unshift(inputValue); // 将变量添加到变量数组
       }
 
-      EventBus.$emit('refreshArray', this.editIndex); // 刷新常量
+      EventBus.$emit('refreshArray', this.editIndex); // 刷新变量
       this.closeEditor_array(); // 关闭对话框
       document.getElementById('arrayInput').value = ''; // 清空输入框
     }

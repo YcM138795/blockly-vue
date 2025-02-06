@@ -4,7 +4,7 @@ export const useAdvancedBlockStore = defineStore('advancedBlockStore', {
   state: () => ({
     code:'',
     functionBlock: [],
-    constantBlock: ["Fn:重命名此常量", "Fn:删除此常量"],
+    constantBlock: ["Fn:重命名此变量", "Fn:删除此变量"],
     arrayBlock: ["Fn:重命名此数组", "Fn:删除此数组"],
   }),
   actions: {

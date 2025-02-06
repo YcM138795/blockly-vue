@@ -366,6 +366,103 @@ import { XTaskCheckTypes } from '../config/config';
                 return code;
             }
         }
+        //数字读取引脚
+        {
+            Blockly.Blocks['gpio_read'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "gpio_read",
+                        "tooltip": "数字读取引脚",
+                        "helpUrl": "",
+                        "message0": "数字读取引脚 %1",
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "gpio",
+                                "options": [
+                                    [
+                                        "P0",
+                                        "GPIO_PIN_22"
+                                    ],
+                                    [
+                                        "P1",
+                                        "GPIO_PIN_25"
+                                    ],
+                                    [
+                                        "P2",
+                                        "GPIO_PIN_21"
+                                    ],
+                                    [
+                                        "P3",
+                                        "GPIO_PIN_27"
+                                    ],
+                                    [
+                                        "P4",
+                                        "GPIO_PIN_31"
+                                    ],
+                                    [
+                                        "P5",
+                                        "GPIO_PIN_32"
+                                    ],
+                                    [
+                                        "P6",
+                                        "GPIO_PIN_33"
+                                    ],
+                                    [
+                                        "P7",
+                                        "GPIO_PIN_34"
+                                    ],
+                                    [
+                                        "P8",
+                                        "GPIO_PIN_24"
+                                    ],
+                                    [
+                                        "P9",
+                                        "GPIO_PIN_6"
+                                    ],
+                                    [
+                                        "P10",
+                                        "GPIO_PIN_29"
+                                    ],
+                                    [
+                                        "P11",
+                                        "GPIO_PIN_30"
+                                    ],
+                                    [
+                                        "P12",
+                                        "GPIO_PIN_16"
+                                    ],
+                                    [
+                                        "P13",
+                                        "GPIO_PIN_17"
+                                    ],
+                                    [
+                                        "P14",
+                                        "GPIO_PIN_18"
+                                    ],
+                                    [
+                                        "P15",
+                                        "GPIO_PIN_28"
+                                    ],
+                                    [
+                                        "P16",
+                                        "GPIO_PIN_9"
+                                    ]
+                                ]
+                            },
+                        ],
+                        "inputsInline": true,
+                        "output": "Number", // 修改这里为 Number 类型
+                        "colour": '#4FD284'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['gpio_read'] = function (block) {
+                const gpio = block.getFieldValue('gpio');
+                const code = `bflb_gpio_read(gpio, ${gpio});`;
+                return [code,Order.NONE];
+            }
+        }
 
         //XTask_mpu6050__task:陀螺仪操作任务执行函数
         {
@@ -568,9 +665,9 @@ import { XTaskCheckTypes } from '../config/config';
         }
     }
 
-    //常量
+    //变量
     {
-        //常量定义
+        //变量定义
         {
             javascriptGenerator.forBlock['constantBlock'] = function (block) {
                 var dropdown_operation = block.getFieldValue('CONSTANT');
@@ -579,7 +676,7 @@ import { XTaskCheckTypes } from '../config/config';
             };
         }
 
-        //常量改变
+        //变量改变
         {
             javascriptGenerator.forBlock['constantBlock_change'] = function (block) {
                 var dropdown_operation = block.getFieldValue('CONSTANT');

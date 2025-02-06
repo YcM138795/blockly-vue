@@ -1463,6 +1463,107 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                 return code;
             }
         }
+        {
+            Blockly.Blocks['init_Ir'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "init_Ir",
+                        "tooltip": "红外初始化",
+                        "helpUrl": "",
+                        "message0": "红外初始化 %1 %2",
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "gpio",
+                                "options": [
+                                    [
+                                        "P0",
+                                        "GPIO_PIN_22"
+                                    ],
+                                    [
+                                        "P1",
+                                        "GPIO_PIN_25"
+                                    ],
+                                    [
+                                        "P2",
+                                        "GPIO_PIN_21"
+                                    ],
+                                    [
+                                        "P3",
+                                        "GPIO_PIN_27"
+                                    ],
+                                    [
+                                        "P4",
+                                        "GPIO_PIN_31"
+                                    ],
+                                    [
+                                        "P5",
+                                        "GPIO_PIN_32"
+                                    ],
+                                    [
+                                        "P6",
+                                        "GPIO_PIN_33"
+                                    ],
+                                    [
+                                        "P7",
+                                        "GPIO_PIN_34"
+                                    ],
+                                    [
+                                        "P8",
+                                        "GPIO_PIN_24"
+                                    ],
+                                    [
+                                        "P9",
+                                        "GPIO_PIN_6"
+                                    ],
+                                    [
+                                        "P10",
+                                        "GPIO_PIN_29"
+                                    ],
+                                    [
+                                        "P11",
+                                        "GPIO_PIN_30"
+                                    ],
+                                    [
+                                        "P12",
+                                        "GPIO_PIN_16"
+                                    ],
+                                    [
+                                        "P13",
+                                        "GPIO_PIN_17"
+                                    ],
+                                    [
+                                        "P14",
+                                        "GPIO_PIN_18"
+                                    ],
+                                    [
+                                        "P15",
+                                        "GPIO_PIN_28"
+                                    ],
+                                    [
+                                        "P16",
+                                        "GPIO_PIN_9"
+                                    ]
+                                ]
+                            },
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['init_Ir'] = function (block) {
+                const dropdown_gpio = block.getFieldValue('gpio');
+                // TODO: Assemble javascript into the code variable.
+                const code = `board_ir_gpio_init(${dropdown_gpio});\n`;
+                return code;
+            }
+        }
     }
 
     //logo
