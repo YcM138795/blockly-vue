@@ -23,9 +23,9 @@
         <button type="primary" @click="saveFunction">保存</button>
       </div>
     </el-dialog>
-    <el-dialog :title="constantText ? constantText : '创建常数'" :visible.sync="isVisible_constant"
+    <el-dialog :title="constantText ? constantText : '创建变量'" :visible.sync="isVisible_constant"
       @close="closeEditor_constant" :close-on-click-modal="false" width="30%">
-      <input type="text" placeholder="请输入常数名" class="constantInput" id="constantInput">
+      <input type="text" placeholder="请输入变量名" class="constantInput" id="constantInput">
       <div slot="footer" class="dialog-footer">
         <button type="primary" @click="saveConstant">保存</button>
       </div>
@@ -56,8 +56,8 @@ export default {
   data() {
     return {
       isVisible_function: false,//函数编辑对话框是否可见
-      isVisible_constant: false,//常数编辑对话框是否可见
-      constantText: '',//常数的名字
+      isVisible_constant: false,//变量编辑对话框是否可见
+      constantText: '',//变量的名字
       isVisible_array: false,//数组编辑对话框是否可见
       arrayText: '',//数组的名字
       editIndex: undefined,//重命名的索引
@@ -395,6 +395,14 @@ export default {
       }
       let funName = this.selectedParams[0];
       let boolean
+      var variableNameRegex = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+      if (!variableNameRegex.test(funName)) {
+    this.$message({
+      message: '函数名不合法，请重新输入',
+      type: 'warning'
+    });
+    return; // 如果变量名不合法则返回
+  }
       if (this.oddBlock) {
         if (funName != 'myFunction' && funName != this.oddBlock.getInput('funName').fieldRow[1].value_)
           boolean = this.advancedBlockStore.ifFunNameExist(funName, this.oddBlock.id);
@@ -446,7 +454,7 @@ export default {
       this.functionShowEditor();
     },
 
-    //常数部分
+    //变量部分
     // 显示变量编辑对话框
     constantShowEditor(str, index) {
       if (str) {
@@ -459,13 +467,21 @@ export default {
     // 关闭变量编辑对话框
     closeEditor_constant() {
       this.isVisible_constant = false;
-      this.constantText == ''
+      this.constantText = ''
       this.editIndex = undefined
     },
 
     // 保存变量
     saveConstant() {
       var inputValue = document.getElementById('constantInput').value; // 获取输入框的值
+      var variableNameRegex = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+      if (!variableNameRegex.test(inputValue)) {
+    this.$message({
+      message: '变量名不合法，请重新输入',
+      type: 'warning'
+    });
+    return; // 如果变量名不合法则返回
+  }
       if (inputValue == '') {
         this.$message({
           message: '不能设置变量名字为空',
@@ -481,8 +497,9 @@ export default {
         return; // 如果输入框为空则返回
       }
 
-      if (this.arrayText) {
+      if (this.constantText) {
         this.advancedBlockStore.constantBlock[this.editIndex] = inputValue;
+        console.log(this.advancedBlockStore);
       } else {
         this.advancedBlockStore.constantBlock.unshift(inputValue); // 将变量添加到变量数组
       }
@@ -513,6 +530,14 @@ export default {
     // 保存数组
     saveArray() {
       var inputValue = document.getElementById('arrayInput').value; // 获取输入框的值
+      var variableNameRegex = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/;
+      if (!variableNameRegex.test(inputValue)) {
+    this.$message({
+      message: '变量名不合法，请重新输入',
+      type: 'warning'
+    });
+    return; // 如果变量名不合法则返回
+  }
       if (inputValue == '') {
         this.$message({
           message: '不能设置数组名字为空',

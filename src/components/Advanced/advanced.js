@@ -670,24 +670,47 @@ import { XTaskCheckTypes } from '../config/config';
         //变量定义
         {
             javascriptGenerator.forBlock['constantBlock'] = function (block) {
-                var dropdown_operation = block.getFieldValue('CONSTANT');
-                var number = block.getFieldValue('NUMBER');
-                return `double ${dropdown_operation} = ${number};\n`;
-            };
+                const dropdown_operation = block.getFieldValue('CONSTANT');
+                const type = block.getFieldValue('TYPE');
+                const value = block.getFieldValue('VALUE');
+              
+                // 根据数据类型生成不同的代码
+                let code;
+                if (type === 'int') {
+                  code = `int ${dropdown_operation} = ${value};\n`;
+                } else if (type === 'float') {
+                  code = `float ${dropdown_operation} = ${value};\n`;
+                } else if (type === 'string') {
+                  code = `char* ${dropdown_operation} = "${value}";\n`;
+                } else if (type === 'bool') {
+                  code = `bool ${dropdown_operation} = ${value};\n`;
+                }
+              
+                return code;
+              };
         }
 
         //变量改变
         {
             javascriptGenerator.forBlock['constantBlock_change'] = function (block) {
-                var dropdown_operation = block.getFieldValue('CONSTANT');
-                var number = block.getFieldValue('NUMBER');
+                const dropdown_operation = block.getFieldValue('CONSTANT');
+                const number = block.getFieldValue('NUMBER');
+              
                 if (number >= 0) {
-                    return `${dropdown_operation} + =${number};\n`;
-
+                  return `${dropdown_operation} += ${number};\n`;
                 } else {
-                    let numberABS = Math.abs(number);
-                    return `${dropdown_operation} - =${numberABS};\n`;
+                  let numberABS = Math.abs(number);
+                  return `${dropdown_operation} -= ${numberABS};\n`;
                 }
+              };
+        }
+        {
+            javascriptGenerator.forBlock['constantBlock_call'] = function (block) {
+                const dropdown_operation = block.getFieldValue('CONSTANT');
+        
+                // 生成调用变量的代码
+                const code = `${dropdown_operation}`;
+                return [code,Order.NONE]; // 返回生成的调用代码
             };
         }
     }
@@ -838,7 +861,7 @@ import { XTaskCheckTypes } from '../config/config';
 //         constantInput = this.getInput('constant');
 //         constantInput.appendField("将");
 
-//         // // 添加常数选项
+//         // // 添加变量选项
 //         // let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
 //         // this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
 //         // this.addConstant(constantInput, this.dropdownField);
@@ -913,7 +936,7 @@ import { XTaskCheckTypes } from '../config/config';
 //         const constantInput = this.getInput('constant');
 
 //         if (this.arrayBlock) {
-//             // // 添加常数选项
+//             // // 添加变量选项
 //             let constantDropdownOptions = this.getConstant(this.arrayBlock);
 //             this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
 //             this.addConstant(constantInput, this.dropdownField);
@@ -989,7 +1012,7 @@ import { XTaskCheckTypes } from '../config/config';
 //         this.numberCount = state['itemCount'];
 //         this.arrayBlock = state['arrayBlock'];
 //         if (this.arrayBlock) {
-//             // // 添加常数选项
+//             // // 添加变量选项
 //             let constantDropdownOptions = this.getConstant(this.arrayBlock);
 //             let dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
 //             this.addConstant(this.getInput('constant'), dropdownField);

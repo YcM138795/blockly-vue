@@ -502,7 +502,7 @@ import {dartGenerator} from 'blockly/dart';
                 if (!this.getInput('input1')) {
                   this.appendDummyInput('input1')
                     .appendField('角度')
-                    .appendField(new Blockly.FieldAngle(90), 'ANGLE'); // 默认值 90 度
+                    .appendField(new Blockly.FieldNumber(90), 'ANGLE'); // 默认值 90 度
                 }
               }
              else {
