@@ -1,855 +1,706 @@
-import * as Blockly from 'blockly/core';
-import { javascriptGenerator, Order } from 'blockly/javascript';
-import '@blockly/field-bitmap';
-import { XTaskCheckTypes } from '../config/config';
-
+import * as Blockly from "blockly/core";
+import { javascriptGenerator, Order } from "blockly/javascript";
+import "@blockly/field-bitmap";
+import { XTaskCheckTypes } from "../config/config";
 
 //基础
 {
-
-    //基础
+  //基础
+  {
+    //forever:无限循环
     {
+      Blockly.Blocks["forever"] = {
+        init: function () {
+          this.jsonInit({
+            type: "forever",
+            tooltip: "",
+            helpUrl: "",
+            message0: "无限循环 %1 %2",
+            args0: [
+              {
+                type: "input_end_row",
+                name: "NAME",
+              },
+              {
+                type: "input_statement",
+                name: "inner",
+                check: XTaskCheckTypes,
+              },
+            ],
+            previousStatement: XTaskCheckTypes,
+            nextStatement: XTaskCheckTypes,
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["forever"] = function (block, generator) {
+        const statement_inner = generator.statementToCode(block, "inner");
 
-        //forever:无限循环
-        {
-            Blockly.Blocks['forever'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "forever",
-                        "tooltip": "",
-                        "helpUrl": "",
-                        "message0": "无限循环 %1 %2",
-                        "args0": [
-                            {
-                                "type": "input_end_row",
-                                "name": "NAME"
-                            },
-                            {
-                                "type": "input_statement",
-                                "name": "inner",
-                                "check": XTaskCheckTypes
-                            }
-                        ],
-                        "previousStatement": XTaskCheckTypes,
-                        "nextStatement": XTaskCheckTypes,
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['forever'] = function (block, generator) {
-                const statement_inner = generator.statementToCode(block, 'inner');
+        // TODO: Assemble javascript into the code variable.
+        const code = `while(1){\n${statement_inner}\n}\n`;
+        return code;
+      };
+    }
+    //implement:执行内部逻辑
+    {
+      Blockly.Blocks["implement"] = {
+        init: function () {
+          this.jsonInit({
+            type: "_implement",
+            tooltip: "执行内部逻辑",
+            helpUrl: "",
+            message0: "while %1 %2 执行 %3",
+            args0: [
+              {
+                type: "field_input",
+                name: " condition",
+                text: "1",
+              },
+              {
+                type: "input_dummy",
+                name: "NAME",
+              },
+              {
+                type: "input_statement",
+                name: "inner",
+                check: XTaskCheckTypes,
+              },
+            ],
+            previousStatement: XTaskCheckTypes,
+            nextStatement: XTaskCheckTypes,
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["implement"] = function (block, generator) {
+        const text__condition = block.getFieldValue(" condition");
 
-                // TODO: Assemble javascript into the code variable.
-                const code = `while(1){\n${statement_inner}\n}\n`;
-                return code;
-            }
-        }
-        //implement:执行内部逻辑
-        {
-            Blockly.Blocks['implement'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "_implement",
-                        "tooltip": "执行内部逻辑",
-                        "helpUrl": "",
-                        "message0": "while %1 %2 执行 %3",
-                        "args0": [
-                            {
-                                "type": "field_input",
-                                "name": " condition",
-                                "text": "1"
-                            },
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                            },
-                            {
-                                "type": "input_statement",
-                                "name": "inner",
-                                "check": XTaskCheckTypes
-                            }
-                        ],
-                        "previousStatement": XTaskCheckTypes,
-                        "nextStatement": XTaskCheckTypes,
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['implement'] = function (block, generator) {
-                const text__condition = block.getFieldValue(' condition');
+        const statement_inner = generator.statementToCode(block, "inner");
 
-                const statement_inner = generator.statementToCode(block, 'inner');
+        // TODO: Assemble javascript into the code variable.
+        const code = `while(${text__condition}){\n${statement_inner}\n}\n`;
+        return code;
+      };
+    }
 
-                // TODO: Assemble javascript into the code variable.
-                const code = `while(${text__condition}){\n${statement_inner}\n}\n`;
-                return code;
-            }
-        }
+    //delay:延时
+    {
+      Blockly.Blocks["delay"] = {
+        init: function () {
+          this.jsonInit({
+            type: "delay",
+            tooltip: "",
+            helpUrl: "",
+            message0: "延时-- %1 毫秒 %2",
+            args0: [
+              {
+                type: "field_number",
+                name: "timer",
+                value: 0,
+                min: 0,
+              },
+              {
+                type: "input_dummy",
+                name: "NAME",
+              },
+            ],
+            previousStatement: XTaskCheckTypes,
+            nextStatement: XTaskCheckTypes,
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["delay"] = function (block) {
+        const number_timer = block.getFieldValue("timer");
+        let time = number_timer;
 
-        //delay:延时
-        {
-            Blockly.Blocks['delay'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "delay",
-                        "tooltip": "",
-                        "helpUrl": "",
-                        "message0": "延时-- %1 毫秒 %2",
-                        "args0": [
-                            {
-                                "type": "field_number",
-                                "name": "timer",
-                                "value": 0,
-                                "min": 0
-                            },
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                            }
-                        ],
-                        "previousStatement": XTaskCheckTypes,
-                        "nextStatement": XTaskCheckTypes,
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['delay'] = function (block) {
-                const number_timer = block.getFieldValue('timer');
-                let time = number_timer;
+        // TODO: Assemble javascript into the code variable.
+        const code = `vTaskDelay(${time});\n`;
+        return code;
+      };
+    }
 
-                // TODO: Assemble javascript into the code variable.
-                const code = `vTaskDelay(${time});\n`;
-                return code;
-            }
-        }
+    //gpio_write:向引脚写入值
+    {
+      Blockly.Blocks["gpio_write"] = {
+        init: function () {
+          this.jsonInit({
+            type: "gpio_write",
+            tooltip: "向引脚写入值",
+            helpUrl: "",
+            message0: "向  引脚 %1 数字写入值 %2 %3",
+            args0: [
+              {
+                type: "field_dropdown",
+                name: "gpio",
+                options: [
+                  ["P0", "GPIO_PIN_22"],
+                  ["P1", "GPIO_PIN_25"],
+                  ["P2", "GPIO_PIN_21"],
+                  ["P3", "GPIO_PIN_27"],
+                  ["P4", "GPIO_PIN_31"],
+                  ["P5", "GPIO_PIN_32"],
+                  ["P6", "GPIO_PIN_33"],
+                  ["P7", "GPIO_PIN_34"],
+                  ["P8", "GPIO_PIN_24"],
+                  ["P9", "GPIO_PIN_6"],
+                  ["P10", "GPIO_PIN_29"],
+                  ["P11", "GPIO_PIN_30"],
+                  ["P12", "GPIO_PIN_16"],
+                  ["P13", "GPIO_PIN_17"],
+                  ["P14", "GPIO_PIN_18"],
+                  ["P15", "GPIO_PIN_28"],
+                  ["P16", "GPIO_PIN_9"],
+                ],
+              },
+              {
+                type: "field_dropdown",
+                name: "number",
+                options: [
+                  ["0", "0"],
+                  ["1", "1"],
+                ],
+              },
+              {
+                type: "input_dummy",
+                name: "NAME",
+              },
+            ],
+            previousStatement: XTaskCheckTypes,
+            nextStatement: XTaskCheckTypes,
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["gpio_write"] = function (block) {
+        const dropdown_gpio = block.getFieldValue("gpio");
+        const number_number = block.getFieldValue("number");
 
-        //gpio_write:向引脚写入值
-        {
-            Blockly.Blocks['gpio_write'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "gpio_write",
-                        "tooltip": "向引脚写入值",
-                        "helpUrl": "",
-                        "message0": "向  引脚 %1 数字写入值 %2 %3",
-                        "args0": [
-                            {
-                                "type": "field_dropdown",
-                                "name": "gpio",
-                                "options": [
-                                    [
-                                        "P0",
-                                        "GPIO_PIN_22"
-                                    ],
-                                    [
-                                        "P1",
-                                        "GPIO_PIN_25"
-                                    ],
-                                    [
-                                        "P2",
-                                        "GPIO_PIN_21"
-                                    ],
-                                    [
-                                        "P3",
-                                        "GPIO_PIN_27"
-                                    ],
-                                    [
-                                        "P4",
-                                        "GPIO_PIN_31"
-                                    ],
-                                    [
-                                        "P5",
-                                        "GPIO_PIN_32"
-                                    ],
-                                    [
-                                        "P6",
-                                        "GPIO_PIN_33"
-                                    ],
-                                    [
-                                        "P7",
-                                        "GPIO_PIN_34"
-                                    ],
-                                    [
-                                        "P8",
-                                        "GPIO_PIN_24"
-                                    ],
-                                    [
-                                        "P9",
-                                        "GPIO_PIN_6"
-                                    ],
-                                    [
-                                        "P10",
-                                        "GPIO_PIN_29"
-                                    ],
-                                    [
-                                        "P11",
-                                        "GPIO_PIN_30"
-                                    ],
-                                    [
-                                        "P12",
-                                        "GPIO_PIN_16"
-                                    ],
-                                    [
-                                        "P13",
-                                        "GPIO_PIN_17"
-                                    ],
-                                    [
-                                        "P14",
-                                        "GPIO_PIN_18"
-                                    ],
-                                    [
-                                        "P15",
-                                        "GPIO_PIN_28"
-                                    ],
-                                    [
-                                        "P16",
-                                        "GPIO_PIN_9"
-                                    ]
-                                ]
-                            },
-                            {
-                                "type": "field_dropdown",
-                                "name": "number",
-                                "options": [
-                                    [
-                                        "0",
-                                        "0"
-                                    ],
-                                    [
-                                        "1",
-                                        "1"
-                                    ]
-                                ]
-                            },
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                            }
-                        ],
-                        "previousStatement": XTaskCheckTypes,
-                        "nextStatement": XTaskCheckTypes,
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['gpio_write'] = function (block) {
-                const dropdown_gpio = block.getFieldValue('gpio');
-                const number_number = block.getFieldValue('number');
+        const setWay = number_number == 1 ? "bflb_gpio_set" : "bflb_gpio_reset";
 
-                const setWay = number_number == 1 ? 'bflb_gpio_set' : 'bflb_gpio_reset';
-
-                // TODO: Assemble javascript into the code variable.
-                const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_OUTPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);
+        // TODO: Assemble javascript into the code variable.
+        const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_OUTPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);
     ${setWay}(gpio, ${dropdown_gpio});\n`;
-                return code;
-            }
-        }
-        {
-            Blockly.Blocks['gpio_output'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "gpio_output",
-                        "tooltip": "选择引脚的高低电平",
-                        "helpUrl": "",
-                        "message0": "当  引脚 %1 被按下时输出为 %2 %3 %4",
-                        "args0": [
-                            {
-                                "type": "field_dropdown",
-                                "name": "gpio",
-                                "options": [
-                                    [
-                                        "P0",
-                                        "GPIO_PIN_22"
-                                    ],
-                                    [
-                                        "P1",
-                                        "GPIO_PIN_25"
-                                    ],
-                                    [
-                                        "P2",
-                                        "GPIO_PIN_21"
-                                    ],
-                                    [
-                                        "P3",
-                                        "GPIO_PIN_27"
-                                    ],
-                                    [
-                                        "P4",
-                                        "GPIO_PIN_31"
-                                    ],
-                                    [
-                                        "P5",
-                                        "GPIO_PIN_32"
-                                    ],
-                                    [
-                                        "P6",
-                                        "GPIO_PIN_33"
-                                    ],
-                                    [
-                                        "P7",
-                                        "GPIO_PIN_34"
-                                    ],
-                                    [
-                                        "P8",
-                                        "GPIO_PIN_24"
-                                    ],
-                                    [
-                                        "P9",
-                                        "GPIO_PIN_6"
-                                    ],
-                                    [
-                                        "P10",
-                                        "GPIO_PIN_29"
-                                    ],
-                                    [
-                                        "P11",
-                                        "GPIO_PIN_30"
-                                    ],
-                                    [
-                                        "P12",
-                                        "GPIO_PIN_16"
-                                    ],
-                                    [
-                                        "P13",
-                                        "GPIO_PIN_17"
-                                    ],
-                                    [
-                                        "P14",
-                                        "GPIO_PIN_18"
-                                    ],
-                                    [
-                                        "P15",
-                                        "GPIO_PIN_28"
-                                    ],
-                                    [
-                                        "P16",
-                                        "GPIO_PIN_9"
-                                    ]
-                                ]
-                            },
-                            {
-                                "type": "field_dropdown",
-                                "name": "electrical_level",
-                                "options": [
-                                    [
-                                        "高电平",
-                                        "true"
-                                    ],
-                                    [
-                                        "低电平",
-                                        "false"
-                                    ]
-                                ]
-                            },
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                              },
-                              {
-                                "type": "input_statement",
-                                "name": "operation",
-                                "check": XTaskCheckTypes
-                              }
-                        ],
-                        "previousStatement": XTaskCheckTypes,
-                        "nextStatement": XTaskCheckTypes,
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['gpio_output'] = function (block,generator) {
-                const dropdown_gpio = block.getFieldValue('gpio');
-                const electrical_level = block.getFieldValue('electrical_level')=="true"?true:false;
-                const statement_operation = generator.statementToCode(block, 'operation');
-                // TODO: Assemble javascript into the code variable.
-                const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_INPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);\nif(bflb_gpio_read(gpio, ${dropdown_gpio})==${electrical_level}){\n${statement_operation}};\n`;
-                return code;
-            }
-        }
-        //数字读取引脚
-        {
-            Blockly.Blocks['gpio_read'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "gpio_read",
-                        "tooltip": "数字读取引脚",
-                        "helpUrl": "",
-                        "message0": "数字读取引脚 %1",
-                        "args0": [
-                            {
-                                "type": "field_dropdown",
-                                "name": "gpio",
-                                "options": [
-                                    [
-                                        "P0",
-                                        "GPIO_PIN_22"
-                                    ],
-                                    [
-                                        "P1",
-                                        "GPIO_PIN_25"
-                                    ],
-                                    [
-                                        "P2",
-                                        "GPIO_PIN_21"
-                                    ],
-                                    [
-                                        "P3",
-                                        "GPIO_PIN_27"
-                                    ],
-                                    [
-                                        "P4",
-                                        "GPIO_PIN_31"
-                                    ],
-                                    [
-                                        "P5",
-                                        "GPIO_PIN_32"
-                                    ],
-                                    [
-                                        "P6",
-                                        "GPIO_PIN_33"
-                                    ],
-                                    [
-                                        "P7",
-                                        "GPIO_PIN_34"
-                                    ],
-                                    [
-                                        "P8",
-                                        "GPIO_PIN_24"
-                                    ],
-                                    [
-                                        "P9",
-                                        "GPIO_PIN_6"
-                                    ],
-                                    [
-                                        "P10",
-                                        "GPIO_PIN_29"
-                                    ],
-                                    [
-                                        "P11",
-                                        "GPIO_PIN_30"
-                                    ],
-                                    [
-                                        "P12",
-                                        "GPIO_PIN_16"
-                                    ],
-                                    [
-                                        "P13",
-                                        "GPIO_PIN_17"
-                                    ],
-                                    [
-                                        "P14",
-                                        "GPIO_PIN_18"
-                                    ],
-                                    [
-                                        "P15",
-                                        "GPIO_PIN_28"
-                                    ],
-                                    [
-                                        "P16",
-                                        "GPIO_PIN_9"
-                                    ]
-                                ]
-                            },
-                        ],
-                        "inputsInline": true,
-                        "output": "Number", // 修改这里为 Number 类型
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['gpio_read'] = function (block) {
-                const gpio = block.getFieldValue('gpio');
-                const code = `bflb_gpio_read(gpio, ${gpio})`;
-                return [code,Order.NONE];
-            }
-        }
+        return code;
+      };
+    }
+    {
+      Blockly.Blocks["gpio_output"] = {
+        init: function () {
+          this.jsonInit({
+            type: "gpio_output",
+            tooltip: "选择引脚的高低电平",
+            helpUrl: "",
+            message0: "当  引脚 %1 被按下时输出为 %2 %3 %4",
+            args0: [
+              {
+                type: "field_dropdown",
+                name: "gpio",
+                options: [
+                  ["P0", "GPIO_PIN_22"],
+                  ["P1", "GPIO_PIN_25"],
+                  ["P2", "GPIO_PIN_21"],
+                  ["P3", "GPIO_PIN_27"],
+                  ["P4", "GPIO_PIN_31"],
+                  ["P5", "GPIO_PIN_32"],
+                  ["P6", "GPIO_PIN_33"],
+                  ["P7", "GPIO_PIN_34"],
+                  ["P8", "GPIO_PIN_24"],
+                  ["P9", "GPIO_PIN_6"],
+                  ["P10", "GPIO_PIN_29"],
+                  ["P11", "GPIO_PIN_30"],
+                  ["P12", "GPIO_PIN_16"],
+                  ["P13", "GPIO_PIN_17"],
+                  ["P14", "GPIO_PIN_18"],
+                  ["P15", "GPIO_PIN_28"],
+                  ["P16", "GPIO_PIN_9"],
+                ],
+              },
+              {
+                type: "field_dropdown",
+                name: "electrical_level",
+                options: [
+                  ["高电平", "true"],
+                  ["低电平", "false"],
+                ],
+              },
+              {
+                type: "input_dummy",
+                name: "NAME",
+              },
+              {
+                type: "input_statement",
+                name: "operation",
+                check: XTaskCheckTypes,
+              },
+            ],
+            previousStatement: XTaskCheckTypes,
+            nextStatement: XTaskCheckTypes,
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["gpio_output"] = function (
+        block,
+        generator
+      ) {
+        const dropdown_gpio = block.getFieldValue("gpio");
+        const electrical_level =
+          block.getFieldValue("electrical_level") == "true" ? true : false;
+        const statement_operation = generator.statementToCode(
+          block,
+          "operation"
+        );
+        // TODO: Assemble javascript into the code variable.
+        const code = `bflb_gpio_init(gpio, ${dropdown_gpio}, GPIO_INPUT | GPIO_PULLUP | GPIO_SMT_EN | GPIO_DRV_0);\nif(bflb_gpio_read(gpio, ${dropdown_gpio})==${electrical_level}){\n${statement_operation}};\n`;
+        return code;
+      };
+    }
+    //数字读取引脚
+    {
+      Blockly.Blocks["gpio_read"] = {
+        init: function () {
+          this.jsonInit({
+            type: "gpio_read",
+            tooltip: "数字读取引脚",
+            helpUrl: "",
+            message0: "数字读取引脚 %1",
+            args0: [
+              {
+                type: "field_dropdown",
+                name: "gpio",
+                options: [
+                  ["P0", "GPIO_PIN_22"],
+                  ["P1", "GPIO_PIN_25"],
+                  ["P2", "GPIO_PIN_21"],
+                  ["P3", "GPIO_PIN_27"],
+                  ["P4", "GPIO_PIN_31"],
+                  ["P5", "GPIO_PIN_32"],
+                  ["P6", "GPIO_PIN_33"],
+                  ["P7", "GPIO_PIN_34"],
+                  ["P8", "GPIO_PIN_24"],
+                  ["P9", "GPIO_PIN_6"],
+                  ["P10", "GPIO_PIN_29"],
+                  ["P11", "GPIO_PIN_30"],
+                  ["P12", "GPIO_PIN_16"],
+                  ["P13", "GPIO_PIN_17"],
+                  ["P14", "GPIO_PIN_18"],
+                  ["P15", "GPIO_PIN_28"],
+                  ["P16", "GPIO_PIN_9"],
+                ],
+              },
+            ],
+            inputsInline: true,
+            output: "Number", // 修改这里为 Number 类型
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["gpio_read"] = function (block) {
+        const gpio = block.getFieldValue("gpio");
+        const code = `bflb_gpio_read(gpio, ${gpio})`;
+        return [code, Order.NONE];
+      };
+    }
 
-        //XTask_mpu6050__task:陀螺仪操作任务执行函数
-        {
-            Blockly.Blocks['XTask_mpu6050__task'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "XTask_mpu6050__task",
-                        "tooltip": "陀螺仪操作任务执行函数",
-                        "helpUrl": "",
-                        "message0": "陀螺仪操作任务执行 %1",
-                        "args0": [
-                            {
-                                "type": "input_dummy",
-                                "name": "NAME"
-                            }
-                        ],
-                        "previousStatement": [''],
-                        "nextStatement": [''],
-                        "colour": '#4FD284'
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['XTask_mpu6050__task'] = function () {
-
-                // TODO: Assemble javascript into the code variable.
-                const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n
+    //XTask_mpu6050__task:陀螺仪操作任务执行
+    {
+      Blockly.Blocks["XTask_mpu6050__task"] = {
+        init: function () {
+          this.jsonInit({
+            type: "XTask_mpu6050__task",
+            tooltip: "陀螺仪操作任务执行",
+            helpUrl: "",
+            message0: "陀螺仪操作任务执行 %1",
+            args0: [
+              {
+                type: "input_dummy",
+                name: "NAME",
+              },
+            ],
+            previousStatement: [""],
+            nextStatement: [""],
+            colour: "#4FD284",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["XTask_mpu6050__task"] = function () {
+        // TODO: Assemble javascript into the code variable.
+        const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n
                 xTaskCreate(mpu task,(char *)"mpu task",512,NULL,9, &mpu handle);`;
-                return code;
-            }
+        return code;
+      };
+    }
+  }
+
+  //函数
+  {
+    Blockly.Blocks["function_definition"] = {
+      init: function () {
+        // 设置块的样式和其他基本属性
+        this.setStyle("function_definition_style");
+        this.setTooltip("");
+        this.setHelpUrl("");
+
+        // 添加一个字段（函数名称）
+        this.appendDummyInput("funName")
+          .appendField("函数")
+          .appendField(new Blockly.FieldTextInput("myFunction"), "NAME");
+
+        // 添加参数部分，默认无参数
+        this.appendDummyInput("Param").appendField("参数:无", "paramName");
+
+        // 添加执行部分（语句输入区）
+        this.appendStatementInput("inner").appendField("执行");
+      },
+      customContextMenu: function (options) {
+        // 过滤掉“复制”选项
+        options.forEach((option) => {
+          if (option.text === "复制") {
+            option.enabled = false;
+          }
+        });
+      },
+      addParam: function (selectedParams) {
+        //设置函数名
+        const nameInput = this.getField("NAME");
+        nameInput.setValue(selectedParams[1]);
+
+        //设置参数
+        const constantInput = this.getInput("Param");
+        if (selectedParams.length >= 3) {
+          if (this.getField("paramName").value_ == "参数:无") {
+            this.setFieldValue("参数:", "paramName");
+          }
         }
 
-    }
-
-    //函数
-    {
-        Blockly.Blocks['function_definition'] = {
-            init: function () {
-
-                // 设置块的样式和其他基本属性
-                this.setStyle('function_definition_style');
-                this.setTooltip('');
-                this.setHelpUrl('');
-
-                // 添加一个字段（函数名称）
-                this.appendDummyInput('funName')
-                    .appendField('函数')
-                    .appendField(new Blockly.FieldTextInput('myFunction'), 'NAME');
-
-                // 添加参数部分，默认无参数
-                this.appendDummyInput('Param')
-                    .appendField('参数:无', 'paramName');
-
-
-                // 添加执行部分（语句输入区）
-                this.appendStatementInput('inner').appendField('执行');
-            },
-            customContextMenu: function (options) {
-                // 过滤掉“复制”选项
-                options.forEach(option => {
-                    if (option.text === "复制") {
-                        option.enabled = false;
-                    }
-                })
-            },
-            addParam: function (selectedParams) {
-                //设置函数名
-                const nameInput = this.getField('NAME');
-                nameInput.setValue(selectedParams[1]);
-
-                //设置参数
-                const constantInput = this.getInput('Param');
-                if (selectedParams.length >= 3) {
-                    if (this.getField('paramName').value_ == '参数:无') {
-                        this.setFieldValue('参数:', 'paramName');
-                    }
-                }
-
-                let newField
-                for (let index = 2; index < selectedParams.length; index++) {
-                    let parts = selectedParams[index].split('--&&--');
-                    // 创建新的输入字段
-                    if (parts[0]) {
-                        newField = new Blockly.FieldTextInput(parts[0]);// 将字段添加到输入槽
-                    } else {
-                        newField = new Blockly.FieldTextInput(parts[1]);// 将字段添加到输入槽
-                    }
-                    constantInput.appendField(newField, parts[1]);
-                }
-            },
-            refreshParam: function (selectedParams) {
-                console.log(selectedParams);
-                const constantInput = this.getInput('Param');
-                if (constantInput) {
-                    // 遍历 constantInput 的所有字段并逐个删除
-                    const fields = constantInput.fieldRow.slice(); // 创建副本防止修改原数组时出错
-                    fields.forEach((field) => {
-                        if (field.name !== 'paramName') { // 保留 'paramName' 字段
-                            constantInput.removeField(field.name);
-                        }
-                    });
-                }
-                this.param = selectedParams; // 保存参数
-                this.addParam(selectedParams); // 重新添加参数  
-            },
-            saveExtraState: function () {
-                return {
-                    'param': this.param,
-                };
-            },
-            loadExtraState: function (state) {
-                this.param = state['param'];
-                if (this.param) {
-                    this.addParam(this.param);
-                }
-            },
+        let newField;
+        for (let index = 2; index < selectedParams.length; index++) {
+          let parts = selectedParams[index].split("--&&--");
+          // 创建新的输入字段
+          if (parts[0]) {
+            newField = new Blockly.FieldTextInput(parts[0]); // 将字段添加到输入槽
+          } else {
+            newField = new Blockly.FieldTextInput(parts[1]); // 将字段添加到输入槽
+          }
+          constantInput.appendField(newField, parts[1]);
+        }
+      },
+      refreshParam: function (selectedParams) {
+        console.log(selectedParams);
+        const constantInput = this.getInput("Param");
+        if (constantInput) {
+          // 遍历 constantInput 的所有字段并逐个删除
+          const fields = constantInput.fieldRow.slice(); // 创建副本防止修改原数组时出错
+          fields.forEach((field) => {
+            if (field.name !== "paramName") {
+              // 保留 'paramName' 字段
+              constantInput.removeField(field.name);
+            }
+          });
+        }
+        this.param = selectedParams; // 保存参数
+        this.addParam(selectedParams); // 重新添加参数
+      },
+      saveExtraState: function () {
+        return {
+          param: this.param,
         };
-
-        Blockly.Themes.Classic.blockStyles["function_definition_style"] = {
-            "colourPrimary": '#4FD284',
-            "colourSecondary": '#4FD284',
-            "colourTertiary": '#4FD284',
-            "hat": "cap"
-        };
-
-        javascriptGenerator.forBlock['function_definition'] = function (block, generator) {
-            let parm = [];//参数类型
-            let fullParm = '';
-
-            block.inputList[1].fieldRow.forEach((field, index) => {
-                if (index > 0) {
-                    fullParm = field.name + '--&&--' + field.value_;
-                    parm.push(fullParm);
-                }
-            });
-            let code = '';
-
-            //拼接函数名
-            const text_name = block.getFieldValue('NAME');
-            code = `void ${text_name}(`
-
-            //拼接参数
-            parm.forEach((item, index) => {
-                let parts = item.split('--&&--');   // 使用 '--&&--' 分隔字符串
-
-                let valueBeforePrefix = parts[0]; // 获取 '--&&--' 前面的部分
-                let valueAfterPrefix = parts[1]; // 获取 '--&&--' 后面的部分
-
-
-                let preFix = getParmType(valueBeforePrefix); //获取参数类型
-                let parmName = getParmName(valueBeforePrefix, valueAfterPrefix, index); //获取参数名
-
-                code += `${preFix} ${parmName}`;
-
-                // 如果不是最后一个item，则添加逗号
-                if (index < parm.length - 1) {
-                    code += ',';
-                }
-            })
-            //解决方法：先创建一个数组，然后根据field的name属性来判断是什么类型的，通过判断类型生成int、bool、string
-            //等类型的前缀，然后将这些前缀利用一个分隔符拼接起来，然后再将这个分隔符裁剪出来，逐个拼接到code里，最后返回code
-
-            //拼接函数体
-            const statement_inner = generator.statementToCode(block, 'inner');
-            code += `){\n${statement_inner}}\n`
-
-            //函数--获取参数类型
-            function getParmType(preFix) {
-                let parmType;
-                if (preFix === '文本') {
-                    parmType = 'char*';
-                } else if (preFix == '布尔值') {
-                    parmType = 'bool';
-                } else if (preFix == '浮点数') {
-                    parmType = 'double';
-                } else if (preFix == '字符串数组') {
-                    parmType = 'char**';
-                } else if (preFix == '浮点数数组') {
-                    parmType = 'double*';
-                }
-                return parmType;
-            }
-            function getParmName(valueAfterPrefix, value, index) {
-                let bool = (value == valueAfterPrefix) ? false : true;
-                let fullName;
-                if (valueAfterPrefix == '文本') {
-                    fullName = (bool) ? value : 'text' + index;
-                } else if (valueAfterPrefix == '布尔值') {
-                    fullName = (bool) ? value : 'boolean' + index;
-                } else if (valueAfterPrefix == '浮点数') {
-                    fullName = (bool) ? value : 'number_double' + index;
-                } else if (valueAfterPrefix == '字符串数组') {
-                    fullName = (bool) ? value : 'array_string' + index;
-                } else if (valueAfterPrefix == '浮点数数组') {
-                    fullName = (bool) ? value : 'array_double' + index;
-                }
-                return fullName;
-            }
-
-            return code;
+      },
+      loadExtraState: function (state) {
+        this.param = state["param"];
+        if (this.param) {
+          this.addParam(this.param);
         }
-    }
+      },
+    };
 
-    //变量
+    Blockly.Themes.Classic.blockStyles["function_definition_style"] = {
+      colourPrimary: "#4FD284",
+      colourSecondary: "#4FD284",
+      colourTertiary: "#4FD284",
+      hat: "cap",
+    };
+
+    javascriptGenerator.forBlock["function_definition"] = function (
+      block,
+      generator
+    ) {
+      let parm = []; //参数类型
+      let fullParm = "";
+
+      block.inputList[1].fieldRow.forEach((field, index) => {
+        if (index > 0) {
+          fullParm = field.name + "--&&--" + field.value_;
+          parm.push(fullParm);
+        }
+      });
+      let code = "";
+
+      //拼接函数名
+      const text_name = block.getFieldValue("NAME");
+      code = `void ${text_name}(`;
+
+      //拼接参数
+      parm.forEach((item, index) => {
+        let parts = item.split("--&&--"); // 使用 '--&&--' 分隔字符串
+
+        let valueBeforePrefix = parts[0]; // 获取 '--&&--' 前面的部分
+        let valueAfterPrefix = parts[1]; // 获取 '--&&--' 后面的部分
+
+        let preFix = getParmType(valueBeforePrefix); //获取参数类型
+        let parmName = getParmName(valueBeforePrefix, valueAfterPrefix, index); //获取参数名
+
+        code += `${preFix} ${parmName}`;
+
+        // 如果不是最后一个item，则添加逗号
+        if (index < parm.length - 1) {
+          code += ",";
+        }
+      });
+      //解决方法：先创建一个数组，然后根据field的name属性来判断是什么类型的，通过判断类型生成int、bool、string
+      //等类型的前缀，然后将这些前缀利用一个分隔符拼接起来，然后再将这个分隔符裁剪出来，逐个拼接到code里，最后返回code
+
+      //拼接函数体
+      const statement_inner = generator.statementToCode(block, "inner");
+      code += `){\n${statement_inner}}\n`;
+
+      //函数--获取参数类型
+      function getParmType(preFix) {
+        let parmType;
+        if (preFix === "文本") {
+          parmType = "char*";
+        } else if (preFix == "布尔值") {
+          parmType = "bool";
+        } else if (preFix == "浮点数") {
+          parmType = "double";
+        } else if (preFix == "字符串数组") {
+          parmType = "char**";
+        } else if (preFix == "浮点数数组") {
+          parmType = "double*";
+        }
+        return parmType;
+      }
+      function getParmName(valueAfterPrefix, value, index) {
+        let bool = value == valueAfterPrefix ? false : true;
+        let fullName;
+        if (valueAfterPrefix == "文本") {
+          fullName = bool ? value : "text" + index;
+        } else if (valueAfterPrefix == "布尔值") {
+          fullName = bool ? value : "boolean" + index;
+        } else if (valueAfterPrefix == "浮点数") {
+          fullName = bool ? value : "number_double" + index;
+        } else if (valueAfterPrefix == "字符串数组") {
+          fullName = bool ? value : "array_string" + index;
+        } else if (valueAfterPrefix == "浮点数数组") {
+          fullName = bool ? value : "array_double" + index;
+        }
+        return fullName;
+      }
+
+      return code;
+    };
+  }
+
+  //变量
+  {
+    //变量定义
     {
-        //变量定义
-        {
-            javascriptGenerator.forBlock['constantBlock'] = function (block) {
-                const dropdown_operation = block.getFieldValue('CONSTANT');
-                const type = block.getFieldValue('TYPE');
-                const value = block.getFieldValue('VALUE');
-              
-                // 根据数据类型生成不同的代码
-                let code;
-                if (type === 'int') {
-                  code = `int ${dropdown_operation} = ${value};\n`;
-                } else if (type === 'float') {
-                  code = `float ${dropdown_operation} = ${value};\n`;
-                } else if (type === 'string') {
-                  code = `char* ${dropdown_operation} = "${value}";\n`;
-                } else if (type === 'bool') {
-                  code = `bool ${dropdown_operation} = ${value};\n`;
-                }
-              
-                return code;
-              };
+      javascriptGenerator.forBlock["constantBlock"] = function (block) {
+        const dropdown_operation = block.getFieldValue("CONSTANT");
+        const type = block.getFieldValue("TYPE");
+        const value = javascriptGenerator.valueToCode(
+          block,
+          "VALUE",
+          javascriptGenerator.ORDER_ATOMIC
+        );
+
+        // 根据数据类型生成不同的代码
+        let code;
+        if (type === "int") {
+          code = `int ${dropdown_operation} = ${value};\n`;
+        } else if (type === "float") {
+          code = `float ${dropdown_operation} = ${value};\n`;
+        } else if (type === "string") {
+          code = `char* ${dropdown_operation} = "${value}";\n`;
+        } else if (type === "bool") {
+          code = `bool ${dropdown_operation} = ${value};\n`;
         }
 
-        //变量改变
-        {
-            javascriptGenerator.forBlock['constantBlock_change'] = function (block) {
-                const dropdown_operation = block.getFieldValue('CONSTANT');
-                const number = block.getFieldValue('NUMBER');
-              
-                if (number >= 0) {
-                  return `${dropdown_operation} += ${number};\n`;
-                } else {
-                  let numberABS = Math.abs(number);
-                  return `${dropdown_operation} -= ${numberABS};\n`;
-                }
-              };
-        }
-        {
-            javascriptGenerator.forBlock['constantBlock_call'] = function (block) {
-                const dropdown_operation = block.getFieldValue('CONSTANT');
-        
-                // 生成调用变量的代码
-                const code = `${dropdown_operation}`;
-                return [code,Order.NONE]; // 返回生成的调用代码
-            };
-        }
+        return code;
+      };
     }
 
-
-
-    //文本
+    //变量改变
     {
-        //string:字符串
-        {
-            Blockly.Blocks['string'] = {
-                init: function () {
-                    this.jsonInit({
-                        "type": "string",
-                        "message0": "\" %1 \"",
-                        "args0": [
-                            {
-                                "type": "field_input",
-                                "name": "value",
-                                "text": " "
-                            }
-                        ],
-                        "inputsInline": true,
-                        "output": "String",
-                        "colour": '#4FD284',
-                        "tooltip": "字符串",
-                        "helpUrl": ""
-                    })
-                }
-            }
-            javascriptGenerator.forBlock['string'] = function (block) {
-                var text_value = block.getFieldValue('value');
-                // TODO: Assemble javascript into code variable.
-                var code = `${text_value}`;
-                // TODO: Change ORDER_NONE to the correct strength.
-                return [code, Order.MEMBER];
-            };
-        }
-        //string_length:求长度
-        {
-            Blockly.Blocks['string_length'] = {
-                init: function () {
-                    this.jsonInit({
-                        "message0": 'length of %1',
-                        "args0": [
-                            {
-                                "type": "input_value",
-                                "name": "VALUE",
-                            }
-                        ],
-                        "output": "Number",
-                        "colour": '#4FD284',
-                        "tooltip": "求长度",
-                    });
-                }
-            }
+      javascriptGenerator.forBlock["constantBlock_change"] = function (block) {
+        const dropdown_operation = block.getFieldValue("CONSTANT");
 
-            javascriptGenerator.forBlock['string_length'] = function (block, generator) {
-                // String or array length.
-                var argument0 = generator.valueToCode(block, 'VALUE', Order.FUNCTION_CALL) || '\'\'';
-                var code = `strlen("${argument0}")`;
-                return [code, Order.MEMBER];
-            };
+        // 获取插槽的值（可能是表达式）
+        let number = javascriptGenerator.valueToCode(
+          block,
+          "NUMBER",
+          javascriptGenerator.ORDER_ATOMIC
+        );
+        // 去掉括号（如果存在）
+        if (number.startsWith("(") && number.endsWith(")")) {
+          number = number.substring(1, number.length - 1); // 去掉第一个和最后一个字符
+        }
+        // 如果 `number` 为空（即插槽没有连接任何块），默认设置为 0
+        if (isNaN(Number(number))) {
+          number = 0;
         }
 
+        if (number >= 0) {
+          return `${dropdown_operation} += ${number};\n`;
+        } else {
+          let numberABS = Math.abs(number);
+          return `${dropdown_operation} -= ${numberABS};\n`;
+        }
+      };
     }
-
-    // barcket:括号
     {
-        {
-            Blockly.Blocks['bracket'] = {
-                init: function () {
-                    this.jsonInit(
-                        {
-                            "type": "bracket",
-                            "message0": "( %1 %2 )",
-                            'icons': {
-                                // Your state goes here!
-                                'my_icon': 'my_icon',
-                            },
-                            "args0": [
-                                {
-                                    "type": "input_dummy"
-                                },
-                                {
-                                    "type": "input_value",
-                                    "name": "digit"
-                                }
-                            ],
-                            "inputsInline": false,
-                            "output": null,
-                            "colour": '#4FD284',
-                            "icon": 'my_icon',
-                            "tooltip": "括号",
-                            "helpUrl": ""
-                        }
-                    );
-                }
-            }
-            javascriptGenerator.forBlock['bracket'] = function (block, generator) {
-                var value_digit = generator.valueToCode(block, 'digit', Order.ATOMIC);
-                // TODO: Assemble javascript into code variable.
-                var code = '(' + value_digit + ')';
-                // TODO: Change ORDER_NONE to the correct strength.
-                return [code, Order.NONE];
-            };
+      javascriptGenerator.forBlock["constantBlock_call"] = function (block) {
+        const dropdown_operation = block.getFieldValue("CONSTANT");
 
-        }
+        // 生成调用变量的代码
+        const code = `${dropdown_operation}`;
+        return [code, Order.NONE]; // 返回生成的调用代码
+      };
     }
+  }
 
-    // //显示框
-    // {
-    //     Blockly.defineBlocksWithJsonArray([
-    //         {
-    //             type: 'test_field_bitmap',
-    //             message0: 'bitmap: %1',
-    //             args0: [
-    //                 {
-    //                     type: 'field_bitmap',
-    //                     name: 'FIELDNAME',
-    //                     width: 5,
-    //                     height: 5,
-    //                     colours: { filled: '#4d8c8c', empty: '#fff' }
-    //                 },
-    //             ],
-    //             "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-    //             "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
-    //             "colour": '#4FD284'
-    //         },
-    //     ]);
-    //     javascriptGenerator.forBlock['test_field_bitmap'] = function () {
-    //         // TODO: Assemble javascript into code variable.
-    //         var code = ``;
-    //         return code;
-    //     };
-    // }
+  //文本
+  {
+    //string:字符串
+    {
+      Blockly.Blocks["string"] = {
+        init: function () {
+          this.jsonInit({
+            type: "string",
+            message0: '" %1 "',
+            args0: [
+              {
+                type: "field_input",
+                name: "value",
+                text: " ",
+              },
+            ],
+            inputsInline: true,
+            output: "String",
+            colour: "#4FD284",
+            tooltip: "字符串",
+            helpUrl: "",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["string"] = function (block) {
+        var text_value = block.getFieldValue("value");
+        // TODO: Assemble javascript into code variable.
+        var code = `${text_value}`;
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.MEMBER];
+      };
+    }
+    //string_length:求长度
+    {
+      Blockly.Blocks["string_length"] = {
+        init: function () {
+          this.jsonInit({
+            message0: "length of %1",
+            args0: [
+              {
+                type: "input_value",
+                name: "VALUE",
+              },
+            ],
+            output: "Number",
+            colour: "#4FD284",
+            tooltip: "求长度",
+          });
+        },
+      };
 
+      javascriptGenerator.forBlock["string_length"] = function (
+        block,
+        generator
+      ) {
+        // String or array length.
+        var argument0 =
+          generator.valueToCode(block, "VALUE", Order.FUNCTION_CALL) || "''";
+        var code = `strlen("${argument0}")`;
+        return [code, Order.MEMBER];
+      };
+    }
+  }
+
+  // barcket:括号
+  {
+    {
+      Blockly.Blocks["bracket"] = {
+        init: function () {
+          this.jsonInit({
+            type: "bracket",
+            message0: "( %1 %2 )",
+            icons: {
+              // Your state goes here!
+              my_icon: "my_icon",
+            },
+            args0: [
+              {
+                type: "input_dummy",
+              },
+              {
+                type: "input_value",
+                name: "digit",
+              },
+            ],
+            inputsInline: false,
+            output: null,
+            colour: "#4FD284",
+            icon: "my_icon",
+            tooltip: "括号",
+            helpUrl: "",
+          });
+        },
+      };
+      javascriptGenerator.forBlock["bracket"] = function (block, generator) {
+        var value_digit = generator.valueToCode(block, "digit", Order.ATOMIC);
+        // TODO: Assemble javascript into code variable.
+        var code = "(" + value_digit + ")";
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Order.NONE];
+      };
+    }
+  }
+
+  // //显示框
+  // {
+  //     Blockly.defineBlocksWithJsonArray([
+  //         {
+  //             type: 'test_field_bitmap',
+  //             message0: 'bitmap: %1',
+  //             args0: [
+  //                 {
+  //                     type: 'field_bitmap',
+  //                     name: 'FIELDNAME',
+  //                     width: 5,
+  //                     height: 5,
+  //                     colours: { filled: '#4d8c8c', empty: '#fff' }
+  //                 },
+  //             ],
+  //             "previousStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+  //             "nextStatement": ['XTask_light_task', 'XTask_led_task', 'XTask_fmq_task', 'XTask_servo_task', 'XTask_motors_task', 'XTask_mpu_task', 'XTask_ultrasonic_task'],
+  //             "colour": '#4FD284'
+  //         },
+  //     ]);
+  //     javascriptGenerator.forBlock['test_field_bitmap'] = function () {
+  //         // TODO: Assemble javascript into code variable.
+  //         var code = ``;
+  //         return code;
+  //     };
+  // }
 }
-
 
 //数组
 // 定义块
@@ -866,10 +717,8 @@ import { XTaskCheckTypes } from '../config/config';
 //         // this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
 //         // this.addConstant(constantInput, this.dropdownField);
 
-
 //         // constantInput.appendField("设置为")
 //         //     .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER") // 获取传递的动态函数名
-
 
 //         this.appendDummyInput()
 //             .appendField(new Blockly.FieldImage(
@@ -925,7 +774,6 @@ import { XTaskCheckTypes } from '../config/config';
 //         currentOptions.unshift(constantDropdownOptions[0]);
 //     },
 // };
-
 
 // Blockly.Blocks['arrayBlock_double'] = {
 //     init: function () {
@@ -1026,40 +874,36 @@ import { XTaskCheckTypes } from '../config/config';
 //     },
 // };
 
+javascriptGenerator.forBlock["arrayBlock_double"] = function (block) {
+  var dropdown_operation = block.getFieldValue("CONSTANT");
 
+  let array = [];
+  for (let i = 0; i < block.numberCount; i++) {
+    let number = block.getFieldValue("NUMBER_" + i);
+    array.push(number);
+  }
 
+  // 拼接成 double myNumbers[] = {...};
+  let arrayString = array.join(", ");
+  let code = `double ${dropdown_operation}[] = {${arrayString}};\n`;
 
-javascriptGenerator.forBlock['arrayBlock_double'] = function (block) {
-    var dropdown_operation = block.getFieldValue('CONSTANT');
-
-    let array = [];
-    for (let i = 0; i < block.numberCount; i++) {
-        let number = block.getFieldValue('NUMBER_' + i);
-        array.push(number);
-    }
-
-    // 拼接成 double myNumbers[] = {...};
-    let arrayString = array.join(', ');
-    let code = `double ${dropdown_operation}[] = {${arrayString}};\n`;
-
-    return code; // 返回拼接的代码
+  return code; // 返回拼接的代码
 };
 
-javascriptGenerator.forBlock['arrayBlock_string'] = function (block) {
-    var dropdown_operation = block.getFieldValue('CONSTANT');
+javascriptGenerator.forBlock["arrayBlock_string"] = function (block) {
+  var dropdown_operation = block.getFieldValue("CONSTANT");
 
-    let array = [];
-    for (let i = 0; i < block.numberCount; i++) {
-        let string = block.getFieldValue('STRING_' + i);
-        array.push(string);
-    }
+  let array = [];
+  for (let i = 0; i < block.numberCount; i++) {
+    let string = block.getFieldValue("STRING_" + i);
+    array.push(string);
+  }
 
-    let arrayString = array.map(str => `"${str}"`).join(', ');
-    let code = `char* ${dropdown_operation}[] = {${arrayString}};\n`;
+  let arrayString = array.map((str) => `"${str}"`).join(", ");
+  let code = `char* ${dropdown_operation}[] = {${arrayString}};\n`;
 
-    return code; // 返回拼接的代码
+  return code; // 返回拼接的代码
 };
-
 
 // // 这些函数可以在其他地方定义
 // function renameVariable(str) {

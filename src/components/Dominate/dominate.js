@@ -11,9 +11,9 @@ const suffix = `while(1){
 //前缀
 const prefix = `gpio = bflb_device_get_by_name("gpio");`
 
-//函数
+//线程
 {
-    // int_main:开始的函数
+    // int_main:开始的线程
     {
         Blockly.Blocks['int_main'] = {
             init: function () {
@@ -64,15 +64,15 @@ ${statements_operate}
     }
 
 
-    // led_task:烧录板灯函数
+    // led_task:烧录板灯线程
     {
         Blockly.Blocks['led_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "led_task",
-                    "tooltip": "烧录板灯函数(仅一个)",
+                    "tooltip": "烧录板灯线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "烧录板灯函数 %1 %2",
+                    "message0": "烧录板灯线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -96,15 +96,15 @@ ${statements_operate}
         };
     }
 
-    // light_task:灯函数
+    // light_task:灯线程
     {
         Blockly.Blocks['light_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "light_task",
-                    "tooltip": "灯函数(仅一个)",
+                    "tooltip": "灯线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "灯函数 %1 %2",
+                    "message0": "灯线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -128,15 +128,15 @@ ${statements_operate}
         };
     }
 
-    // fmq_task:蜂鸣器函数
+    // fmq_task:蜂鸣器线程
     {
         Blockly.Blocks['fmq_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "fmq_task",
-                    "tooltip": "蜂鸣器函数(仅一个)",
+                    "tooltip": "蜂鸣器线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "蜂鸣器函数 %1 %2",
+                    "message0": "蜂鸣器线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -160,15 +160,15 @@ ${statements_operate}
         };
     }
 
-    // motors_task:电机函数
+    // motors_task:电机线程
     {
         Blockly.Blocks['motors_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "motors_task",
-                    "tooltip": "电机函数(仅一个)",
+                    "tooltip": "电机线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "电机函数 %1 %2",
+                    "message0": "电机线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -192,15 +192,15 @@ ${statements_operate}
         };
     }
 
-    // servo_task:舵机函数
+    // servo_task:舵机线程
     {
         Blockly.Blocks['servo_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "servo_task",
-                    "tooltip": "舵机函数(仅一个)",
+                    "tooltip": "舵机线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "舵机函数 %1 %2",
+                    "message0": "舵机线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -224,15 +224,15 @@ ${statements_operate}
         };
     }
 
-    // mpu_task:陀螺仪函数
+    // mpu_task:陀螺仪线程
     {
         Blockly.Blocks['mpu_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "mpu_task",
-                    "tooltip": "陀螺仪函数(仅一个)",
+                    "tooltip": "陀螺仪线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "陀螺仪函数 %1 %2",
+                    "message0": "陀螺仪线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -256,15 +256,15 @@ ${statements_operate}
         };
     }
 
-    // ultrasonic_task:超声波函数
+    // ultrasonic_task:超声波线程
     {
         Blockly.Blocks['ultrasonic_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "ultrasonic_task",
-                    "tooltip": "超声波函数(仅一个)",
+                    "tooltip": "超声波线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "超声波函数 %1 %2",
+                    "message0": "超声波线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -288,15 +288,15 @@ ${statements_operate}
         };
     }
 
-    // ir_task:红外遥控函数
+    // ir_task:红外遥控线程
     {
         Blockly.Blocks['ir_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "ir_task",
-                    "tooltip": "红外遥控函数(仅一个)",
+                    "tooltip": "红外遥控线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "红外遥控函数 %1 %2",
+                    "message0": "红外遥控线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",
@@ -347,15 +347,15 @@ ${statements_operate}
         };
     }
 
-    // logo_task:logo函数
+    // logo_task:logo线程
     {
         Blockly.Blocks['logo_task'] = {
             init: function () {
                 this.jsonInit({
                     "type": "logo_task",
-                    "tooltip": "logo函数(仅一个)",
+                    "tooltip": "logo线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "logo函数 %1 %2",
+                    "message0": "logo线程 %1 %2",
                     "args0": [
                         {
                             "type": "input_dummy",

@@ -49,7 +49,7 @@ export default {
               },
               {
                 kind: "label",
-                text: "函数跳出"
+                text: "线程跳出"
               },
               {
                 kind: "block",

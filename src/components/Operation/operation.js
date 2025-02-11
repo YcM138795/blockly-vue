@@ -24,7 +24,7 @@ import { XTaskCheckTypes } from '../config/config';
             "previousStatement": XTaskCheckTypes,
             "nextStatement": XTaskCheckTypes,
             "colour": '#FFBF00',
-            "tooltip": "字符输出函数",
+            "tooltip": "字符输出线程",
             "helpUrl": ""
           })
         }
@@ -60,7 +60,7 @@ import { XTaskCheckTypes } from '../config/config';
             "previousStatement": XTaskCheckTypes,
             "nextStatement": XTaskCheckTypes,
             "colour": '#FFBF00',
-            "tooltip": "数字输出函数",
+            "tooltip": "数字输出线程",
             "helpUrl": ""
           })
         }
@@ -181,7 +181,7 @@ import { XTaskCheckTypes } from '../config/config';
 
 
 
-  //函数跳出
+  //线程跳出
   {
     //break:跳出
     {
@@ -194,7 +194,7 @@ import { XTaskCheckTypes } from '../config/config';
             "previousStatement": XTaskCheckTypes,
             "nextStatement": XTaskCheckTypes,
             "colour": '#FFBF00',
-            "tooltip": "函数跳出函数",
+            "tooltip": "线程跳出线程",
             "helpUrl": ""
           })
         }
@@ -221,7 +221,7 @@ import { XTaskCheckTypes } from '../config/config';
             "previousStatement": XTaskCheckTypes,
             "nextStatement": XTaskCheckTypes,
             "colour": '#FFBF00',
-            "tooltip": "函数继续函数",
+            "tooltip": "线程继续线程",
             "helpUrl": ""
           })
         }

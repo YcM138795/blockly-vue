@@ -1014,7 +1014,7 @@ export default {
         this.constantBlock = that.advancedBlockStore.constantBlock;
         this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
     // 创建输入框，并设置它们在同一行
-    this.appendDummyInput()
+    this.appendValueInput("VALUE")
       .appendField(new Blockly.FieldDropdown([
         ["整型", "int"],
         ["浮点型", "float"],
@@ -1022,8 +1022,7 @@ export default {
       ]), "TYPE")
       .appendField("变量")
       .appendField(this.dropdownField, "CONSTANT")
-      .appendField("设置为")
-      .appendField(new Blockly.FieldTextInput("null"), "VALUE");
+      .appendField("设置为").setCheck(null)
 
     // 设置块的连接属性
     this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
@@ -1105,10 +1104,17 @@ this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前
     // 定义变量改变块
     const blockDefinition_change = {
       init: function () {
-        this.appendDummyInput('constant')
-          .appendField("以")
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.000000001), "NUMBER") // 获取传递的动态函数名
-          .appendField("为幅度改变变量");
+        // 先创建 "constant" 输入框
+this.appendDummyInput()
+    .appendField("以");
+
+this.appendValueInput("NUMBER")
+    .setCheck("Number"); // 只允许数值输入
+
+this.appendDummyInput('constant')
+    .appendField("为幅度改变变量");
+
+this.setInputsInline(true); // 让所有输入保持在同一行
 
         let constantInput = this.getInput('constant');
 

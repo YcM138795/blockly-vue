@@ -54,13 +54,13 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //烧录板灯
     {
-        //XTask_led_task:烧录板灯操作任务执行函数
+        //XTask_led_task:烧录板灯操作任务执行线程
         {
             Blockly.Blocks['XTask_led_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_led_task",
-                        "tooltip": "烧录板灯操作任务执行函数",
+                        "tooltip": "烧录板灯操作任务执行",
                         "helpUrl": "",
                         "message0": "烧录板灯操作任务执行 %1",
                         "args0": [
@@ -175,13 +175,13 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //陀螺仪
     {
-        //XTask_mpu_task:陀螺仪操作任务执行函数
+        //XTask_mpu_task:陀螺仪操作任务执行线程
         {
             Blockly.Blocks['XTask_mpu_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_led_task",
-                        "tooltip": "陀螺仪操作任务执行函数",
+                        "tooltip": "陀螺仪操作任务执行",
                         "helpUrl": "",
                         "message0": "陀螺仪操作任务执行 %1",
                         "args0": [
@@ -280,13 +280,13 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //小车灯
     {
-        //XTask_light_task:灯操作任务执行函数
+        //XTask_light_task:灯操作任务执行线程
         {
             Blockly.Blocks['XTask_light_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_light_task",
-                        "tooltip": "灯操作任务执行函数",
+                        "tooltip": "灯操作任务执行",
                         "helpUrl": "",
                         "message0": "灯操作任务执行 %1",
                         "args0": [
@@ -446,13 +446,13 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //蜂鸣器
     {
-        //XTask_fmq_task:蜂鸣器操作任务执行函数
+        //XTask_fmq_task:蜂鸣器操作任务执行线程
         {
             Blockly.Blocks['XTask_fmq_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_fmq_task",
-                        "tooltip": "蜂鸣器操作任务执行函数",
+                        "tooltip": "蜂鸣器操作任务执行",
                         "helpUrl": "",
                         "message0": "蜂鸣器操作任务执行 %1",
                         "args0": [
@@ -563,15 +563,15 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //舵机
     {
-        //XTask_servo_task:电机操作任务执行函数
+        //XTask_servo_task:电机操作任务执行线程
         {
             Blockly.Blocks['XTask_servo_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_servo_task",
-                        "tooltip": "舵机操作任务执行函数",
+                        "tooltip": "舵机操作任务执行",
                         "helpUrl": "",
-                        "message0": "舵机操作任务执行函数 %1",
+                        "message0": "舵机操作任务执行 %1",
                         "args0": [
                             {
                                 "type": "input_dummy",
@@ -968,15 +968,15 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //电机
     {
-        //XTask_motors_task:电机操作任务执行函数
+        //XTask_motors_task:电机操作任务执行线程
         {
             Blockly.Blocks['XTask_motors_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_motors_task",
-                        "tooltip": "电机操作任务执行函数",
+                        "tooltip": "电机操作任务执行",
                         "helpUrl": "",
-                        "message0": "电机操作任务执行函数 %1",
+                        "message0": "电机操作任务执行 %1",
                         "args0": [
                             {
                                 "type": "input_dummy",
@@ -1317,15 +1317,15 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //超声波
     {
-        //XTask_ultrasonic_task:超声波操作任务执行函数
+        //XTask_ultrasonic_task:超声波操作任务执行线程
         {
             Blockly.Blocks['XTask_ultrasonic_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_ultrasonic_task",
-                        "tooltip": "超声波操作任务执行函数",
+                        "tooltip": "超声波操作任务执行",
                         "helpUrl": "",
-                        "message0": "超声波操作任务执行函数 %1",
+                        "message0": "超声波操作任务执行 %1",
                         "args0": [
                             {
                                 "type": "input_dummy",
@@ -1435,15 +1435,15 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //红外线
     {
-        //XTask_ir_task:红外线操作任务执行函数
+        //XTask_ir_task:红外线操作任务执行线程
         {
             Blockly.Blocks['XTask_ir_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_ir_task",
-                        "tooltip": "红外线操作任务执行函数",
+                        "tooltip": "红外线操作任务执行",
                         "helpUrl": "",
-                        "message0": "红外线操作任务执行函数 %1",
+                        "message0": "红外线操作任务执行 %1",
                         "args0": [
                             {
                                 "type": "input_dummy",
@@ -1568,15 +1568,15 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
 
     //logo
     {
-        //XTask_logo_task:logo操作任务执行函数
+        //XTask_logo_task:logo操作任务执行线程
         {
             Blockly.Blocks['XTask_logo_task'] = {
                 init: function () {
                     this.jsonInit({
                         "type": "XTask_logo_task",
-                        "tooltip": "logo操作任务执行函数",
+                        "tooltip": "logo操作任务执行",
                         "helpUrl": "",
-                        "message0": "logo操作任务执行函数 %1",
+                        "message0": "logo操作任务执行 %1",
                         "args0": [
                             {
                                 "type": "input_dummy",

@@ -460,7 +460,7 @@ import {dartGenerator} from 'blockly/dart';
             "tooltip": "数学方法",
             "helpUrl": ""
           });
-          // 改变输入个数的函数
+          // 改变输入个数的线程
           this.mathFunChange();
         },
   

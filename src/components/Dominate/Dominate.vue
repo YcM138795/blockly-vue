@@ -19,7 +19,7 @@ export default {
         contents: [
           {
             "kind": "category",
-            "name": "函数",
+            "name": "线程",
             "categoryStyle": "dominate_category",
             "cssConfig": {
               "container": "dominate",
