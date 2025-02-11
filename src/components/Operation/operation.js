@@ -274,6 +274,7 @@ import { XTaskCheckTypes } from '../config/config';
       javascriptGenerator.forBlock['number_variable'] = function (block, generator) {
         var text_value1 = block.getFieldValue('value1');
         var value_value2 = generator.valueToCode(block, 'value2', Order.ATOMIC);
+        console.log(value_value2)
         // TODO: Assemble javascript into code variable.
         var code = `int ${text_value1} = ${value_value2};\n`;
         return code;

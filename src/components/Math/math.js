@@ -536,12 +536,12 @@ import {dartGenerator} from 'blockly/dart';
           value_input1 = generator.valueToCode(block, 'input1', Order.ATOMIC) || 0;
         }
         
-        var value_input2 = generator.valueToCode(block, 'input2', Order.ATOMIC) || 0; 
         var code
 
         if (dropdown_maths !== 'pow') {
           code = dropdown_maths+'(' + value_input1+'*(M_PI / 180)'+')'
         } else {
+          var value_input2 = generator.valueToCode(block, 'input2', Order.ATOMIC) || 0; 
           code = 'pow(' + value_input1 + ',' + value_input2 + ')'
         }
         return [code, Order.MEMBER];
@@ -557,14 +557,11 @@ import {dartGenerator} from 'blockly/dart';
           // 获取数值输入的值
           value_input1 = generator.valueToCode(block, 'input1', Order.ATOMIC) || 0;
         }
-
-        var value_input2 = generator.valueToCode(block, 'input2', Order.ATOMIC) || 0;
-
-
         var code
         if (dropdown_maths !== 'pow') {
           code = 'Math.' + dropdown_maths +'('+ value_input1+'*(Math.PI / 180)'+')'
         } else {
+          var value_input2 = generator.valueToCode(block, 'input2', Order.ATOMIC) || 0;
           code = 'Math.pow(' + value_input1 + ',' + value_input2 + ')'
         }
         // TODO: Assemble javascript into code variable.

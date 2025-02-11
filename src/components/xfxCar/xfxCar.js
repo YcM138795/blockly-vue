@@ -1773,4 +1773,25 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
         }
 
     }
+    {
+        Blockly.Blocks['init_Button'] = {
+            init: function () {
+                this.jsonInit({
+                    "type": "init_Button",
+                    "tooltip": "初始化按键",
+                    "helpUrl": "",
+                    "message0": "初始化按键",
+                    "previousStatement": XTaskCheckTypes,
+                    "nextStatement": XTaskCheckTypes,
+                    "colour": '#ff7272'
+                })
+            }
+        }
+        javascriptGenerator.forBlock['init_Button'] = function () {
+
+            // TODO: Assemble javascript into the code variable.
+            const code = `adc_init();\n`;
+            return code;
+        }
+    }
 }

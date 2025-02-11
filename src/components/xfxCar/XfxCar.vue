@@ -195,6 +195,12 @@ export default {
                 kind: "block",
                 type: "distance"
               },
+              { "kind": "label", "text": "按键控制" },
+              {
+                kind: "block",
+                type: "init_Button"
+              }
+
             ]
           },
         ],
