@@ -98,11 +98,11 @@ import { XTaskCheckTypes } from '../config/config';
                 "options": [
                   [
                     "A",
-                    "A"
+                    "adc_key_is_left(adc_key_read())"
                   ],
                   [
                     "B",
-                    "B"
+                    "adc_key_is_right(adc_key_read())"
                   ]
                 ]
               },
