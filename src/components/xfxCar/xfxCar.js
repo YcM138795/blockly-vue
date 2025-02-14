@@ -1354,7 +1354,7 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "init_Ultrasonic",
                         "tooltip": "初始化超声波",
                         "helpUrl": "",
-                        "message0": "初始化超声波 %1 %2 %3",
+                        "message0": "初始化超声波 \n ping trig: %1 \n echo: %2 %3",
                         "args0": [
                             {
                                 type: "field_dropdown",
@@ -1458,7 +1458,7 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "Ultrasonic_ranging",
                         "tooltip": "超声波触发测距，并计算距离",
                         "helpUrl": "",
-                        "message0": "超声波测距 %1 %2 %3",
+                        "message0": "超声波测距\n ping trig: %1 \n echo: %2 \n unit: cm %3",
                         "args0": [
                             {
                                 type: "field_dropdown",
