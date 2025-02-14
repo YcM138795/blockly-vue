@@ -1354,8 +1354,54 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "init_Ultrasonic",
                         "tooltip": "初始化超声波",
                         "helpUrl": "",
-                        "message0": "初始化超声波 %1",
+                        "message0": "初始化超声波 %1 %2 %3",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "gpio1",
+                                options: [
+                                  ["P0", "GPIO_PIN_22"],
+                                  ["P1", "GPIO_PIN_25"],
+                                  ["P2", "GPIO_PIN_21"],
+                                  ["P3", "GPIO_PIN_27"],
+                                  ["P4", "GPIO_PIN_31"],
+                                  ["P5", "GPIO_PIN_32"],
+                                  ["P6", "GPIO_PIN_33"],
+                                  ["P7", "GPIO_PIN_34"],
+                                  ["P8", "GPIO_PIN_24"],
+                                  ["P9", "GPIO_PIN_6"],
+                                  ["P10", "GPIO_PIN_29"],
+                                  ["P11", "GPIO_PIN_30"],
+                                  ["P12", "GPIO_PIN_16"],
+                                  ["P13", "GPIO_PIN_17"],
+                                  ["P14", "GPIO_PIN_18"],
+                                  ["P15", "GPIO_PIN_28"],
+                                  ["P16", "GPIO_PIN_9"],
+                                ],
+                              },
+                              {
+                                type: "field_dropdown",
+                                name: "gpio2",
+                                options: [
+                                  ["P0", "GPIO_PIN_22"],
+                                  ["P1", "GPIO_PIN_25"],
+                                  ["P2", "GPIO_PIN_21"],
+                                  ["P3", "GPIO_PIN_27"],
+                                  ["P4", "GPIO_PIN_31"],
+                                  ["P5", "GPIO_PIN_32"],
+                                  ["P6", "GPIO_PIN_33"],
+                                  ["P7", "GPIO_PIN_34"],
+                                  ["P8", "GPIO_PIN_24"],
+                                  ["P9", "GPIO_PIN_6"],
+                                  ["P10", "GPIO_PIN_29"],
+                                  ["P11", "GPIO_PIN_30"],
+                                  ["P12", "GPIO_PIN_16"],
+                                  ["P13", "GPIO_PIN_17"],
+                                  ["P14", "GPIO_PIN_18"],
+                                  ["P15", "GPIO_PIN_28"],
+                                  ["P16", "GPIO_PIN_9"],
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -1367,10 +1413,11 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['init_Ultrasonic'] = function () {
-
+            javascriptGenerator.forBlock['init_Ultrasonic'] = function (block) {
+                const gpio1 = block.getFieldValue("gpio1");
+                const gpio2 = block.getFieldValue("gpio2");
                 // TODO: Assemble javascript into the code variable.
-                const code = `Ultrasonic_Init();\nfloat distance;\n`;
+                const code = `Ultrasonic_Init(${gpio1},${gpio2});\nfloat distance;\n`;
                 return code;
             }
         }
@@ -1411,8 +1458,54 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "Ultrasonic_ranging",
                         "tooltip": "超声波触发测距，并计算距离",
                         "helpUrl": "",
-                        "message0": "超声波测距 %1",
+                        "message0": "超声波测距 %1 %2 %3",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "gpio1",
+                                options: [
+                                  ["P0", "GPIO_PIN_22"],
+                                  ["P1", "GPIO_PIN_25"],
+                                  ["P2", "GPIO_PIN_21"],
+                                  ["P3", "GPIO_PIN_27"],
+                                  ["P4", "GPIO_PIN_31"],
+                                  ["P5", "GPIO_PIN_32"],
+                                  ["P6", "GPIO_PIN_33"],
+                                  ["P7", "GPIO_PIN_34"],
+                                  ["P8", "GPIO_PIN_24"],
+                                  ["P9", "GPIO_PIN_6"],
+                                  ["P10", "GPIO_PIN_29"],
+                                  ["P11", "GPIO_PIN_30"],
+                                  ["P12", "GPIO_PIN_16"],
+                                  ["P13", "GPIO_PIN_17"],
+                                  ["P14", "GPIO_PIN_18"],
+                                  ["P15", "GPIO_PIN_28"],
+                                  ["P16", "GPIO_PIN_9"],
+                                ],
+                              },
+                              {
+                                type: "field_dropdown",
+                                name: "gpio2",
+                                options: [
+                                  ["P0", "GPIO_PIN_22"],
+                                  ["P1", "GPIO_PIN_25"],
+                                  ["P2", "GPIO_PIN_21"],
+                                  ["P3", "GPIO_PIN_27"],
+                                  ["P4", "GPIO_PIN_31"],
+                                  ["P5", "GPIO_PIN_32"],
+                                  ["P6", "GPIO_PIN_33"],
+                                  ["P7", "GPIO_PIN_34"],
+                                  ["P8", "GPIO_PIN_24"],
+                                  ["P9", "GPIO_PIN_6"],
+                                  ["P10", "GPIO_PIN_29"],
+                                  ["P11", "GPIO_PIN_30"],
+                                  ["P12", "GPIO_PIN_16"],
+                                  ["P13", "GPIO_PIN_17"],
+                                  ["P14", "GPIO_PIN_18"],
+                                  ["P15", "GPIO_PIN_28"],
+                                  ["P16", "GPIO_PIN_9"],
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -1423,10 +1516,11 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['Ultrasonic_ranging'] = function () {
-
+            javascriptGenerator.forBlock['Ultrasonic_ranging'] = function (block) {
+                const gpio1 = block.getFieldValue("gpio1");
+                const gpio2 = block.getFieldValue("gpio2");
                 // TODO: Assemble javascript into the code variable.
-                const code = `Ultrasonic_get_distance(&distance)`;
+                const code = `Ultrasonic_get_distance(${gpio1},${gpio2},&distance)`;
                 // TODO: Change Order.NONE to the correct operator precedence strength
                 return [code, Order.NONE];
             }
