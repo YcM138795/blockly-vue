@@ -45,6 +45,17 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
         };
         javascriptGenerator.forBlock['int_main'] = function (block) {
             var statements_operate = javascriptGenerator.statementToCode(block, 'operate');
+            // 分开 `setup` 和 `loop` 代码
+            var setup_code = "";
+            var loop_code = "";
+            // 处理多个代码块
+            statements_operate.split("\n").forEach(statement => {
+            if (statement.includes("---LOOP---")) {
+                loop_code += statement.replace("---LOOP---", "") + "\n";
+            } else {
+                setup_code += statement + "\n";
+            }
+            });
             // TODO: Assemble javascript into code variable.
             var code = `int main(void){
   board_init();
@@ -56,9 +67,15 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
   btconnt_init();\n
   xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, 1, &usbdev_handle);
   xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, 1, &zforth_handle);
-${statements_operate}
+${setup_code}
   vTaskStartScheduler();
-	while (1);\n}\n`;
+  while (1){
+    if (runota >0){
+        ${loop_code}
+        vTaskPrioritySet(usbdev_handle, 15);
+        vTaskPrioritySet(zforth_handle, 15);
+    }
+  };\n}\n`;
             return code;
         };
     }
@@ -296,8 +313,31 @@ ${statements_operate}
                     "type": "ir_task",
                     "tooltip": "红外遥控线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "红外遥控线程 %1 %2",
+                    "message0": "红外遥控线程 %1 %2 %3",
                     "args0": [
+                        {
+                            type: "field_dropdown",
+                            name: "gpio",
+                            options: [
+                              ["P0", "GPIO_PIN_22"],
+                              ["P1", "GPIO_PIN_25"],
+                              ["P2", "GPIO_PIN_21"],
+                              ["P3", "GPIO_PIN_27"],
+                              ["P4", "GPIO_PIN_31"],
+                              ["P5", "GPIO_PIN_32"],
+                              ["P6", "GPIO_PIN_33"],
+                              ["P7", "GPIO_PIN_34"],
+                              ["P8", "GPIO_PIN_24"],
+                              ["P9", "GPIO_PIN_6"],
+                              ["P10", "GPIO_PIN_29"],
+                              ["P11", "GPIO_PIN_30"],
+                              ["P12", "GPIO_PIN_16"],
+                              ["P13", "GPIO_PIN_17"],
+                              ["P14", "GPIO_PIN_18"],
+                              ["P15", "GPIO_PIN_28"],
+                              ["P16", "GPIO_PIN_9"],
+                            ],
+                          },
                         {
                             "type": "input_dummy",
                             "name": "NAME"
@@ -314,13 +354,14 @@ ${statements_operate}
         };
 
         javascriptGenerator.forBlock['ir_task'] = function (block, generator) {
+            const dropdown_gpio = block.getFieldValue("gpio");
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
             var code = `int ir_task(void)
 {
     printf("IR NEC case:\\r\\n");
 
-    board_ir_gpio_init();
+    board_ir_gpio_init(${dropdown_gpio});
     Motors_init();
 
     uint64_t rx_data;

@@ -302,35 +302,6 @@ import { XTaskCheckTypes } from "../config/config";
         return [code, Order.NONE];
       };
     }
-
-    //XTask_mpu6050__task:陀螺仪操作任务执行
-    {
-      Blockly.Blocks["XTask_mpu6050__task"] = {
-        init: function () {
-          this.jsonInit({
-            type: "XTask_mpu6050__task",
-            tooltip: "陀螺仪操作任务执行",
-            helpUrl: "",
-            message0: "陀螺仪操作任务执行 %1",
-            args0: [
-              {
-                type: "input_dummy",
-                name: "NAME",
-              },
-            ],
-            previousStatement: [""],
-            nextStatement: [""],
-            colour: "#4FD284",
-          });
-        },
-      };
-      javascriptGenerator.forBlock["XTask_mpu6050__task"] = function () {
-        // TODO: Assemble javascript into the code variable.
-        const code = ` xTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);\n
-                xTaskCreate(mpu task,(char *)"mpu task",512,NULL,9, &mpu handle);`;
-        return code;
-      };
-    }
   }
 
   //函数

@@ -62,8 +62,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_led_task",
                         "tooltip": "烧录板灯操作任务执行",
                         "helpUrl": "",
-                        "message0": "烧录板灯操作任务执行 %1",
+                        "message0": "烧录板灯操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -75,10 +98,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_led_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_led_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(led_task, (char *)"led_task",  512, NULL, 9, &led_handle);\n`;
+                const code = `xTaskCreate(led_task, (char *)"led_task",  512, NULL, ${configMAX_PRIORITIES}, &led_handle);\n---LOOP---vTaskSuspend(led_handle);\n`;
                 return code;
             }
         }
@@ -183,8 +206,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_led_task",
                         "tooltip": "陀螺仪操作任务执行",
                         "helpUrl": "",
-                        "message0": "陀螺仪操作任务执行 %1",
+                        "message0": "陀螺仪操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -196,10 +242,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_mpu_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_mpu_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, 9, &mpu_handle);\nxTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, 8, &m6050_handle);`;
+                const code = `xTaskCreate(mpu_task, (char *)"mpu_task",  512, NULL, ${configMAX_PRIORITIES}, &mpu_handle);\n---LOOP---vTaskSuspend(mpu_handle);\nxTaskCreate(bl61x_mpu6050_task, (char *)"m6050_task",  8192, NULL, ${configMAX_PRIORITIES}, &m6050_handle);\n---LOOP---vTaskSuspend(m6050_handle);\n`;
                 return code;
             }
         }
@@ -288,8 +334,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_light_task",
                         "tooltip": "灯操作任务执行",
                         "helpUrl": "",
-                        "message0": "灯操作任务执行 %1",
+                        "message0": "灯操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -301,10 +370,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_light_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_light_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(light_task, (char *)"light_task",  512, NULL,   configMAX_PRIORITIES - 3, &light_handle);\n`;
+                const code = `xTaskCreate(light_task, (char *)"light_task",  512, NULL,   ${configMAX_PRIORITIES}, &light_handle);\n---LOOP---vTaskSuspend(light_handle);\n`;
                 return code;
             }
         }
@@ -454,8 +523,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_fmq_task",
                         "tooltip": "蜂鸣器操作任务执行",
                         "helpUrl": "",
-                        "message0": "蜂鸣器操作任务执行 %1",
+                        "message0": "蜂鸣器操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -467,10 +559,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_fmq_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_fmq_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(fmq_task, (char *)"fmq_task",  512, NULL, configMAX_PRIORITIES - 3, &fmq_handle);\n`;
+                const code = `xTaskCreate(fmq_task, (char *)"fmq_task",  512, NULL, ${configMAX_PRIORITIES}, &fmq_handle);\n---LOOP---vTaskSuspend(fmq_handle);\n`;
                 return code;
             }
         }
@@ -571,8 +663,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_servo_task",
                         "tooltip": "舵机操作任务执行",
                         "helpUrl": "",
-                        "message0": "舵机操作任务执行 %1",
+                        "message0": "舵机操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -584,10 +699,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_servo_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_servo_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(servo_task, (char *)"servo_task",  512, NULL, configMAX_PRIORITIES - 3, &servo_handle);\n`;
+                const code = `xTaskCreate(servo_task, (char *)"servo_task",  512, NULL, ${configMAX_PRIORITIES}, &servo_handle);\n---LOOP---vTaskSuspend(servo_handle);\n`;
                 return code;
             }
         }
@@ -976,8 +1091,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_motors_task",
                         "tooltip": "电机操作任务执行",
                         "helpUrl": "",
-                        "message0": "电机操作任务执行 %1",
+                        "message0": "电机操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -989,10 +1127,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_motors_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_motors_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(motors_task, (char *)"motors_task",  512, NULL, configMAX_PRIORITIES - 3, &motors_handle);\n`;
+                const code = `xTaskCreate(motors_task, (char *)"motors_task",  512, NULL, ${configMAX_PRIORITIES}, &motors_handle);\n---LOOP---vTaskSuspend(motors_handle);\n`;
                 return code;
             }
         }
@@ -1325,8 +1463,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_ultrasonic_task",
                         "tooltip": "超声波操作任务执行",
                         "helpUrl": "",
-                        "message0": "超声波操作任务执行 %1",
+                        "message0": "超声波操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -1338,10 +1499,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_ultrasonic_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_ultrasonic_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(ultrasonic_task, (char *)"ultrasonic_task",  1024, NULL, configMAX_PRIORITIES - 3, &ultrasonic_handle);\n`;
+                const code = `xTaskCreate(ultrasonic_task, (char *)"ultrasonic_task",  1024, NULL, ${configMAX_PRIORITIES}, &ultrasonic_handle);\n---LOOP---vTaskSuspend(ultrasonic_handle);\n`;
                 return code;
             }
         }
@@ -1537,8 +1698,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_ir_task",
                         "tooltip": "红外线操作任务执行",
                         "helpUrl": "",
-                        "message0": "红外线操作任务执行 %1",
+                        "message0": "红外线操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -1550,10 +1734,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_ir_task'] = function () {
-
+            javascriptGenerator.forBlock['XTask_ir_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue("configMAX_PRIORITIES");
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(ir_task, (char *)"ir_task",  4096, NULL, 7, &ir_task_handle);\n`;
+                const code = `xTaskCreate(ir_task, (char *)"ir_task",  4096, NULL, ${configMAX_PRIORITIES}, &ir_task_handle);\n---LOOP---vTaskSuspend(ir_task_handle);\n`;
                 return code;
             }
         }
@@ -1670,8 +1854,31 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                         "type": "XTask_logo_task",
                         "tooltip": "logo操作任务执行",
                         "helpUrl": "",
-                        "message0": "logo操作任务执行 %1",
+                        "message0": "logo操作任务执行\n优先级: %1 %2",
                         "args0": [
+                            {
+                                type: "field_dropdown",
+                                name: "configMAX_PRIORITIES",
+                                options: [
+                                  ["1", "1"],
+                                  ["2", "2"],
+                                  ["3", "3"],
+                                  ["4", "4"],
+                                  ["5", "5"],
+                                  ["6", "6"],
+                                  ["7", "7"],
+                                  ["8", "8"],
+                                  ["9", "9"],
+                                  ["10", "10"],
+                                  ["11", "11"],
+                                  ["12", "12"],
+                                  ["13", "13"],
+                                  ["14", "14"],
+                                  ["15", "15"],
+                                  ["16", "16"],
+                                  
+                                ],
+                              },
                             {
                                 "type": "input_dummy",
                                 "name": "NAME"
@@ -1683,9 +1890,10 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                     })
                 }
             }
-            javascriptGenerator.forBlock['XTask_logo_task'] = function () {
+            javascriptGenerator.forBlock['XTask_logo_task'] = function (block) {
+                const configMAX_PRIORITIES = block.getFieldValue('configMAX_PRIORITIES');
                 // TODO: Assemble javascript into the code variable.
-                const code = `xTaskCreate(logo_task, (char *)"logo_task", 8192, NULL,configMAX_PRIORITIES - 1, &logo_handle);\n`;
+                const code = `xTaskCreate(logo_task, (char *)"logo_task", 8192, NULL,${configMAX_PRIORITIES}, &logo_handle);\n---LOOP---vTaskSuspend(logo_handle);\n`;
                 return code;
             }
         }
