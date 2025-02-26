@@ -65,7 +65,7 @@ uint8_t runota=0;
 
 void version(void) {
 	char buf[128];
-	snprintf(buf, 127, "version: %s\n\r", VERSION);
+	snprintf(buf, 127, "version: %s\\n\\r", VERSION);
 	zf_txs(buf);
 }
 
@@ -87,7 +87,7 @@ void bl61x_mpu6050_task(void *param)
   
   	bl61x_mpu6050_init(i2c0);
 
-	printf("-----\r\n");
+	printf("-----\\r\\n");
 
 
 	while(1)
@@ -107,7 +107,7 @@ void bl61x_mpu6050_task(void *param)
 				temp=-temp;		//转为正数
 			}
 
-			printf("Temperature:%d*c\r\n",temp);
+			printf("Temperature:%d*c\\r\\n",temp);
 
 			temp=pitch*10;
 			if(temp<0)
@@ -115,7 +115,7 @@ void bl61x_mpu6050_task(void *param)
 				temp=-temp;		//转为正数
 			}
 
-			printf("Pitch:%d\r\n",temp);
+			printf("Pitch:%d\\r\\n",temp);
 			pitch1=temp;
 			temp=roll*10;
 			if(temp<0)
@@ -123,7 +123,7 @@ void bl61x_mpu6050_task(void *param)
 				temp=-temp;		//转为正数
 			}
 
-			printf("Roll:%d\r\n",temp);
+			printf("Roll:%d\\r\\n",temp);
 			roll1=temp;
 			temp=yaw*10;
 			if(temp<0)
@@ -131,7 +131,7 @@ void bl61x_mpu6050_task(void *param)
 				temp=-temp;		//转为正数
 			}
 
-			printf("Yaw:%d\r\n",temp);
+			printf("Yaw:%d\\r\\n",temp);
 			yaw1=temp;
 			}
 		}

@@ -362,9 +362,6 @@ export default {
           {kind: "block",type: "forever"},
           {kind: "block",type: "implement"},
           {kind: "block",type: "delay"},
-          {kind: "block",type: "gpio_write"},
-          {kind: "block",type: "gpio_output"},
-          {kind: "block",type: "gpio_read"},
           ...callFuncionBlocks,
           { kind: "label", text: "" },
 

@@ -199,8 +199,19 @@ export default {
               {
                 kind: "block",
                 type: "init_Button"
+              },
+              {
+                kind: "block",
+                type: "gpio_write"
+              },
+              {
+                kind: "block",
+                type: "gpio_output"
+              },
+              {
+                kind: "block",
+                type: "gpio_read"
               }
-
             ]
           },
         ],
