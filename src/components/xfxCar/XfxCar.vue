@@ -30,6 +30,10 @@ export default {
                 type: "init_Ir"
               },
               {
+                kind: "block",
+                type: "bflb_ir_receive"
+              },
+              {
                 "kind": "label",
                 "text": "烧录板灯控制"
               },

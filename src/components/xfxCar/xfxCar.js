@@ -1842,6 +1842,32 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                 return code;
             }
         }
+        {
+            Blockly.Blocks['bflb_ir_receive'] = {
+                init: function () {
+                    this.jsonInit({
+                        "type": "bflb_ir_receive",
+                        "tooltip": "红外接收",
+                        "helpUrl": "",
+                        "message0": "红外接收 %1",
+                        "args0": [
+                            {
+                                "type": "input_dummy",
+                                "name": "NAME"
+                            }
+                        ],
+                        "previousStatement": XTaskCheckTypes,
+                        "nextStatement": XTaskCheckTypes,
+                        "colour": '#ff7272'
+                    })
+                }
+            }
+            javascriptGenerator.forBlock['bflb_ir_receive'] = function () {
+                // TODO: Assemble javascript into the code variable.
+                const code = `rx_len = bflb_ir_receive(irrx, &rx_data);\nprintf("Receive bit:%d, value: 0x%016lx",rx_len, rx_data);\n`;
+                return code;
+            }
+        }
     }
 
     //logo

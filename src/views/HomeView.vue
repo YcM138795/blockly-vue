@@ -5,7 +5,8 @@
     <ContentView></ContentView>
     <div style="width: 100%; height: 60px">
       <TopNav :history_files="history_files" @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange"
-        :code="code" @change="receiveChange" @loading="receiveLoading" @blockCode="receiveBlock">
+        :code="code" @change="receiveChange" @loading="receiveLoading" @blockCode="receiveBlock" @edit="editHistoryFile"
+        @delete="deleteHistoryFile">
       </TopNav>
     </div>
     <div id="blockly">
@@ -46,7 +47,7 @@ import AdvancedBlock from '@/components/Advanced/Advanced.vue';
 import '@blockly/block-plus-minus';
 import * as zh_hans from 'blockly/msg/zh-hans';
 import { EventBus } from '../utils/eventBus';
-import { createCodeBlock, find } from '@/api/codeblock';
+import { createCodeBlock, find, update, remove } from '@/api/codeblock';
 import store from '@/store';
 //设置语言
 Blockly.setLocale(zh_hans);
@@ -358,10 +359,10 @@ export default {
         let arrayBlocks = this.initArray();
 
         return [
-          {"kind": "label","text": "基础"},
-          {kind: "block",type: "forever"},
-          {kind: "block",type: "implement"},
-          {kind: "block",type: "delay"},
+          { "kind": "label", "text": "基础" },
+          { kind: "block", type: "forever" },
+          { kind: "block", type: "implement" },
+          { kind: "block", type: "delay" },
           ...callFuncionBlocks,
           { kind: "label", text: "" },
 
@@ -573,21 +574,119 @@ export default {
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
       this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
-      // 读取自定义函数的数据
-      const functionBlockData = this.advancedBlockStore.functionBlock;
-      const constantBlock = this.advancedBlockStore.constantBlock;
-      const arrayBlock = this.advancedBlockStore.arrayBlock;
-
-      // 将工作区状态和自定义函数数据一起保存到 localStorage
-      const workspaceData = {
-        blocksState: state,//工作区的块
-        functionBlocks: functionBlockData,//自定义函数的数据
-        constantBlock: constantBlock,
-        arrayBlock: arrayBlock
-      };
-      localStorage.setItem('workspaceData', JSON.stringify(workspaceData));
     },
+    //保存编辑的历史文件
+    editHistoryFile(projectName) {
+      this.$confirm('是否对该文件进行修改?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        this.receiveLoading(true, '正在修改中');
 
+        try {
+          // 保存工作区状态
+          const state = Blockly.serialization.workspaces.save(this.workspace);
+
+          // 序列化自定义块数据
+          const strFunctionBlock = this.advancedBlockStore.functionBlock.map(subArray => subArray.join(', ')).join(' |&&| ');
+          const strConstantBlock = this.advancedBlockStore.constantBlock.join(' |&&| ');
+          const strArrayBlock = this.advancedBlockStore.arrayBlock.join(' |&&| ');
+
+          // 构建请求数据
+          const data = {
+            "userId": this.store.getters.phoneNumber,
+            "text": JSON.stringify(state),
+            "projectName": projectName,
+            "functionBlock": strFunctionBlock,
+            "constantBlock": strConstantBlock,
+            "arrayBlock": strArrayBlock
+          };
+
+          // 更新数据
+          await update(data);
+
+          // 获取更新后的历史文件
+          const res = await find({ "userId": this.store.getters.phoneNumber });
+
+          // 更新历史文件列表
+          this.history_files = res.map(file => ({
+            ...file,
+            updatedAt: formatDate(file.updatedAt)
+          })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+          if (this.workspace && this.workspace.toolbox_) {
+            const selectedItem = this.workspace.toolbox_.getSelectedItem();
+            if (selectedItem) {
+              this.workspace.toolbox_.clearSelection();
+            }
+          }
+          // 更新完成，关闭加载状态
+          this.receiveLoading(false);
+
+          // 显示成功消息
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        } catch (error) {
+          console.error('修改文件时出错:', error);
+          // 更新失败，关闭加载状态
+          this.receiveLoading(false);
+          // 显示错误消息
+          this.$message({
+            type: 'error',
+            message: '修改失败，请重试!'
+          });
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        });
+      });
+    },
+    deleteHistoryFile(projectName) {
+      this.$confirm('是否删除该文件?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        this.receiveLoading(true, '正在删除中');
+        try {
+          // 删除数据
+          await remove({ "userId": this.store.getters.phoneNumber, "projectName": projectName });
+          // 获取更新后的历史文件
+          const res = await find({ "userId": this.store.getters.phoneNumber });
+
+          // 更新历史文件列表
+          this.history_files = res.map(file => ({
+            ...file,
+            updatedAt: formatDate(file.updatedAt)
+          })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+          if (this.workspace && this.workspace.toolbox_) {
+            const selectedItem = this.workspace.toolbox_.getSelectedItem();
+            if (selectedItem) {
+              this.workspace.toolbox_.clearSelection();
+            }
+          }
+          this.receiveLoading(false);
+          // 显示成功消息
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        } catch (error) {
+          console.error('删除文件时出错:', error);
+          // 更新失败，关闭加载状态
+          this.receiveLoading(false);
+          // 显示错误消息
+          this.$message({
+            type: 'error',
+            message: '删除失败，请重试!'
+          });
+        }
+      })
+    },
     // 恢复工作区
     restoreWorkspace() {
       try {
@@ -710,6 +809,12 @@ export default {
         this.advancedBlockStore.arrayBlock = block.arrayBlock.split(' |&&| ')
 
         this.$nextTick(() => {
+          if (this.workspace && this.workspace.toolbox_) {
+            const selectedItem = this.workspace.toolbox_.getSelectedItem();
+            if (selectedItem) {
+              this.workspace.toolbox_.clearSelection();
+            }
+          }
           this.initCallFuncion()
           this.initConstant()
           this.initArray()
@@ -725,6 +830,8 @@ export default {
               setTimeout(() => {
                 this.workspace.addChangeListener(this.blockDeleteListener);
               }, 1000);
+              this.addToolbox();
+
               this.receiveLoading(true, '历史文件载入中');//触发遮罩层，防止文件切换过快导致载入异常
               setTimeout(() => {
                 this.receiveLoading(false);
@@ -983,71 +1090,71 @@ export default {
 
     //初始化变量块
     initConstant() {
-  let constantBlockArry = [
-    {
-      kind: "label",
-      text: "变量"
-    },
-    {
-      kind: "button",
-      text: "点击创建新变量",
-      callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
-    },
-  ];
+      let constantBlockArry = [
+        {
+          kind: "label",
+          text: "变量"
+        },
+        {
+          kind: "button",
+          text: "点击创建新变量",
+          callbackKey: "createAdvancedToolbox"  // 关键：添加callbackKey
+        },
+      ];
 
-  if (this.advancedBlockStore.constantBlock.length > 2) {
-    constantBlockArry.push({
-      kind: "label",
-      text: "我的变量"
-    });
+      if (this.advancedBlockStore.constantBlock.length > 2) {
+        constantBlockArry.push({
+          kind: "label",
+          text: "我的变量"
+        });
 
-    const that = this;
+        const that = this;
 
-    // 定义变量块
-    const blockDefinition = {
-      init: function () {
-        // 添加变量选项
-        let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
-        this.constantBlock = that.advancedBlockStore.constantBlock;
-        this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
-    // 创建输入框，并设置它们在同一行
-    this.appendValueInput("VALUE")
-      .appendField(new Blockly.FieldDropdown([
-        ["整型", "int"],
-        ["浮点型", "float"],
-        ["字符串型", "string"],
-      ]), "TYPE")
-      .appendField("变量")
-      .appendField(this.dropdownField, "CONSTANT")
-      .appendField("设置为").setCheck(null)
+        // 定义变量块
+        const blockDefinition = {
+          init: function () {
+            // 添加变量选项
+            let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+            this.constantBlock = that.advancedBlockStore.constantBlock;
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            // 创建输入框，并设置它们在同一行
+            this.appendValueInput("VALUE")
+              .appendField(new Blockly.FieldDropdown([
+                ["整型", "int"],
+                ["浮点型", "float"],
+                ["字符串型", "string"],
+              ]), "TYPE")
+              .appendField("变量")
+              .appendField(this.dropdownField, "CONSTANT")
+              .appendField("设置为").setCheck(null)
 
-    // 设置块的连接属性
-    this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
-    this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
-    this.setColour('#4FD284'); // 设置块的颜色
-    this.setTooltip('定义一个变量并设置其数据类型和初始值');
-    this.setHelpUrl('');
-    
-},
-      getConstant: function (constantBlock) {
-        let constantDropdownOptions = [];
-        for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
-          constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
-        }
-        return constantDropdownOptions;
-      },
-      addConstant: function (constantInput, dropdownField) {
-        constantInput.appendField(dropdownField, "CONSTANT");
-      },
-      addNewConstant: function (currentOptions, constantDropdownOptions, Index,value) {
+            // 设置块的连接属性
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
+            this.setColour('#4FD284'); // 设置块的颜色
+            this.setTooltip('定义一个变量并设置其数据类型和初始值');
+            this.setHelpUrl('');
+
+          },
+          getConstant: function (constantBlock) {
+            let constantDropdownOptions = [];
+            for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+              constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
+            }
+            return constantDropdownOptions;
+          },
+          addConstant: function (constantInput, dropdownField) {
+            constantInput.appendField(dropdownField, "CONSTANT");
+          },
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index, value) {
             if (Index != undefined) {
               let temp = currentOptions[Index][0];
               currentOptions[Index][0] = constantDropdownOptions[Index][0];
               currentOptions[Index][1] = constantDropdownOptions[Index][1];
-              if(value.value_||temp==value){
-// 自动选择当前选项
-this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
-}
+              if (value.value_ || temp == value) {
+                // 自动选择当前选项
+                this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+              }
             } else {
               currentOptions.unshift(constantDropdownOptions[0]);
             }
@@ -1063,91 +1170,91 @@ this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前
               this.dispose(true);
             }
           },
-      saveExtraState: function () {
-        return {
-          'constantBlock': this.constantBlock,
-        };
-      },
-      loadExtraState: function (state) {
-        this.constantBlock = state['constantBlock'];
-        if (this.constantBlock) {
-          this.getField('CONSTANT').setValidator((newValue) => {
-            const options = this.getField('CONSTANT').getOptions();
-            const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+          saveExtraState: function () {
+            return {
+              'constantBlock': this.constantBlock,
+            };
+          },
+          loadExtraState: function (state) {
+            this.constantBlock = state['constantBlock'];
+            if (this.constantBlock) {
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
 
-            if (newValue == 'Fn:重命名此变量') {
-              EventBus.$emit('showConstantEditor', '重命名此变量', index);
-              return this.getField('CONSTANT')
-            } else if (newValue == 'Fn:删除此变量') {
-              EventBus.$emit('deleteConstant', index);
-              return this.getField('CONSTANT')
+                if (newValue == 'Fn:重命名此变量') {
+                  EventBus.$emit('showConstantEditor', '重命名此变量', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此变量') {
+                  EventBus.$emit('deleteConstant', index);
+                  return this.getField('CONSTANT')
+                }
+                return newValue; // 返回新值以更新显示
+              });
             }
-            return newValue; // 返回新值以更新显示
-          });
-        }
-      },
-    };
+          },
+        };
 
-    // 注册变量块类型
-    const blockType = 'constantBlock'; // 为每个块生成一个唯一的类型名称
-    Blockly.Blocks[blockType] = blockDefinition;
+        // 注册变量块类型
+        const blockType = 'constantBlock'; // 为每个块生成一个唯一的类型名称
+        Blockly.Blocks[blockType] = blockDefinition;
 
-    // 创建变量块
-    const constantBlock = {
-      kind: 'block',
-      type: blockType, // 使用唯一的块类型
-    };
+        // 创建变量块
+        const constantBlock = {
+          kind: 'block',
+          type: blockType, // 使用唯一的块类型
+        };
 
-    // 定义变量改变块
-    const blockDefinition_change = {
-      init: function () {
-        // 先创建 "constant" 输入框
-this.appendDummyInput()
-    .appendField("以");
+        // 定义变量改变块
+        const blockDefinition_change = {
+          init: function () {
+            // 先创建 "constant" 输入框
+            this.appendDummyInput()
+              .appendField("以");
 
-this.appendValueInput("NUMBER")
-    .setCheck("Number"); // 只允许数值输入
+            this.appendValueInput("NUMBER")
+              .setCheck("Number"); // 只允许数值输入
 
-this.appendDummyInput('constant')
-    .appendField("为幅度改变变量");
+            this.appendDummyInput('constant')
+              .appendField("为幅度改变变量");
 
-this.setInputsInline(true); // 让所有输入保持在同一行
+            this.setInputsInline(true); // 让所有输入保持在同一行
 
-        let constantInput = this.getInput('constant');
+            let constantInput = this.getInput('constant');
 
-        // 添加变量选项
-        let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
-        this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
-        this.addConstant(constantInput, this.dropdownField);
-        this.constantBlock = that.advancedBlockStore.constantBlock;
-        // 设置块的连接属性
-        this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
-        this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
-        this.setColour('#4FD284'); // 设置块的颜色
-        this.setTooltip('改变变量的值');
-        this.setHelpUrl('');
-        
-      },
-      getConstant: function (constantBlock) {
-        let constantDropdownOptions = [];
-        for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
-          constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
-        }
-        return constantDropdownOptions;
-      },
-      addConstant: function (constantInput, dropdownField) {
-        constantInput.appendField(dropdownField, "CONSTANT");
-      },
-      addNewConstant: function (currentOptions, constantDropdownOptions, Index,value) {
+            // 添加变量选项
+            let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            this.addConstant(constantInput, this.dropdownField);
+            this.constantBlock = that.advancedBlockStore.constantBlock;
+            // 设置块的连接属性
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
+            this.setColour('#4FD284'); // 设置块的颜色
+            this.setTooltip('改变变量的值');
+            this.setHelpUrl('');
+
+          },
+          getConstant: function (constantBlock) {
+            let constantDropdownOptions = [];
+            for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+              constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
+            }
+            return constantDropdownOptions;
+          },
+          addConstant: function (constantInput, dropdownField) {
+            constantInput.appendField(dropdownField, "CONSTANT");
+          },
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index, value) {
             if (Index != undefined) {
-            let temp = currentOptions[Index][0];
+              let temp = currentOptions[Index][0];
               currentOptions[Index][0] = constantDropdownOptions[Index][0];
               currentOptions[Index][1] = constantDropdownOptions[Index][1];
-if(value.value_||temp==value){
-// 自动选择当前选项
-this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
-}
-              
+              if (value.value_ || temp == value) {
+                // 自动选择当前选项
+                this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+              }
+
             } else {
               currentOptions.unshift(constantDropdownOptions[0]);
             }
@@ -1163,134 +1270,134 @@ this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前
               this.dispose(true);
             }
           },
-      saveExtraState: function () {
-        return {
-          'constantBlock': this.constantBlock,
-        };
-      },
-      loadExtraState: function (state) {
-        this.constantBlock = state['constantBlock'];
-        if (this.constantBlock) {
-          this.getField('CONSTANT').setValidator((newValue) => {
-            const options = this.getField('CONSTANT').getOptions();
-            const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+          saveExtraState: function () {
+            return {
+              'constantBlock': this.constantBlock,
+            };
+          },
+          loadExtraState: function (state) {
+            this.constantBlock = state['constantBlock'];
+            if (this.constantBlock) {
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
 
-            if (newValue == 'Fn:重命名此变量') {
-              EventBus.$emit('showConstantEditor', '重命名此变量', index);
-              return this.getField('CONSTANT')
-            } else if (newValue == 'Fn:删除此变量') {
-              EventBus.$emit('deleteConstant', index);
-              return this.getField('CONSTANT')
+                if (newValue == 'Fn:重命名此变量') {
+                  EventBus.$emit('showConstantEditor', '重命名此变量', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此变量') {
+                  EventBus.$emit('deleteConstant', index);
+                  return this.getField('CONSTANT')
+                }
+                return newValue; // 返回新值以更新显示
+              });
             }
-            return newValue; // 返回新值以更新显示
-          });
-        }
-      },
-    };
-
-    // 注册变量改变块类型
-    const blockType_change = 'constantBlock_change'; // 为每个块生成一个唯一的类型名称
-    Blockly.Blocks[blockType_change] = blockDefinition_change;
-
-    // 创建变量改变块
-    const constantBlock_change = {
-      kind: 'block',
-      type: blockType_change, // 使用唯一的块类型
-    };
-// **调用变量块**：将调用已有的变量，显示为下拉框
-const blockDefinition_call = {
-      init: function () {
-        // 添加变量调用选项
-        let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
-        this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
-        this.constantBlock = that.advancedBlockStore.constantBlock;
-        // 创建输入框，并设置它们在同一行
-        this.appendDummyInput()
-          .appendField("变量")
-          .appendField(this.dropdownField, "CONSTANT");
-        this.setOutput(true, null); // 设置输出类型为 null，表示可以连接任何类型的块
-        this.setColour('#4FD284'); // 设置块的颜色
-        this.setTooltip('调用已定义的变量');
-        this.setHelpUrl('');
-      },
-
-      getConstant: function (constantBlock) {
-        let constantDropdownOptions = [];
-        for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
-            constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
-        }
-        return constantDropdownOptions;
-      },
-
-      addConstant: function (constantInput, dropdownField) {
-        constantInput.appendField(dropdownField, "CONSTANT");
-      },
-      addNewConstant: function (currentOptions, constantDropdownOptions, Index,value) {
-        if (Index != undefined) {
-        let temp = currentOptions[Index][0];
-          currentOptions[Index][0] = constantDropdownOptions[Index][0];
-          currentOptions[Index][1] = constantDropdownOptions[Index][1];
-if(value.value_||temp==value){
-  this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
-}
-          
-        } else {
-          currentOptions.unshift(constantDropdownOptions[0]);
-        }
-      },
-      deleteNewConstant: function (Index) {
-        // 获取下拉框的所有选项
-        const currentOptions = this.getField('CONSTANT').getOptions();
-        // 获取当前下拉框的值
-        const currentValue = this.getField('CONSTANT').getValue();
-        const index = currentOptions.findIndex(option => option[0] === currentValue);
-        currentOptions.splice(Index, 1);
-        if (index == Index) {
-          this.dispose(true);
-        }
-      },
-      saveExtraState: function () {
-        return {
-          'constantBlock': this.constantBlock,
+          },
         };
-      },
 
-      loadExtraState: function (state) {
-        this.constantBlock = state['constantBlock'];
-        if (this.constantBlock) {
-          this.getField('CONSTANT').setValidator((newValue) => {
-            const options = this.getField('CONSTANT').getOptions();
-            const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 获取选项的索引
-            if (newValue == 'Fn:重命名此变量') {
-              EventBus.$emit('showConstantEditor', '重命名此变量', index);
-              return this.getField('CONSTANT');
-            } else if (newValue == 'Fn:删除此变量') {
-              EventBus.$emit('deleteConstant', index);
-              return this.getField('CONSTANT');
+        // 注册变量改变块类型
+        const blockType_change = 'constantBlock_change'; // 为每个块生成一个唯一的类型名称
+        Blockly.Blocks[blockType_change] = blockDefinition_change;
+
+        // 创建变量改变块
+        const constantBlock_change = {
+          kind: 'block',
+          type: blockType_change, // 使用唯一的块类型
+        };
+        // **调用变量块**：将调用已有的变量，显示为下拉框
+        const blockDefinition_call = {
+          init: function () {
+            // 添加变量调用选项
+            let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            this.constantBlock = that.advancedBlockStore.constantBlock;
+            // 创建输入框，并设置它们在同一行
+            this.appendDummyInput()
+              .appendField("变量")
+              .appendField(this.dropdownField, "CONSTANT");
+            this.setOutput(true, null); // 设置输出类型为 null，表示可以连接任何类型的块
+            this.setColour('#4FD284'); // 设置块的颜色
+            this.setTooltip('调用已定义的变量');
+            this.setHelpUrl('');
+          },
+
+          getConstant: function (constantBlock) {
+            let constantDropdownOptions = [];
+            for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+              constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
             }
-            return newValue;
-          });
-        }
-      },
-    };
+            return constantDropdownOptions;
+          },
 
-    // 注册调用变量块类型
-    const blockType_call = 'constantBlock_call'; // 为每个块生成一个唯一的类型名称
-    Blockly.Blocks[blockType_call] = blockDefinition_call;
+          addConstant: function (constantInput, dropdownField) {
+            constantInput.appendField(dropdownField, "CONSTANT");
+          },
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index, value) {
+            if (Index != undefined) {
+              let temp = currentOptions[Index][0];
+              currentOptions[Index][0] = constantDropdownOptions[Index][0];
+              currentOptions[Index][1] = constantDropdownOptions[Index][1];
+              if (value.value_ || temp == value) {
+                this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+              }
 
-    // 创建调用变量块
-    const constantBlock_call = {
-      kind: 'block',
-      type: blockType_call, // 使用唯一的块类型
-    };
-    // 将生成的变量相关块加入到数组
-    constantBlockArry.push(constantBlock);
-    constantBlockArry.push(constantBlock_call);
-    constantBlockArry.push(constantBlock_change);
-  }
+            } else {
+              currentOptions.unshift(constantDropdownOptions[0]);
+            }
+          },
+          deleteNewConstant: function (Index) {
+            // 获取下拉框的所有选项
+            const currentOptions = this.getField('CONSTANT').getOptions();
+            // 获取当前下拉框的值
+            const currentValue = this.getField('CONSTANT').getValue();
+            const index = currentOptions.findIndex(option => option[0] === currentValue);
+            currentOptions.splice(Index, 1);
+            if (index == Index) {
+              this.dispose(true);
+            }
+          },
+          saveExtraState: function () {
+            return {
+              'constantBlock': this.constantBlock,
+            };
+          },
 
-  return constantBlockArry;
-},
+          loadExtraState: function (state) {
+            this.constantBlock = state['constantBlock'];
+            if (this.constantBlock) {
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 获取选项的索引
+                if (newValue == 'Fn:重命名此变量') {
+                  EventBus.$emit('showConstantEditor', '重命名此变量', index);
+                  return this.getField('CONSTANT');
+                } else if (newValue == 'Fn:删除此变量') {
+                  EventBus.$emit('deleteConstant', index);
+                  return this.getField('CONSTANT');
+                }
+                return newValue;
+              });
+            }
+          },
+        };
+
+        // 注册调用变量块类型
+        const blockType_call = 'constantBlock_call'; // 为每个块生成一个唯一的类型名称
+        Blockly.Blocks[blockType_call] = blockDefinition_call;
+
+        // 创建调用变量块
+        const constantBlock_call = {
+          kind: 'block',
+          type: blockType_call, // 使用唯一的块类型
+        };
+        // 将生成的变量相关块加入到数组
+        constantBlockArry.push(constantBlock);
+        constantBlockArry.push(constantBlock_call);
+        constantBlockArry.push(constantBlock_change);
+      }
+
+      return constantBlockArry;
+    },
     //初始化数组块
     initArray() {
       let arrayBlockArry = [
@@ -1361,12 +1468,12 @@ if(value.value_||temp==value){
             constantInput.appendField(dropdownField, "CONSTANT");
             constantInput.appendField("设为浮点数数组");
           },
-          addNewConstant: function (currentOptions, constantDropdownOptions, Index,value) {
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index, value) {
             if (Index != undefined) {
-              let temp=currentOptions[Index][0]
+              let temp = currentOptions[Index][0]
               currentOptions[Index][0] = constantDropdownOptions[Index][0];
               currentOptions[Index][1] = constantDropdownOptions[Index][1];
-              if (value.value_||temp==value) {
+              if (value.value_ || temp == value) {
                 this.getField('CONSTANT').setValue(constantDropdownOptions[Index][0]); // 设置为当前选项
               }
             } else {
@@ -1531,13 +1638,13 @@ if(value.value_||temp==value){
             constantInput.appendField(dropdownField, "CONSTANT");
             constantInput.appendField("设为字符串数组");
           },
-          addNewConstant: function (currentOptions, constantDropdownOptions, Index,value){
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index, value) {
 
             if (Index != undefined) {
-let temp=currentOptions[Index][0]
+              let temp = currentOptions[Index][0]
               currentOptions[Index][0] = constantDropdownOptions[Index][0];
               currentOptions[Index][1] = constantDropdownOptions[Index][1];
-              if (value.value_||temp==value) {
+              if (value.value_ || temp == value) {
                 this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
               }
             } else {
@@ -1660,10 +1767,10 @@ let temp=currentOptions[Index][0]
       const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
-        if (block.type == 'constantBlock' || block.type == 'constantBlock_change'|| block.type == 'constantBlock_call') {
+        if (block.type == 'constantBlock' || block.type == 'constantBlock_change' || block.type == 'constantBlock_call') {
           let constantDropdownOptions = block.getConstant(this.advancedBlockStore.constantBlock);
           const currentOptions = block.dropdownField.getOptions();
-          block.addNewConstant(currentOptions, constantDropdownOptions, Index,block.getFieldValue('CONSTANT'));
+          block.addNewConstant(currentOptions, constantDropdownOptions, Index, block.getFieldValue('CONSTANT'));
         }
       });
     },
@@ -1674,7 +1781,7 @@ let temp=currentOptions[Index][0]
       const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
-        if (block.type == 'constantBlock' || block.type == 'constantBlock_change'|| block.type == 'constantBlock_call') {
+        if (block.type == 'constantBlock' || block.type == 'constantBlock_change' || block.type == 'constantBlock_call') {
           block.constantBlock = this.advancedBlockStore.constantBlock;
           block.deleteNewConstant(Index);
         }
@@ -1690,7 +1797,7 @@ let temp=currentOptions[Index][0]
           block.arrayBlock = this.advancedBlockStore.arrayBlock;
           let arrayDropdownOptions = block.getConstant(this.advancedBlockStore.arrayBlock);
           const currentOptions = block.dropdownField.getOptions();
-          block.addNewConstant(currentOptions, arrayDropdownOptions, Index,block.getFieldValue('CONSTANT'));
+          block.addNewConstant(currentOptions, arrayDropdownOptions, Index, block.getFieldValue('CONSTANT'));
         }
         if (block.type.startsWith('call_function_')) {
           let arrayDropdownOptions = block.getParam(this.advancedBlockStore.arrayBlock);

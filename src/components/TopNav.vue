@@ -71,6 +71,11 @@
                                 </div>
                                 最后修改日期：{{ history_file.updatedAt }}
                             </div>
+                            <div class="icons-container">
+                                <img src="../assets/img/edit.png" style="width: 15px;height: 15px;" @click="editFile(history_file,index)"/>
+                                <img src="../assets/img/delete.png" style="width: 15px;height: 15px;margin-right: 20px;" @click="deleteFile(history_file)"/>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="view-code">
@@ -112,7 +117,6 @@
 <script>
 import { Compile } from '../utils'
 import { serial_request, kermit_start, kermit_stop } from '../utils/burn'
-
 import { EventBus } from '../utils/eventBus';
 import ProgressBar from 'progressbar.js';
 import store from '@/store';
@@ -396,6 +400,16 @@ export default {
                 callback();
             }
         },
+        editFile(history_file,index){
+            if(index==this.selectedIndex){
+                this.$emit('edit', history_file.projectName);
+            }
+        },
+        deleteFile(history_file){
+
+            this.$emit('delete', history_file.projectName);
+            this.selectedIndex=""
+        },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -407,8 +421,10 @@ export default {
             });
         },
         selectFile(index) {
-            this.selectedIndex = index;
-            this.$emit('blockCode', this.history_files[index]);
+            if(this.selectedIndex!=index){
+                this.selectedIndex = index;
+                this.$emit('blockCode', this.history_files[index]);
+            }
         },
         historyFilesVisable() {
             this.viewShow = 'workbench';
@@ -636,7 +652,11 @@ export default {
     height: 100px;
     cursor: pointer;
 }
-
+.icons-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* 让图标紧贴右侧 */
+}
 .selected-file {
     border-color: #FF8D1A;
     /* 选中后变为高亮绿色 */
