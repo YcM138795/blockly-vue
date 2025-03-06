@@ -1,22 +1,16 @@
 "use strict";
 
-export function kermit_qctl() {
+export  function kermit_qctl() {
     return '#'.charCodeAt();
 }
 
-export function kermit_ebq() {
-    return '&'.charCodeAt();
-}
 
-export function kermit_qctl_enable() {
+export  function kermit_qctl_enable() {
     return (kermit_qctl() != ' '.charCodeAt());
 }
 
-export function kermit_ebq_enable() {
-    return (kermit_ebq() != ' '.charCodeAt());
-}
 
-export function kermit_mark() {
+export  function kermit_mark() {
     return 0x01;
 }
 
@@ -96,6 +90,7 @@ export function kermit_type_size() {
     return 1;
 }
 
+
 export function kermit_sum_size() {
     return 1;
 }
@@ -116,9 +111,6 @@ export function kermit_packet_max() {
 export function kermit_enc_max() {
     var x = 1;
     if (kermit_qctl_enable()) {
-        x++;
-    }
-    if (kermit_ebq_enable()) {
         x++;
     }
     return x;
@@ -165,9 +157,6 @@ export function kermit_is_prefix(val) {
     if (val == kermit_qctl()) {
         return true;
     }
-    if (val == kermit_ebq()) {
-        return true;
-    }
     return false;
 }
 
@@ -191,23 +180,23 @@ export function arr2str(arr) {
 }
 
 export function kermit_data_push(pkt, data) {
-    if (kermit_ebq_enable() && kermit_have_bit7(data)) {
-        pkt.push(kermit_ebq());
-        kermit_len_add(pkt, 1);
-        data = data & ~(1 << 7);
-    }
     if (kermit_qctl_enable() && kermit_is_prefix(data)) {
         pkt.push(kermit_qctl());
+        //pkt[kermit_data_next(pkt)] = kermit_qctl();
         kermit_len_add(pkt, 1);
     }
     if (kermit_qctl_enable() && kermit_is_control(data)) {
         pkt.push(kermit_qctl());
+        //pkt[kermit_data_next(pkt)] = kermit_qctl();
         kermit_len_add(pkt, 1);
         data = kermit_ctl(data);
     }
     pkt.push(data);
+    //pkt[kermit_data_next(pkt)] = data;
     kermit_len_add(pkt, 1);
+    //console.log(arr2str(pkt));
 }
+
 
 export function kermit_sum_offset(pkt) {
     return kermit_header_size() + kermit_data_size(pkt);
@@ -246,13 +235,15 @@ export function kermit_recv_reset(pkt) {
     pkt.length = 0;
 }
 
+//127
 export function kermit_visible_max() {
-    return 127;
+    return 253;
 }
 
 export function kermit_len_max() {
     return kermit_unchar(kermit_visible_max());
 }
+
 
 export function kermit_seq_min() {
     return 0;
@@ -287,34 +278,37 @@ export function KSTA_SUM_OK() {
 }
 
 export function KSTA_MARK_BAD() {
-    return -60;
+    return 60;
 }
 
 export function KSTA_LEN_BAD() {
-    return -61;
+    return 61;
 }
 
 export function KSTA_SEQ_BAD() {
-    return -62;
+    return 62;
 }
 
 export function KSTA_TYPE_BAD() {
-    return -63;
+    return 63;
 }
 
 export function KSTA_DATA_BAD() {
-    return -64;
+    return 64;
 }
 
 export function KSTA_SUM_BAD() {
-    return -65;
+    return 65;
 }
 
+
 export function kermit_recv(pkt, data) {
+    //console.log(pkt.length);
     if (pkt.length == kermit_mark_offset()) {
         pkt.push(data);
         if (kermit_mark_get(pkt) != kermit_mark()) {
             kermit_recv_reset(pkt);
+            //console.log("bad mark");
             return KSTA_MARK_BAD();
         }
         return KSTA_MARK_OK();
@@ -324,6 +318,7 @@ export function kermit_recv(pkt, data) {
         if ((kermit_len_get(pkt) < kermit_len_min()) ||
             (kermit_len_get(pkt) > kermit_len_max())) {
             kermit_recv_reset(pkt);
+            //console.log("bad len");
             return KSTA_LEN_BAD();
         }
         return KSTA_LEN_OK();
@@ -333,6 +328,7 @@ export function kermit_recv(pkt, data) {
         if ((kermit_seq_get(pkt) < kermit_seq_min()) ||
             (kermit_seq_get(pkt) > kermit_seq_max())) {
             kermit_recv_reset(pkt);
+            //console.log("bad seq");
             return KSTA_SEQ_BAD();
         }
         return KSTA_SEQ_OK();
@@ -347,10 +343,12 @@ export function kermit_recv(pkt, data) {
             if (kermit_sum_check(pkt)) {
                 return KSTA_SUM_OK();
             }
+            console.log(arr2str(pkt));
             return KSTA_SUM_BAD();
         }
         return KSTA_DATA_OK();
     }
+    //console.log("bad data");
     return KSTA_DATA_BAD();
 }
 

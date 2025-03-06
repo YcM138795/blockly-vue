@@ -15,8 +15,10 @@ import {
 
 import { EventBus } from './eventBus';
 
-"use strict";
+// import { Term } from './term';
 
+"use strict";
+// var term;
 
 
 if ("serial" in navigator) {
@@ -30,16 +32,30 @@ var baudrate = 2000000;
 
 var comport_opened = false;
 
+
+var stat
+
 //端口请求
 async function serial_request(refs) {
-    var stat = refs.stat;
+     stat = refs.stat;
     try {
         // 请求串口
-        comport = await navigator.serial.requestPort();
+        comport = await navigator.serial.requestPort({
+            filters: [{ usbVendorId: 0x0BAD }]		// 只请求具有特定供应商VID的设备
+        });
         console.log(comport.getInfo());
 
         if (comport) {
             serial_open(refs);
+            comport.addEventListener("connect", () => {
+                stat.value = "串口通信连接";
+            });
+            comport.addEventListener("disconnect", () => {
+                stat.value = "串口通信断开";
+                comport.forget();
+                comport = undefined;
+                comport_opened = false;
+            });
         }
 
     } catch (error) {
@@ -47,6 +63,9 @@ async function serial_request(refs) {
         stat.value = "请求串口失败"
     }
 }
+
+
+
 
 //端口打开
 async function serial_open(refs) {
@@ -71,6 +90,7 @@ async function serial_open(refs) {
     }
 }
 
+
 //端口关闭
 async function serial_close(refs) {
     var stat = refs.stat;
@@ -80,15 +100,17 @@ async function serial_close(refs) {
             reader.releaseLock();
             comport_opened = false;
             await comport.close();
-            stat.value = "COM PORT CLOSE OK";
+            stat.value = "端口关闭成功";
         } catch (e) {
             comport_opened = true;
-            stat.value = "COM PORT CLOSE FAIL";
+            stat.value = "端口已关闭失败";
             console.error(e);
         }
         return;
     }
 }
+
+
 
 //端口忘记
 async function serial_forget(refs) {
@@ -106,12 +128,14 @@ async function serial_forget(refs) {
         console.error(e);
     }
 }
+
+
 var reader;
 
 var krun = false;
 
 var krxfifo_limit = 8192;
-var krxfifo = [];
+var krxfifo = [ ];
 
 function krxfifo_push(val) {
     if (krxfifo.length >= krxfifo_limit) {
@@ -133,18 +157,18 @@ async function serial_rx() {
         return;
     }
     var i;
-    // var x;
-    while (comport.readable && comport_opened) {
-        let flag = 1
+    while(comport.readable && comport_opened) {
         reader = comport.readable.getReader();
         try {
-            while (flag == 1) {
+            // eslint-disable-next-line no-constant-condition
+            while (true) {
                 const { value, done } = await reader.read();
                 if (done) {
                     break;
                 }
                 for (i = 0; i < value.length; i++) {
                     // x = String.fromCharCode(value[i]);
+                    // term.write(x);
                     if (krun) {
                         krxfifo_push(value[i]);
                     }
@@ -170,25 +194,25 @@ function strarr2intarr(strarr) {
 
 async function serial_txs(str) {
     var arr;
-    arr = str.split('');
+    arr = str.split('');		//字符串分割, Hello输出["h", "e", "l", "l", "o"]
     await serial_txa(strarr2intarr(arr));
 }
 
 function delay_ms(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function serial_txa(arr) {
     if (comport == undefined) {
-        // stat.value = "PLEASE CLICK REQUEST";
+        stat.value = "请点击端口请求";
         return;
     }
-    if (comport_opened == false) {
-        // stat.value = "PLEASE OPEN COM PORT";
+    if (comport_opened == false ) {
+        stat.value = "PLEASE OPEN COM PORT";
         return;
     }
     try {
-        while (comport.writable.locked == true) {
+        while(comport.writable.locked == true) {
             await delay_ms(1);
         }
         var writer = comport.writable.getWriter();
@@ -198,26 +222,66 @@ async function serial_txa(arr) {
     } catch (e) {
         console.log(e);
     }
+    //console.log(arr[0]);
 }
 
+// async function serial_paste() {
+//     var str;
+//     var pastebox = document.getElementById("pastebox");
+//     str = pastebox.value;
+//     await serial_txs(str);
+// }
 
+// async function term_handler(str) {
+//     if (comport_opened == false) {
+//         return;
+//     }
+//     if (comport == undefined) {
+//         return;
+//     }
+//     //console.log(str);
+//     await serial_txs(str);
+// }
 
+// function term_wrap_onclick_handler() {
+// }
 
+// var cols = 80;
+// var rows = 25;
+// var font_size = 16;
 
+// var term_wrap_el;
+
+// term = new Term({ cols: cols, rows: rows, scrollback: 10000, fontSize: font_size });
+// term.setKeyHandler(term_handler);
+// term.open(document.getElementById("term_container"),
+//             document.getElementById("term_paste"));
+
+// term_wrap_el = document.getElementById("term_wrap")
+// term_wrap_el.style.width = term.term_el.style.width;
+// term_wrap_el.onclick = term_wrap_onclick_handler;
+
+// var file_input = document.getElementById("upload_file");
+// var upload_file = undefined;
+// file_input.addEventListener("change", function() {
+//     // upload_file = file_input.files[0];
+// });
 
 function kermit_packet_make_msg(pkt, seq, type, msg) {
     kermit_header_make(pkt, seq, type);
     var msg_array = msg.split('');
     var i;
-    for (i = 0; (i < msg_array.length) &&
-        (kermit_packet_size(pkt) < (kermit_packet_max() - kermit_enc_max()))
-        ; i++) {
+    for (i = 0; (i < msg_array.length) && 
+            (kermit_packet_size(pkt) < (kermit_packet_max() - kermit_enc_max()))
+            ; i++) {
         kermit_data_push(pkt, msg_array[i].charCodeAt());
     }
     kermit_sum_set(pkt, kermit_sum_make(pkt));
     console.log(pkt);
 }
 
+
+// var kermit_stat = document.getElementById("kermit_stat");
 
 var kermit_send_time;
 var kermit_timeout = 8000;
@@ -227,12 +291,14 @@ async function kermit_send(pkt) {
     await serial_txa(pkt);
 }
 
+
+
 async function kermit_transloop(pkt) {
     var rpkt = [];
     var ret;
-
+	
     await kermit_send(pkt);
-    while (krun) {
+    while(krun) {
         if ((Date.now() - kermit_send_time) > kermit_timeout) {
             //console.log("kermit recv ack packet timeout, resend");
             await kermit_send(pkt);
@@ -257,11 +323,12 @@ async function kermit_transloop(pkt) {
             await delay_ms(1);
         }
     }
+	
 }
 
 
-async function kermit_start(refs,file,flashing) {
-    EventBus.$emit('flashing', {boolean:true,first:false}); 
+async function kermit_start(refs, file, flashing) {
+    EventBus.$emit('flashing', { boolean: true, first: false });
     const kermit_stat = refs.kermit_stat;
 
     if (comport == undefined) {
@@ -316,10 +383,10 @@ async function kermit_start(refs,file,flashing) {
 
 
     while (sended < total) {
-        if(!flashing.boolean){
+        if (!flashing.boolean) {
             kermit_stat.value = `已取消烧录`;
             sended = total;
-            EventBus.$emit('progress', { sended,total  }); // 触发进度事件
+            EventBus.$emit('progress', { sended, total }); // 触发进度事件
             return;
         }
         console.log('循环烧录');
