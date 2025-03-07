@@ -3,7 +3,8 @@
         <div class="first-floor">
             <div class="TopNav">
                 <div class="left">
-                    <img src="https://jnui-edu.oss-cn-hangzhou.aliyuncs.com/commonResource/edu-logo.jpg" alt="logo" class="logo">
+                    <img src="https://jnui-edu.oss-cn-hangzhou.aliyuncs.com/commonResource/edu-logo.jpg" alt="logo"
+                        class="logo">
                 </div>
                 <div class="center">
                     <div class="custom-select-container">
@@ -72,10 +73,12 @@
                                 最后修改日期：{{ history_file.updatedAt }}
                             </div>
                             <div class="icons-container">
-                                <img src="../assets/img/edit.png" style="width: 15px;height: 15px;" @click="editFile(history_file,index)"/>
-                                <img src="../assets/img/delete.png" style="width: 15px;height: 15px;margin-right: 20px;" @click="deleteFile(history_file)"/>
+                                <img src="../assets/img/edit.png" style="width: 15px;height: 15px;"
+                                    @click="editFile(history_file, index)" />
+                                <img src="../assets/img/delete.png" style="width: 15px;height: 15px;margin-right: 20px;"
+                                    @click.stop="deleteFile(history_file, index)" />
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="view-code">
@@ -157,7 +160,7 @@ export default {
                     { validator: this.checkDuplicate, trigger: 'blur' }
                 ]
             },
-            selectedIndex: null, // 存储被选中的文件索引
+            selectedIndex: this.parentIndex, // 存储被选中的文件索引
             codeViewIns: null,
         }
     },
@@ -215,7 +218,13 @@ export default {
     watch: {
         code(newCode) {
             this.codeViewIns.setValue(newCode);
-        }
+        },
+        parentIndex: {
+            handler(newValue) {
+                this.selectedIndex = newValue; // 监听 prop 变化并更新 data
+            },
+            immediate: true // 立即执行一次
+        },
     },
     beforeDestroy() {
         // 在组件销毁时移除全局点击事件监听
@@ -229,6 +238,11 @@ export default {
         history_files: {
             type: Array,
             require: true
+        },
+        parentIndex: {
+            type: Number,
+            required: false,
+            default: -1
         }
     },
     methods: {
@@ -245,7 +259,7 @@ export default {
         //保存
         async saveAction() {
             this.changeDialogVisable();
-            this.$emit('save', this.form.projectName);
+            this.$emit('save', this.form.projectName, this.selectedIndex);
             this.form.projectName = '';
             // 生成成功通知
             const h = this.$createElement;
@@ -400,15 +414,15 @@ export default {
                 callback();
             }
         },
-        editFile(history_file,index){
-            if(index==this.selectedIndex){
+        editFile(history_file, index) {
+            if (index == this.selectedIndex) {
                 this.$emit('edit', history_file.projectName);
             }
         },
-        deleteFile(history_file){
+        deleteFile(history_file, index) {
 
-            this.$emit('delete', history_file.projectName);
-            this.selectedIndex=""
+            this.$emit('delete', history_file.projectName, index, this.selectedIndex);
+
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
@@ -421,9 +435,8 @@ export default {
             });
         },
         selectFile(index) {
-            if(this.selectedIndex!=index){
-                this.selectedIndex = index;
-                this.$emit('blockCode', this.history_files[index]);
+            if (this.selectedIndex != index) {
+                this.$emit('blockCode', this.history_files[index], index);
             }
         },
         historyFilesVisable() {
@@ -440,9 +453,11 @@ export default {
     /* 让子元素平均分布在父容器内 */
     background-color: azure;
 }
-.logo{
+
+.logo {
     width: 50px;
 }
+
 .left {
     text-align: left;
 }
@@ -652,11 +667,14 @@ export default {
     height: 100px;
     cursor: pointer;
 }
+
 .icons-container {
     display: flex;
     align-items: center;
-    margin-left: auto; /* 让图标紧贴右侧 */
+    margin-left: auto;
+    /* 让图标紧贴右侧 */
 }
+
 .selected-file {
     border-color: #FF8D1A;
     /* 选中后变为高亮绿色 */
@@ -730,11 +748,11 @@ export default {
 
 .save {
     background-image: url('../assets/img/save.png');
-    
+
 }
 
 .historyFiles {
     background-image: url('../assets/img/menu.png');
-    
+
 }
 </style>

@@ -6,7 +6,7 @@
     <div style="width: 100%; height: 60px">
       <TopNav :history_files="history_files" @save="saveWorkspace" @clear="clearScreen" @viewShowUpdate="codeShowChange"
         :code="code" @change="receiveChange" @loading="receiveLoading" @blockCode="receiveBlock" @edit="editHistoryFile"
-        @delete="deleteHistoryFile">
+        @delete="deleteHistoryFile" :parentIndex="selectedIndex">
       </TopNav>
     </div>
     <div id="blockly">
@@ -93,7 +93,8 @@ export default {
       loadingText: '',
       projectName: '',
       store: store,
-      history_files: []
+      history_files: [],
+      selectedIndex: -1,
     };
   },
   //引用的组件
@@ -569,11 +570,14 @@ export default {
     },
 
     // 保存工作区
-    saveWorkspace(projectName) {
+    async saveWorkspace(projectName, selectedIndex) {
       this.projectName = projectName;
       //读取工作区的块
       const state = Blockly.serialization.workspaces.save(this.workspace);
-      this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
+      await this.createProject(this.store.getters.phoneNumber, JSON.stringify(state), this.projectName, this.advancedBlockStore.functionBlock, this.advancedBlockStore.constantBlock, this.advancedBlockStore.arrayBlock);
+      if (selectedIndex != -1) {
+        this.selectedIndex = selectedIndex + 1;
+      }
     },
     //保存编辑的历史文件
     editHistoryFile(projectName) {
@@ -645,7 +649,7 @@ export default {
         });
       });
     },
-    deleteHistoryFile(projectName) {
+    deleteHistoryFile(projectName, index, selectedIndex) {
       this.$confirm('是否删除该文件?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -669,6 +673,13 @@ export default {
               this.workspace.toolbox_.clearSelection();
             }
           }
+          if (index == selectedIndex) {
+            this.clearScreen();
+            this.selectedIndex = -1;
+          } else if (index < selectedIndex) {
+            this.selectedIndex = selectedIndex - 1;
+          }
+
           this.receiveLoading(false);
           // 显示成功消息
           this.$message({
@@ -685,7 +696,12 @@ export default {
             message: '删除失败，请重试!'
           });
         }
-      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     // 恢复工作区
     restoreWorkspace() {
@@ -781,7 +797,7 @@ export default {
       this.loading = loading;
       this.loadingText = loadingText;
     },
-    createProject(userId, text, projectName, functionBlock, constantBlock, arrayBlock) {
+    async createProject(userId, text, projectName, functionBlock, constantBlock, arrayBlock) {
       const strFunctionBlock = functionBlock.map(subArray => subArray.join(', ')).join(' |&&| ');
       const strConstantBlock = constantBlock.join(' |&&| ');
       const strArrayBlock = arrayBlock.join(' |&&| ');
@@ -789,20 +805,25 @@ export default {
 
       const data = { "userId": userId, "text": text, "projectName": projectName, "functionBlock": strFunctionBlock, "constantBlock": strConstantBlock, "arrayBlock": strArrayBlock };
 
-      createCodeBlock(data).then(() => {
-        find({ "userId": this.store.getters.phoneNumber }).then(res => {
-          this.history_files = res.map(file => ({
-            ...file,
-            updatedAt: formatDate(file.updatedAt)
-          })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      await createCodeBlock(data);
+
+      const res = await find({ "userId": this.store.getters.phoneNumber })
+      this.history_files = res.map(file => ({
+        ...file,
+        updatedAt: formatDate(file.updatedAt)
+      })).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      if (this.workspace && this.workspace.toolbox_) {
+        const selectedItem = this.workspace.toolbox_.getSelectedItem();
+        if (selectedItem) {
+          this.workspace.toolbox_.clearSelection();
         }
-        );
       }
-      );
+
     },
 
-    receiveBlock(block) {
+    receiveBlock(block, index) {
       if (block) {
+        this.selectedIndex = index
         const state = JSON.parse(block.text);
         this.advancedBlockStore.functionBlock = block.functionBlock.split(' |&&| ').map(subStr => subStr.split(', '));
         this.advancedBlockStore.constantBlock = block.constantBlock.split(' |&&| ')
@@ -1700,10 +1721,8 @@ export default {
             };
           },
           loadExtraState: function (state) {
-            console.log(state);
             this.numberCount = state['itemCount'];
             this.arrayBlock = state['arrayBlock'];
-            console.log(this.arrayBlock);
 
             if (this.arrayBlock) {
               if (!this.getField('CONSTANT')) {
