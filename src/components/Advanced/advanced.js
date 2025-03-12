@@ -318,7 +318,22 @@ import { XTaskCheckTypes } from "../config/config";
         return code;
       };
     }
+    //变量赋值
+    {
+      javascriptGenerator.forBlock["assignBlock"] = function (block) {
+        const dropdown_operation = block.getFieldValue("CONSTANT");
+        const value = javascriptGenerator.valueToCode(
+          block,
+          "VALUE",
+          javascriptGenerator.ORDER_ATOMIC
+        );
 
+        // 根据数据类型生成不同的代码
+        let code;
+        code = `${dropdown_operation} = ${value};\n`;
+        return code;
+      };
+    }
     //变量改变
     {
       javascriptGenerator.forBlock["constantBlock_change"] = function (block) {

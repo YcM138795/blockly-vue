@@ -82,9 +82,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -226,9 +223,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -354,9 +348,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -543,9 +534,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -682,10 +670,7 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["11", "11"],
                                   ["12", "12"],
                                   ["13", "13"],
-                                  ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
+                                  ["14", "14"],                 
                                 ],
                               },
                             {
@@ -935,27 +920,24 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                 ]
                             },
                             {
-                                "type": "field_number",
-                                "name": "speed",
-                                "value": 0,
-                                "min": 0,
-                                "max": 180
+                                "type": "input_dummy"
                             },
                             {
-                                "type": "input_dummy",
-                                "name": "NAME"
+                                "type": "input_value",
+                                "name": "speed"
                             }
                         ],
+                        "inputsInline": true,
                         "previousStatement": XTaskCheckTypes,
                         "nextStatement": XTaskCheckTypes,
                         "colour": '#ff7272'
                     })
                 }
             }
-            javascriptGenerator.forBlock['Servo_operation'] = function (block) {
+            javascriptGenerator.forBlock['Servo_operation'] = function (block,generator) {
                 const dropdown_serial_number = block.getFieldValue('serial_number');
                 const dropdown__turn_around = block.getFieldValue(' turn_around');
-                const number_speed = block.getFieldValue('speed');
+                const number_speed = generator.valueToCode(block, 'speed', Order.ATOMIC);
 
                 let code;
                 if (dropdown__turn_around == 'forward') {
@@ -1111,9 +1093,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -1483,9 +1462,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -1718,9 +1694,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -1900,9 +1873,6 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                                   ["12", "12"],
                                   ["13", "13"],
                                   ["14", "14"],
-                                  ["15", "15"],
-                                  ["16", "16"],
-                                  
                                 ],
                               },
                             {
@@ -2303,5 +2273,59 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                 const code = `bflb_gpio_read(gpio, ${gpio})`;
                 return [code, Order.NONE];
               };
+            }
+            {
+                Blockly.Blocks["gpio_init"] = {
+                    init: function () {
+                      this.jsonInit({
+                        type: "gpio_read",
+                        tooltip: "初始化引脚",
+                        helpUrl: "",
+                        message0: "初始化引脚 %1为%2",
+                        args0: [
+                          {
+                            type: "field_dropdown",
+                            name: "gpio",
+                            options: [
+                              ["P0", "GPIO_PIN_22"],
+                              ["P1", "GPIO_PIN_25"],
+                              ["P2", "GPIO_PIN_21"],
+                              ["P3", "GPIO_PIN_27"],
+                              ["P4", "GPIO_PIN_31"],
+                              ["P5", "GPIO_PIN_32"],
+                              ["P6", "GPIO_PIN_33"],
+                              ["P7", "GPIO_PIN_34"],
+                              ["P8", "GPIO_PIN_24"],
+                              ["P9", "GPIO_PIN_6"],
+                              ["P10", "GPIO_PIN_29"],
+                              ["P11", "GPIO_PIN_30"],
+                              ["P12", "GPIO_PIN_16"],
+                              ["P13", "GPIO_PIN_17"],
+                              ["P14", "GPIO_PIN_18"],
+                              ["P15", "GPIO_PIN_28"],
+                              ["P16", "GPIO_PIN_9"],
+                            ],
+                          },
+                          {
+                            type: "field_dropdown",
+                            name: "method",
+                            options: [
+                              ["输入", "GPIO_INPUT"],
+                              ["输出", "GPIO_OUTPUT"],
+                            ],
+                          },
+                        ],
+                        previousStatement: XTaskCheckTypes,
+                        nextStatement: XTaskCheckTypes,
+                        colour: "#ff7272",
+                      });
+                    },
+                  };
+                  javascriptGenerator.forBlock["gpio_init"] = function (block) {
+                    const gpio = block.getFieldValue("gpio");
+                    const method = block.getFieldValue("method");
+                    const code = `bflb_gpio_init(gpio, ${gpio}, ${method}|GPIO_PULLDOWN|GPIO_SMT_EN|GPIO_DRV_3),`;
+                    return code;
+                  };
             }
 }

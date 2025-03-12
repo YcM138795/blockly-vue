@@ -1140,6 +1140,7 @@ export default {
             this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
             // 创建输入框，并设置它们在同一行
             this.appendValueInput("VALUE")
+              .appendField("定义")
               .appendField(new Blockly.FieldDropdown([
                 ["整型", "int"],
                 ["浮点型", "float"],
@@ -1147,7 +1148,7 @@ export default {
               ]), "TYPE")
               .appendField("变量")
               .appendField(this.dropdownField, "CONSTANT")
-              .appendField("设置为").setCheck(null)
+              .appendField("并将值初始化为").setCheck(null)
 
             // 设置块的连接属性
             this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
@@ -1220,10 +1221,101 @@ export default {
         const blockType = 'constantBlock'; // 为每个块生成一个唯一的类型名称
         Blockly.Blocks[blockType] = blockDefinition;
 
+
         // 创建变量块
         const constantBlock = {
           kind: 'block',
           type: blockType, // 使用唯一的块类型
+        };
+
+
+        // 定义变量块重新赋值块
+const assignBlockDefinition = {
+  init: function () {
+            // 添加变量选项
+            let constantDropdownOptions = this.getConstant(that.advancedBlockStore.constantBlock);
+            this.constantBlock = that.advancedBlockStore.constantBlock;
+            this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
+            // 创建输入框，并设置它们在同一行
+            this.appendValueInput("VALUE")
+              .appendField("变量")
+              .appendField(this.dropdownField, "CONSTANT")
+              .appendField("设置为").setCheck(null)
+
+            // 设置块的连接属性
+            this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
+            this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
+            this.setColour('#4FD284'); // 设置块的颜色
+            this.setTooltip('变量重新设置数值');
+            this.setHelpUrl('');
+
+          },
+    getConstant: function (constantBlock) {
+            let constantDropdownOptions = [];
+            for (let constantIndex = 0; constantIndex < constantBlock.length; constantIndex++) {
+              constantDropdownOptions.push([constantBlock[constantIndex], constantBlock[constantIndex]]);
+            }
+            return constantDropdownOptions;
+          },
+          addConstant: function (constantInput, dropdownField) {
+            constantInput.appendField(dropdownField, "CONSTANT");
+          },
+          addNewConstant: function (currentOptions, constantDropdownOptions, Index, value) {
+            if (Index != undefined) {
+              let temp = currentOptions[Index][0];
+              currentOptions[Index][0] = constantDropdownOptions[Index][0];
+              currentOptions[Index][1] = constantDropdownOptions[Index][1];
+              if (value.value_ || temp == value) {
+                // 自动选择当前选项
+                this.getField('CONSTANT').setValue(currentOptions[Index][0]); // 设置为当前选项
+              }
+            } else {
+              currentOptions.unshift(constantDropdownOptions[0]);
+            }
+          },
+          deleteNewConstant: function (Index) {
+            // 获取下拉框的所有选项
+            const currentOptions = this.getField('CONSTANT').getOptions();
+            // 获取当前下拉框的值
+            const currentValue = this.getField('CONSTANT').getValue();
+            const index = currentOptions.findIndex(option => option[0] === currentValue);
+            currentOptions.splice(Index, 1);
+            if (index == Index) {
+              this.dispose(true);
+            }
+          },
+          saveExtraState: function () {
+            return {
+              'constantBlock': this.constantBlock,
+            };
+          },
+          loadExtraState: function (state) {
+            this.constantBlock = state['constantBlock'];
+            if (this.constantBlock) {
+              this.getField('CONSTANT').setValidator((newValue) => {
+                const options = this.getField('CONSTANT').getOptions();
+                const index = options.findIndex(option => option[0] === this.getField('CONSTANT').getValue()); // 通过比较选项的第一个元素获取索引
+
+                if (newValue == 'Fn:重命名此变量') {
+                  EventBus.$emit('showConstantEditor', '重命名此变量', index);
+                  return this.getField('CONSTANT')
+                } else if (newValue == 'Fn:删除此变量') {
+                  EventBus.$emit('deleteConstant', index);
+                  return this.getField('CONSTANT')
+                }
+                return newValue; // 返回新值以更新显示
+              });
+            }
+          },
+};
+
+// 注册变量赋值块类型
+const assignBlockType = 'assignBlock';
+Blockly.Blocks[assignBlockType] = assignBlockDefinition;
+ // 创建变量块
+ const assignBlock = {
+          kind: 'block',
+          type: assignBlockType, // 使用唯一的块类型
         };
 
         // 定义变量改变块
@@ -1413,6 +1505,7 @@ export default {
         };
         // 将生成的变量相关块加入到数组
         constantBlockArry.push(constantBlock);
+        constantBlockArry.push(assignBlock);
         constantBlockArry.push(constantBlock_call);
         constantBlockArry.push(constantBlock_change);
       }
@@ -1786,7 +1879,7 @@ export default {
       const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
-        if (block.type == 'constantBlock' || block.type == 'constantBlock_change' || block.type == 'constantBlock_call') {
+        if (block.type == 'constantBlock'|| block.type=='assignBlock'|| block.type == 'constantBlock_change' || block.type == 'constantBlock_call') {
           let constantDropdownOptions = block.getConstant(this.advancedBlockStore.constantBlock);
           const currentOptions = block.dropdownField.getOptions();
           block.addNewConstant(currentOptions, constantDropdownOptions, Index, block.getFieldValue('CONSTANT'));
@@ -1800,7 +1893,7 @@ export default {
       const allBlocks = this.workspace.getAllBlocks(); // 获取工作区中的所有块
       allBlocks.forEach((block) => {
         // 检查块的类型是否是调用函数块，并且块的函数名是否与被删除的函数匹配
-        if (block.type == 'constantBlock' || block.type == 'constantBlock_change' || block.type == 'constantBlock_call') {
+        if (block.type == 'constantBlock'|| block.type=='assignBlock' || block.type == 'constantBlock_change' || block.type == 'constantBlock_call') {
           block.constantBlock = this.advancedBlockStore.constantBlock;
           block.deleteNewConstant(Index);
         }

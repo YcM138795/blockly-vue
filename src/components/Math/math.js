@@ -159,8 +159,6 @@ import {dartGenerator} from 'blockly/dart';
       };
       
     }
-  
-    // operation:数学运算
     {
       Blockly.Blocks['operation'] = {
         init: function () {
@@ -169,128 +167,94 @@ import {dartGenerator} from 'blockly/dart';
             "message0": "%1 %2 %3 %4",
             "args0": [
               {
-                "type": "field_number",
+                "type": "input_value",
                 "name": "digit1",
-                "value": 0
+                "check": "Number"
               },
               {
                 "type": "field_dropdown",
                 "name": "maths1",
                 "options": [
-                  [
-                    "+",
-                    "+"
-                  ],
-                  [
-                    "–",
-                    "-"
-                  ],
-                  [
-                    "×",
-                    "*"
-                  ],
-                  [
-                    "÷",
-                    "/"
-                  ]
+                  ["+", "+"], ["–", "-"], ["×", "*"], ["÷", "/"]
                 ]
               },
               {
-                "type": "field_number",
+                "type": "input_value",
                 "name": "digit2",
-                "value": 0
+                "check": "Number"
               },
               {
                 "type": "field_dropdown",
                 "name": "maths2",
                 "options": [
-                  [
-                    "空",
-                    "null"
-                  ],
-                  [
-                    "+",
-                    "+"
-                  ],
-                  [
-                    "–",
-                    "-"
-                  ],
-                  [
-                    "×",
-                    "*"
-                  ],
-                  [
-                    "÷",
-                    "/"
-                  ]
+                  ["空", "null"], ["+", "+"], ["–", "-"], ["×", "*"], ["÷", "/"]
                 ]
-              },
-              // {
-              //   "type": "input_value",
-              //   "name": "operate",
-              //   "check": "Number",
-              //   "align": "CENTRE"
-              // }
+              }
             ],
             "output": "Number",
-            "colour": '#3BB0FF',
+            "colour": "#3BB0FF",
             "tooltip": "运算",
             "helpUrl": ""
-          })
-          this.operationChange();
+          });
+      
+          // 绑定 change 监听
+          this.setOnChange(function () {
+            this.operationChange();
+          });
         },
-
-        operationChange:function(){
+      
+        operationChange: function () {
           const dropdown = this.getField('maths2');
-          dropdown.setValidator((newValue) =>{
-            if(newValue!=='null'){
-              if(!this.getInput('digit3')){
-                this.appendValueInput('digit3')
+          if (!dropdown) return;
+      
+          const newValue = dropdown.getValue();
+          if (newValue !== 'null') {
+            if (!this.getInput('digit3')) {
+              this.appendValueInput('digit3')
                 .setCheck('Number')
-              }
-            }else{
-              if(this.getInput('digit3')){
-                this.removeInput('digit3')
-              }
+                .setAlign(Blockly.ALIGN_CENTRE);
             }
-          })
+          } else {
+            if (this.getInput('digit3')) {
+              this.removeInput('digit3');
+            }
+          }
         }
-      }
-  
-      javascriptGenerator.forBlock['operation'] = function (block, generator) {
-        11
-        var number_digit1 = block.getFieldValue('digit1');
-        var dropdown_maths1 = block.getFieldValue('maths1');
-        var number_digit2 = block.getFieldValue('digit2');
-        var dropdown_maths2 = block.getFieldValue('maths2');
-        var digit3 = generator.valueToCode(block, 'digit3', Order.ATOMIC);
-        var code
-        if (dropdown_maths2==='null') {
-          code = number_digit1 + dropdown_maths1 + number_digit2;
-        } else {
-          code = '(' + number_digit1 + dropdown_maths1 + number_digit2 + ')' + dropdown_maths2 + digit3;
-        }
-        return [code, Order.MEMBER];
       };
-      dartGenerator.forBlock['operation'] = function (block, generator) {
-        11
-        var number_digit1 = block.getFieldValue('digit1');
-        var dropdown_maths1 = block.getFieldValue('maths1');
-        var number_digit2 = block.getFieldValue('digit2');
-        var dropdown_maths2 = block.getFieldValue('maths2');
-        var digit3 = generator.valueToCode(block, 'digit3', Order.ATOMIC);
-        var code
-        if (dropdown_maths2==='null') {
-          code = number_digit1 + dropdown_maths1 + number_digit2;
+      
+      javascriptGenerator.forBlock['operation'] = function (block, generator) {
+        var digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || '0';
+        var maths1 = block.getFieldValue('maths1');
+        var digit2 = generator.valueToCode(block, 'digit2', Order.ATOMIC) || '0';
+        var maths2 = block.getFieldValue('maths2');
+        var digit3 = block.getInput('digit3') ? generator.valueToCode(block, 'digit3', Order.ATOMIC) || '0' : '';
+      
+        var code;
+        if (maths2 === 'null') {
+          code = `${digit1} ${maths1} ${digit2}`;
         } else {
-          code = '(' + number_digit1 + dropdown_maths1 + number_digit2 + ')' + dropdown_maths2 + digit3;
+          code = `(${digit1} ${maths1} ${digit2}) ${maths2} ${digit3}`;
         }
         return [code, Order.MEMBER];
       };
       
-    }
-  
+      dartGenerator.forBlock['operation'] = function (block, generator) {
+        var digit1 = generator.valueToCode(block, 'digit1', Order.ATOMIC) || '0';
+        var maths1 = block.getFieldValue('maths1');
+        var digit2 = generator.valueToCode(block, 'digit2', Order.ATOMIC) || '0';
+        var maths2 = block.getFieldValue('maths2');
+        var digit3 = block.getInput('digit3') ? generator.valueToCode(block, 'digit3', Order.ATOMIC) || '0' : '';
+      
+        var code;
+        if (maths2 === 'null') {
+          code = `${digit1} ${maths1} ${digit2}`;
+        } else {
+          code = `(${digit1} ${maths1} ${digit2}) ${maths2} ${digit3}`;
+        }
+        return [code, Order.MEMBER];
+      };
+      
+    }  
     // remainder:余数计算
     {
       Blockly.Blocks['remainder'] = {

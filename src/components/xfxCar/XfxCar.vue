@@ -206,16 +206,21 @@ export default {
               },
               {
                 kind: "block",
-                type: "gpio_write"
+                type: "gpio_output"
               },
+              { "kind": "label", "text": "引脚控制" },
               {
                 kind: "block",
-                type: "gpio_output"
+                type: "gpio_init"
               },
               {
                 kind: "block",
                 type: "gpio_read"
-              }
+              },
+              {
+                kind: "block",
+                type: "gpio_write"
+              },
             ]
           },
         ],
