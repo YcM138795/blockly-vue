@@ -2324,7 +2324,7 @@ Blockly.fieldRegistry.register('ImageTextGridDropdown', ImageTextGridDropdown);
                   javascriptGenerator.forBlock["gpio_init"] = function (block) {
                     const gpio = block.getFieldValue("gpio");
                     const method = block.getFieldValue("method");
-                    const code = `bflb_gpio_init(gpio, ${gpio}, ${method}|GPIO_PULLDOWN|GPIO_SMT_EN|GPIO_DRV_3);\n`;
+                    const code = `bflb_gpio_init(gpio, ${gpio}, ${method}|GPIO_PULLUP|GPIO_SMT_EN|GPIO_DRV_3);\n`;
                     return code;
                   };
             }
