@@ -52,6 +52,15 @@ function registerFunctionBlockContextMenuOptions() {
   Blockly.ContextMenuRegistry.registry.register(editOption);
   Blockly.ContextMenuRegistry.registry.register(useCallFunctionOption);
 }
+function unregisterFunctionBlockContextMenuOptions() {
+  const menuIds = ['edit_function', 'useCall_function']; // 已注册的选项 ID 列表
 
+  menuIds.forEach((id) => {
+    if (Blockly.ContextMenuRegistry.registry.getItem(id)) {
+      
+      Blockly.ContextMenuRegistry.registry.unregister(id);
+    }
+  });
+}
 
-export { registerFunctionBlockContextMenuOptions };
+export { registerFunctionBlockContextMenuOptions,unregisterFunctionBlockContextMenuOptions };

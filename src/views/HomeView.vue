@@ -31,7 +31,7 @@
 <script>
 import * as Blockly from 'blockly/core';
 import { javascriptGenerator } from "blockly/javascript";
-import { registerFunctionBlockContextMenuOptions } from '../utils/blocklyContextMenu'//引入右键菜单
+import { registerFunctionBlockContextMenuOptions,unregisterFunctionBlockContextMenuOptions } from '../utils/blocklyContextMenu'//引入右键菜单
 import { generateCallFunctionCode } from '../utils/functionBlockGenerate';//引入生成函数的代码
 //引入其他组件
 import TopNav from '../components/TopNav.vue'
@@ -60,6 +60,7 @@ export default {
   provide() {
     return {
       Homeworkspace: this.workspace, // 提供 workspace 给所有子组件
+      cleanupResources: this.cleanupResources,
     };
   },
   data() {
@@ -395,6 +396,29 @@ export default {
 
       // 恢复工作区
       this.restoreWorkspace();
+    },
+    cleanupResources() {
+      // 销毁 Blockly 工作区
+      if (this.workspace) {
+        this.workspace.removeChangeListener(this.workspaceChangeListener);
+        this.workspace.dispose();
+        this.workspace = null;
+      }
+
+      // 移除 EventBus 事件监听器
+      EventBus.$off('addMyFunction', this.handleAddMyFunction);
+      EventBus.$off('refreshConstant', this.refreshConstant);
+      EventBus.$off('refreshArray', this.refreshArray);
+      EventBus.$off('deleteArray', this.deleteArray);
+      EventBus.$off('deleteConstant', this.deleteConstant);
+       // 移除工具箱类别回调
+  if (this.workspace) {
+    this.workspace.unregisterToolboxCategoryCallback('DYNAMIC_FUNCTION_CATEGORY');
+  }
+
+  // 移除右键菜单项
+  unregisterFunctionBlockContextMenuOptions();
+
     },
     addInt_Main() {
       // 添加int_main块加到工作区

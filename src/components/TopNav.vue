@@ -132,6 +132,7 @@ import * as monaco from 'monaco-editor';
 
 export default {
     name: 'TopNav',
+    inject: ['cleanupResources'],
     data() {
         return {
             //定时器id记录
@@ -229,6 +230,9 @@ export default {
     beforeDestroy() {
         // 在组件销毁时移除全局点击事件监听
         document.removeEventListener('click', this.handleClickOutside);
+        if (this.cleanupResources) {
+            this.cleanupResources(); // 调用父组件的 cleanupResources 方法
+        }
     },
     props: {
         code: {
@@ -402,7 +406,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.$store.dispatch('LogOut').then(() => {
-                    location.href = '#/login';//返回登录界面
+                    this.$router.push({ name: 'login' });
                 })
             }).catch(() => { });
         },
