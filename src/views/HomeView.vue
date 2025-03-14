@@ -648,6 +648,7 @@ export default {
               this.workspace.toolbox_.clearSelection();
             }
           }
+          this.selectedIndex = 0;
           // 更新完成，关闭加载状态
           this.receiveLoading(false);
 
