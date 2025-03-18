@@ -1164,7 +1164,7 @@ export default {
             this.constantBlock = that.advancedBlockStore.constantBlock;
             this.dropdownField = new Blockly.FieldDropdown(constantDropdownOptions);
             // 创建输入框，并设置它们在同一行
-            this.appendValueInput("VALUE")
+            this.appendDummyInput()
               .appendField("定义")
               .appendField(new Blockly.FieldDropdown([
                 ["整型", "int"],
@@ -1173,13 +1173,12 @@ export default {
               ]), "TYPE")
               .appendField("变量")
               .appendField(this.dropdownField, "CONSTANT")
-              .appendField("并将值初始化为").setCheck(null)
 
             // 设置块的连接属性
             this.setPreviousStatement(true, XTaskCheckTypes); // 允许前面有代码块连接
             this.setNextStatement(true, XTaskCheckTypes);     // 允许后面有代码块连接
             this.setColour('#4FD284'); // 设置块的颜色
-            this.setTooltip('定义一个变量并设置其数据类型和初始值');
+            this.setTooltip('定义一个变量');
             this.setHelpUrl('');
 
           },

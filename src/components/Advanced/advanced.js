@@ -297,24 +297,17 @@ import { XTaskCheckTypes } from "../config/config";
       javascriptGenerator.forBlock["constantBlock"] = function (block) {
         const dropdown_operation = block.getFieldValue("CONSTANT");
         const type = block.getFieldValue("TYPE");
-        const value = javascriptGenerator.valueToCode(
-          block,
-          "VALUE",
-          javascriptGenerator.ORDER_ATOMIC
-        );
-
         // 根据数据类型生成不同的代码
         let code;
         if (type === "int") {
-          code = `int ${dropdown_operation} = ${value};\n`;
+          code = `int ${dropdown_operation};\n`;
         } else if (type === "float") {
-          code = `float ${dropdown_operation} = ${value};\n`;
+          code = `float ${dropdown_operation};\n`;
         } else if (type === "string") {
-          code = `char* ${dropdown_operation} = "${value}";\n`;
+          code = `char* ${dropdown_operation};\n`;
         } else if (type === "bool") {
-          code = `bool ${dropdown_operation} = ${value};\n`;
+          code = `bool ${dropdown_operation};\n`;
         }
-
         return code;
       };
     }

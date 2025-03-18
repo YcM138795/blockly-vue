@@ -316,31 +316,8 @@ ${setup_code}
                     "type": "ir_task",
                     "tooltip": "红外遥控线程(仅一个)",
                     "helpUrl": "",
-                    "message0": "红外遥控线程 %1 %2 %3",
+                    "message0": "红外遥控线程 %1 %2",
                     "args0": [
-                        {
-                            type: "field_dropdown",
-                            name: "gpio",
-                            options: [
-                              ["P0", "GPIO_PIN_22"],
-                              ["P1", "GPIO_PIN_25"],
-                              ["P2", "GPIO_PIN_21"],
-                              ["P3", "GPIO_PIN_27"],
-                              ["P4", "GPIO_PIN_31"],
-                              ["P5", "GPIO_PIN_32"],
-                              ["P6", "GPIO_PIN_33"],
-                              ["P7", "GPIO_PIN_34"],
-                              ["P8", "GPIO_PIN_24"],
-                              ["P9", "GPIO_PIN_6"],
-                              ["P10", "GPIO_PIN_29"],
-                              ["P11", "GPIO_PIN_30"],
-                              ["P12", "GPIO_PIN_16"],
-                              ["P13", "GPIO_PIN_17"],
-                              ["P14", "GPIO_PIN_18"],
-                              ["P15", "GPIO_PIN_28"],
-                              ["P16", "GPIO_PIN_9"],
-                            ],
-                          },
                         {
                             "type": "input_dummy",
                             "name": "NAME"
@@ -357,16 +334,11 @@ ${setup_code}
         };
 
         javascriptGenerator.forBlock['ir_task'] = function (block, generator) {
-            const dropdown_gpio = block.getFieldValue("gpio");
             var statements_operate = generator.statementToCode(block, 'operate');
             // TODO: Assemble javascript into code variable.
             var code = `int ir_task(void)
 {
     printf("IR NEC case:\\r\\n");
-
-    board_ir_gpio_init(${dropdown_gpio});
-    Motors_init();
-
     uint64_t rx_data;
     uint8_t rx_len;
     struct bflb_ir_rx_config_s rx_cfg;

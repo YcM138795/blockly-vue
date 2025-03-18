@@ -160,7 +160,7 @@ import { XTaskCheckTypes } from '../config/config';
     for (let i = 0; i < ${value_times}; i++) {
         ${statements_operate}
     }
-    `;
+    \n`;
     return code;
   };
 
