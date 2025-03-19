@@ -58,27 +58,41 @@ const prefix = `gpio = bflb_device_get_by_name("gpio");`
             });
             // TODO: Assemble javascript into code variable.
             var code = `int main(void){
-  board_init();
-  float pitch,roll,yaw;
-  uart0 = bflb_device_get_by_name("uart0");
-  board_i2c0_gpio_init(); // GPIO0 GPIO1
-  usbdev_init();
-  board_sdh_gpio_init();
-  fatfs_sdh_driver_register();
-  ota_init();
-  btconnt_init();
-  runota=0;
-  xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, 1, &usbdev_handle);
-  xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, 1, &zforth_handle);
-${setup_code}
-  vTaskStartScheduler();
+board_init();
+float pitch,roll,yaw; 	
+uart0 = bflb_device_get_by_name("uart0");
+board_i2c0_gpio_init(); // GPIO0 GPIO1  
+usbdev_init();
+board_sdh_gpio_init();
+fatfs_sdh_driver_register();
+ota_init();
+btconnt_init();
+runota=0;
+if (adc_key_is_right(adc_key_read()) ==0)	//判断按键被按下了
+{
+	xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES -3, &usbdev_handle);
+	xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES -3, &zforth_handle);
+	vTaskStartScheduler();
+	while (1)
+	{
+		if (runota >0)
+		{
+			vTaskPrioritySet(usbdev_handle, 6); 
+			vTaskPrioritySet(zforth_handle, 6);
+		}
+	};
+}else{
+    xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES -3, &usbdev_handle);
+    xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES -3, &zforth_handle);
+    ${setup_code}
+    vTaskStartScheduler();
   while (1){
     if (runota >0){
         ${loop_code}
         vTaskPrioritySet(usbdev_handle, 15);
         vTaskPrioritySet(zforth_handle, 15);
     }
-  };\n}\n`;
+  };\n}\n}\n`;
             return code;
         };
     }
