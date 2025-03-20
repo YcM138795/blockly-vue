@@ -148,7 +148,7 @@ import { XTaskCheckTypes } from '../config/config';
     var value_times = generator.valueToCode(block, 'times', Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
     // TODO: Assemble javascript into code variable.
-    var code = `int i;\nfor( i=0;i<${value_times};i++){\n${statements_operate}}`;
+    var code = `for(index1=0;index1<${value_times};index1++){\n${statements_operate}}\n`;
     return code;
   };
   dartGenerator.forBlock['cycle'] = function (block, generator) {
@@ -157,7 +157,7 @@ import { XTaskCheckTypes } from '../config/config';
 
     // TODO: Assemble dart into code variable.
     var code = `
-    for (let i = 0; i < ${value_times}; i++) {
+    for (let index1 = 0; index1 < ${value_times}; index1++) {
         ${statements_operate}
     }
     \n`;
