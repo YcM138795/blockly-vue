@@ -52,7 +52,15 @@ static TaskHandle_t m6050_handle;	//陀螺仪任务
 static TaskHandle_t mpu_handle;		//陀螺仪功能任务（主板朝上闪灯）
 static TaskHandle_t servo_handle;	//舵机任务
 static TaskHandle_t ir_task_handle;	//红外遥控任务
-
+void led_task(void *param);
+void light_task(void *param);
+void fmq_task(void *param);
+void motors_task(void *param);
+void mpu_task(void *param);
+void servo_task(void *param);
+void ultrasonic_task(void *param);
+int ir_task(void *param);
+void logo_task(void *param);
 // OTA TODO:
 // add sha256sum check
 // add xz decompress support
