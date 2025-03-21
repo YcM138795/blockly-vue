@@ -59,7 +59,7 @@ void motors_task(void *param);
 void mpu_task(void *param);
 void servo_task(void *param);
 void ultrasonic_task(void *param);
-int ir_task(void *param);
+int ir_task(void);
 void logo_task(void *param);
 // OTA TODO:
 // add sha256sum check
