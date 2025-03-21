@@ -71,8 +71,8 @@ btconnt_init();
 runota=0;
 if (adc_key_is_right(adc_key_read()))	//判断按键被按下了
 {
-	xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES -3, &usbdev_handle);
-	xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES -3, &zforth_handle);
+	xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, 7, &usbdev_handle);
+	xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, 7, &zforth_handle);
 	vTaskStartScheduler();
 	while (1)
 	{
@@ -83,15 +83,15 @@ if (adc_key_is_right(adc_key_read()))	//判断按键被按下了
 		}
 	};
 }else{
-    xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, configMAX_PRIORITIES -3, &usbdev_handle);
-    xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, configMAX_PRIORITIES -3, &zforth_handle);
+    xTaskCreate(usbdev_task, (char *)"usbdev_task", 8192, NULL, 7, &usbdev_handle);
+    xTaskCreate(zforth_task, (char *)"zforth_task", 8192, NULL, 7, &zforth_handle);
     ${setup_code}
     vTaskStartScheduler();
   while (1){
     if (runota >0){
         ${loop_code}
-        vTaskPrioritySet(usbdev_handle, 15);
-        vTaskPrioritySet(zforth_handle, 15);
+        vTaskPrioritySet(usbdev_handle, 7);
+        vTaskPrioritySet(zforth_handle, 7);
     }
   };\n}\n}\n`;
             return code;
