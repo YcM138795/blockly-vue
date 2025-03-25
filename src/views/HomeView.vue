@@ -286,6 +286,7 @@ export default {
       // 监听工作区变化事件
       this.workspace.addChangeListener(this.workspaceChangeListener);
       this.workspace.addChangeListener(() => {
+
         javascriptGenerator.init(this.workspace);
         let functionBlocks = [];
         this.workspace.getAllBlocks().forEach(block => {
@@ -432,6 +433,7 @@ export default {
     workspaceChangeListener() {
 
       var allBlocks = this.workspace.getAllBlocks();
+      let cycleBlocks = [];
       allBlocks.forEach((block) => {
         if (block.type === 'XTask_light_task') {
           if (!this.hasCustomBlock('light_task')) {
@@ -514,9 +516,13 @@ export default {
             // 设置指定块的位置，例如添加在已有块的旁边
             customBlock.moveBy(250, 50);  // 可根据需要修改坐标
           }
-        }
+        }else if (block.type === 'cycle') {
+          cycleBlocks.push(block);
+}
       })
-
+      cycleBlocks.forEach((block, index) => {
+        block.indexVar = `index${index + 1}`;  // 生成唯一的变量名
+    });
       allBlocks = this.workspace.getAllBlocks();
       if (allBlocks.length === 0) {
         this.addInt_Main()

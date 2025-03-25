@@ -113,9 +113,7 @@ import { XTaskCheckTypes } from '../config/config';
   }
 
 }
-
-// cycle:循环
-{
+{  
   Blockly.Blocks['cycle'] = {
     init: function () {
       this.jsonInit({
@@ -142,27 +140,28 @@ import { XTaskCheckTypes } from '../config/config';
         "tooltip": "循环",
         "helpUrl": ""
       })
-    }
+    },
   }
+
   javascriptGenerator.forBlock['cycle'] = function (block, generator) {
     var value_times = generator.valueToCode(block, 'times', Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
-    // TODO: Assemble javascript into code variable.
-    var code = `for(index1=0;index1<${value_times};index1++){\n${statements_operate}}\n`;
+    var indexVar = block.indexVar || "index1"; // 确保 index 变量存在
+
+    var code = `for(int ${indexVar}=0; ${indexVar}<${value_times}; ${indexVar}++){\n${statements_operate}}\n`;
     return code;
-  };
-  dartGenerator.forBlock['cycle'] = function (block, generator) {
+};
+ dartGenerator.forBlock['cycle'] = function (block, generator) {
     var value_times = generator.valueToCode(block, 'times', Order.ATOMIC) || 0;
     var statements_operate = generator.statementToCode(block, 'operate');
+    var indexVar = block.indexVar || "index1"; // 确保 index 变量存在
 
-    // TODO: Assemble dart into code variable.
     var code = `
-    for (let index1 = 0; index1 < ${value_times}; index1++) {
+    for (int ${indexVar} = 0; ${indexVar} < ${value_times}; ${indexVar}++) {
         ${statements_operate}
-    }
-    \n`;
+    }\n`;
     return code;
-  };
+};
 
 }
 

@@ -70,7 +70,6 @@ struct bflb_device_s *i2c0;
 struct bflb_device_s *irrx;
 
 uint8_t runota=0;
-int index1;
 void version(void) {
 	char buf[128];
 	snprintf(buf, 127, "version: %s\\n\\r", VERSION);
