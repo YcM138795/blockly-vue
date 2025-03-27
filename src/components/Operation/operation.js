@@ -178,67 +178,6 @@ import { XTaskCheckTypes } from '../config/config';
       }
     }
   }
-
-
-
-  //线程跳出
-  {
-    //break:跳出
-    {
-      Blockly.Blocks['break'] = {
-        init: function () {
-          this.jsonInit({
-            "type": "printf",
-            "message0": "break",
-            "inputsInline": true,
-            "previousStatement": XTaskCheckTypes,
-            "nextStatement": XTaskCheckTypes,
-            "colour": '#FFBF00',
-            "tooltip": "线程跳出线程",
-            "helpUrl": ""
-          })
-        }
-      }
-      javascriptGenerator.forBlock['break'] = function () {
-        return `break;\n`;
-      };
-      //   dartGenerator.forBlock['break'] = function (block, generator) {
-      //     var value_value = generator.valueToCode(block, 'value', Order.NONE);
-      //     var code = '';
-      //       code = `console.log("${value_value}");\n`;
-      //     return code;
-      //   };
-    }
-
-    //continue:继续
-    {
-      Blockly.Blocks['continue'] = {
-        init: function () {
-          this.jsonInit({
-            "type": "printf",
-            "message0": "continue ",
-            "inputsInline": true,
-            "previousStatement": XTaskCheckTypes,
-            "nextStatement": XTaskCheckTypes,
-            "colour": '#FFBF00',
-            "tooltip": "线程继续线程",
-            "helpUrl": ""
-          })
-        }
-      }
-      javascriptGenerator.forBlock['continue'] = function () {
-        return `continue;\n`;
-      };
-      //   dartGenerator.forBlock['continue'] = function (block, generator) {
-      //     var value_value = generator.valueToCode(block, 'value', Order.NONE);
-      //     var code = '';
-      //       code = `console.log("${value_value}");\n`;
-      //     return code;
-      //   };
-    }
-
-  }
-
   //变量操作
   {
     //number_variable:变量

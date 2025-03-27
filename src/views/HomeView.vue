@@ -363,7 +363,6 @@ export default {
 
         return [
           { "kind": "label", "text": "基础" },
-          { kind: "block", type: "forever" },
           { kind: "block", type: "implement" },
           { kind: "block", type: "delay" },
           ...callFuncionBlocks,

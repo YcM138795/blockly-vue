@@ -204,10 +204,6 @@ export default {
                 kind: "block",
                 type: "init_Button"
               },
-              {
-                kind: "block",
-                type: "gpio_output"
-              },
               { "kind": "label", "text": "引脚控制" },
               {
                 kind: "block",
@@ -220,6 +216,10 @@ export default {
               {
                 kind: "block",
                 type: "gpio_write"
+              },
+              {
+                kind: "block",
+                type: "gpio_output"
               },
             ]
           },

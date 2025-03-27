@@ -239,7 +239,135 @@ import { XTaskCheckTypes } from '../config/config';
     return [code, Order.MEMBER];
   };
 }
+{
+  Blockly.Blocks['compare_input'] = {
+    init: function () {
+      this.jsonInit({
+        "type": "compare",
+        "message0": "%1 %2 %3",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "number1",
+            "check": "Number"
+          },
+          {
+            "type": "field_dropdown",
+            "name": "maths",
+            "options": [
+              [
+                ">",
+                ">"
+              ],
+              [
+                ">=",
+                ">="
+              ],
+              [
+                "<",
+                "<"
+              ],
+              [
+                "<=",
+                "<="
+              ],
+              [
+                "=",
+                "=="
+              ]
+            ]
+          },
+          {
+            "type": "input_value",
+            "name": "number2",
+            "check": "Number"
+          },
+        ],
+        "output": "Boolean",
+        "colour": '#FF962E',
+        "tooltip": "做比较(输入变量版)",
+        "inputsInline": true,
+        "helpUrl": ""
+      })
+    }
+  }
+  javascriptGenerator.forBlock['compare_input'] = function (block,generator) {
+    var number_digit1 = generator.valueToCode(block, 'number1', Order.ATOMIC) || 0;
+    var dropdown_maths = block.getFieldValue('maths');
+    var number_digit2 = generator.valueToCode(block, 'number2', Order.ATOMIC) || 0;
+    // TODO: Assemble javascript into code variable.
+    var code = number_digit1 + dropdown_maths + number_digit2;
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
+  dartGenerator.forBlock['compare_input'] = function (block,generator) {
+    var number_digit1 = generator.valueToCode(block, 'number1', Order.ATOMIC) || 0;
+    var dropdown_maths = block.getFieldValue('maths');
+    var number_digit2 = generator.valueToCode(block, 'number2', Order.ATOMIC) || 0;
+    // TODO: Assemble dart into code variable.
+    var code = number_digit1 + dropdown_maths + number_digit2;
 
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
+}
+//线程跳出
+  {
+    //break:跳出
+    {
+      Blockly.Blocks['break'] = {
+        init: function () {
+          this.jsonInit({
+            "type": "printf",
+            "message0": "break",
+            "inputsInline": true,
+            "previousStatement": XTaskCheckTypes,
+            "nextStatement": XTaskCheckTypes,
+            "colour": '#FF962E',
+            "tooltip": "线程跳出线程",
+            "helpUrl": ""
+          })
+        }
+      }
+      javascriptGenerator.forBlock['break'] = function () {
+        return `break;\n`;
+      };
+      //   dartGenerator.forBlock['break'] = function (block, generator) {
+      //     var value_value = generator.valueToCode(block, 'value', Order.NONE);
+      //     var code = '';
+      //       code = `console.log("${value_value}");\n`;
+      //     return code;
+      //   };
+    }
+
+    //continue:继续
+    {
+      Blockly.Blocks['continue'] = {
+        init: function () {
+          this.jsonInit({
+            "type": "printf",
+            "message0": "continue ",
+            "inputsInline": true,
+            "previousStatement": XTaskCheckTypes,
+            "nextStatement": XTaskCheckTypes,
+            "colour": '#FF962E',
+            "tooltip": "线程继续线程",
+            "helpUrl": ""
+          })
+        }
+      }
+      javascriptGenerator.forBlock['continue'] = function () {
+        return `continue;\n`;
+      };
+      //   dartGenerator.forBlock['continue'] = function (block, generator) {
+      //     var value_value = generator.valueToCode(block, 'value', Order.NONE);
+      //     var code = '';
+      //       code = `console.log("${value_value}");\n`;
+      //     return code;
+      //   };
+    }
+
+  }
 //single_compare:单比较
 {
   Blockly.Blocks['single_compare'] = {
@@ -365,7 +493,46 @@ import { XTaskCheckTypes } from '../config/config';
     return code;
   };
 }
-
+//logical_negation:逻辑非
+{
+  Blockly.Blocks['logical_negation'] = {
+    init: function () {
+      this.jsonInit({
+        "type": "logical_negation",
+        "message0": "非 %1",
+        "args0": [
+          {
+            "type": "input_value",
+            "name": "judge",
+            "check": [
+              "Boolean",
+              "Number"
+           ]
+          }
+        ],
+        "inputsInline": true,
+        "output": "Boolean",
+        "colour": '#FF962E',
+        "tooltip": "逻辑非",
+        "helpUrl": ""
+      })
+    }
+  }
+  javascriptGenerator.forBlock['logical_negation'] = function (block, generator) {
+    var value_judge = generator.valueToCode(block, 'judge', Order.ATOMIC);
+    // TODO: Assemble javascript into code variable.
+    var code = `!${value_judge}`;
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
+  dartGenerator.forBlock['logical_negation'] = function (block, generator) {
+    var value_judge = generator.valueToCode(block, 'judge', Order.ATOMIC);
+    // TODO: Assemble dart into code variable.
+    var code = `!${value_judge}`;
+    // TODO: Change ORDER_NONE to the correct strength.
+    return [code, Order.MEMBER];
+  };
+}
 //and_judge:与判断
 {
   Blockly.Blocks['and_judge'] = {

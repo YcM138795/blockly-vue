@@ -33,10 +33,6 @@
               },
               {
                 kind: "block",
-                type: "number_double",
-              },
-              {
-                kind: "block",
                 type: "single_operation",
               },
               {

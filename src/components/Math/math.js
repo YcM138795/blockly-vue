@@ -47,51 +47,6 @@ import {dartGenerator} from 'blockly/dart';
       };
       
     }
-  
-    // number_double：整数输入-双向
-    {
-      Blockly.Blocks['number_double'] = {
-        init: function () {
-          this.jsonInit(
-            {
-              "type": "number_double",
-              "message0": "%1 %2",
-              "args0": [
-                {
-                  "type": "field_number",
-                  "name": "digit",
-                  "value": 1
-                },
-                {
-                  "type": "input_value",
-                  "name": "operate"
-                }
-              ],
-              "output": "Number",
-              "colour": '#3BB0FF',
-            }
-          )
-        }
-      }
-      javascriptGenerator.forBlock['number_double'] = function (block, generator) {
-        var number_digit = block.getFieldValue('digit');
-        var value_operate = generator.valueToCode(block, 'operate', Order.NONE);
-        // TODO: Assemble javascript into code variable.
-        var code = number_digit + value_operate;
-        // TODO: Change ORDER_NONE to the correct strength.
-        return [code, Order.MEMBER];
-      };
-      dartGenerator.forBlock['number_double'] = function (block, generator) {
-        var number_digit = block.getFieldValue('digit');
-        var value_operate = generator.valueToCode(block, 'operate', Order.NONE);
-        // TODO: Assemble javascript into code variable.
-        var code = number_digit + value_operate;
-        // TODO: Change ORDER_NONE to the correct strength.
-        return [code, Order.MEMBER];
-      };
-     
-    }
-  
     // single_operation:单运算
     {
       Blockly.Blocks['single_operation'] = {

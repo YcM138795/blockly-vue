@@ -7,40 +7,6 @@ import { XTaskCheckTypes } from "../config/config";
 {
   //基础
   {
-    //forever:无限循环
-    {
-      Blockly.Blocks["forever"] = {
-        init: function () {
-          this.jsonInit({
-            type: "forever",
-            tooltip: "",
-            helpUrl: "",
-            message0: "无限循环 %1 %2",
-            args0: [
-              {
-                type: "input_end_row",
-                name: "NAME",
-              },
-              {
-                type: "input_statement",
-                name: "inner",
-                check: XTaskCheckTypes,
-              },
-            ],
-            previousStatement: XTaskCheckTypes,
-            nextStatement: XTaskCheckTypes,
-            colour: "#4FD284",
-          });
-        },
-      };
-      javascriptGenerator.forBlock["forever"] = function (block, generator) {
-        const statement_inner = generator.statementToCode(block, "inner");
-
-        // TODO: Assemble javascript into the code variable.
-        const code = `while(1){\n${statement_inner}\n}\n`;
-        return code;
-      };
-    }
     //implement:执行内部逻辑
     {
       Blockly.Blocks["implement"] = {

@@ -49,18 +49,6 @@ export default {
               },
               {
                 kind: "label",
-                text: "线程跳出"
-              },
-              {
-                kind: "block",
-                type: "break"
-              },
-              {
-                kind: "block",
-                type: "continue"
-              },
-              {
-                kind: "label",
                 text: "变量操作"
               },
               {

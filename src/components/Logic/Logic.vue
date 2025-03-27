@@ -33,6 +33,50 @@ export default {
               },
               {
                 "kind": "block",
+                "type": "if_judge"
+              },
+              {
+                "kind": "block",
+                "type": "if_else"
+              },
+              {
+                "kind": "label",
+                "text": "循环"
+              },
+              {
+                "kind": "block",
+                "type": "cycle",
+              },
+              {
+                kind: "block",
+                type: "break"
+              },
+              {
+                kind: "block",
+                type: "continue"
+              },
+              {
+                "kind": "label",
+                "text": "比较"
+              },
+              {
+                "kind": "block",
+                "type": "compare"
+              },
+              {
+                "kind": "block",
+                "type": "compare_input"
+              },
+              {
+                "kind": "block",
+                "type": "single_compare"
+              },
+              {
+                "kind": "label",
+                "text": "布尔值"
+              },
+              {
+                "kind": "block",
                 "type": "true"
               },
               {
@@ -41,29 +85,12 @@ export default {
               },
               {
                 "kind": "block",
-                "type": "if_judge"
-              },
-              {
-                "kind": "block",
-                "type": "if_else"
-              },
-              {
-                "kind": "block",
-                "type": "cycle",
-              },
-              {
-                "kind": "block",
-                "type": "compare"
-              },
-              {
-                "kind": "block",
-                "type": "single_compare"
-              },
-              {
-                "kind": "block",
                 "type": "and_or",
               },
-
+              {
+                "kind": "block",
+                "type": "logical_negation",
+              },
               {
                 "kind": "block",
                 "type": "or_judge",
